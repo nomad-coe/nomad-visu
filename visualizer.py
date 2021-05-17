@@ -7,18 +7,25 @@ import os
 from scipy.spatial import ConvexHull
 import copy
 import pandas as pd
+from itertools import cycle
+import plotly.express as px
 
 class Visualizer:
-    def __init__(self, df, sisso, classes, features):
+
+    def __init__(self, df, sisso, classes, embedding_features, hover_features):
         self.sisso = sisso
         self.df = df
         self.n_classes = df['Classes'].unique().size
         self.classes = df['Classes'].unique()
-        # self.df_classes = c
-        self.features = features
-#        self.class0 = str(classes[0])
-#        self.class1 = str(classes[1])
+        self.embedding_features = embedding_features
+        self.hover_features = hover_features
+        self.total_compounds = df.shape[0]
+        self.frac = (1000 / self.total_compounds)
+        if self.frac > 1:
+            self.frac = 1
+        self.frac = int(self.frac*100)/100
         self.marker_size = 7
+
         # self.marker_symbol_cls0 = 'circle'
         # self.marker_symbol_cls1 = 'square'
         self.compounds_list = df.index.tolist()
@@ -41,8 +48,7 @@ class Visualizer:
                               'Arial',
                               'Verdana',
                               'Courier New',
-                              'Comic Sans MS',
-                              ]
+                              'Comic Sans MS']
         self.line_styles = ["dash",
                             "solid",
                             "dot",
@@ -56,11 +62,11 @@ class Visualizer:
                               'Purple scale',
                               'Turquoise scale']
         self.bg_color = 'rgba(229,236,246, 0.5)'
-        self.color_cls1 = "#EB8273"
-        self.color_cls0 = "rgb(138, 147, 248)"
-        self.color_hull0 = 'Grey'
-        self.color_hull1 = 'Grey'
-        self.color_line = 'Black'
+        # self.color_cls1 = "#EB8273"
+        # self.color_cls0 = "rgb(138, 147, 248)"
+        # self.color_hull0 = 'Grey'
+        # self.color_hull1 = 'Grey'
+        # self.color_line = 'Black'
         self.qualitative_colors = [
                             'Plotly',
                             'D3',
@@ -82,23 +88,44 @@ class Visualizer:
                             'Safe',
                             'Vivid'
                             ]
+        self.n_points = []
+        self.global_symbols = []
+        self.global_sizes = []
+        self.global_symbols = []
+        self.name_trace = []
+        self.df_classes = []
+        self.shuffled_entries = []
+        self.df_entries_onmap = []
+        self.trace = {}
 
+        self.palette = cycle(getattr(px.colors.qualitative, self.qualitative_colors[0]))
         self.fig = go.FigureWidget()
         self.viewer_l = JsmolView()
         self.viewer_r = JsmolView()
         self.instantiate_widgets()
 
+        # Dataframe should contain the 'Classes' column
+        # Traces are addded for each different class the dataframe is composed of 
         for cl in range(self.n_classes):
+
+            self.df_classes.append(self.df.loc[self.df['Classes']==self.classes[cl]])
+            self.shuffled_entries.append(self.df_classes[cl].index.to_numpy()[np.random.permutation(self.df_classes[cl].shape[0])])
+            self.n_points.append(int(self.frac * self.df_classes[cl].shape[0]))
+            self.global_symbols.append(["circle"] * self.n_points[cl])
+            self.global_sizes.append([self.marker_size] * self.n_points[cl])
+            self.name_trace.append(self.classes[cl])
+            self.df_entries_onmap.append(self.df_classes[cl].loc[self.shuffled_entries[cl]].head(self.n_points[cl]))
+
             self.fig.add_trace(
                 (
                     go.Scatter(
-                        name=self.classes[cl],
+                        name=self.name_trace[cl],
                         mode='markers',
-                        x=self.df[df['Classes']==df['Classes'].unique()[cl]][str(features[0])],
-                        y=self.df[df['Classes']==df['Classes'].unique()[cl]][str(features[1])],
-                        # marker_color=next(self.palette),
+                        x=self.df[df['Classes']==df['Classes'].unique()[cl]][str(self.embedding_features[0])],
+                        y=self.df[df['Classes']==df['Classes'].unique()[cl]][str(self.embedding_features[1])],
+                        marker=dict(symbol=self.symbols[cl], color=next(self.palette), size=self.global_sizes[cl])
                     )))
-            # self.trace[self.name_trace[cl]] = self.fig['data'][cl]
+            self.trace[self.name_trace[cl]] = self.fig['data'][cl]
 
         # self.fig.update_layout(
         #     plot_bgcolor=self.bg_color,
@@ -127,9 +154,162 @@ class Visualizer:
         # )
         self.fig.update_xaxes(ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor='black')
         self.fig.update_yaxes(ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor='black')
+        
+        self.update_appearance_variables ()
+        self.update_layout_figure ()
+
+    def update_layout_figure(self):
+
+        with self.fig.batch_update():
+
+            # if self.widg_colormarkers.value == 'Default':
+                # self.palette = cycle(getattr(px.colors.qualitative, self.widg_colorpalette.value))
+                self.fig.update_layout(showlegend=True)
+                for cl in np.arange(self.n_classes):
+                    color = next(self.palette)
+                    self.trace[self.name_trace[cl]].marker.symbol = self.global_symbols[cl]
+                    self.trace[self.name_trace[cl]].marker.size = self.global_sizes[cl]
+                    # self.trace[self.name_trace[cl]].marker.line.color = self.global_markerlinecolor[cl]
+                    # self.trace[self.name_trace[cl]].marker.line.width = self.global_markerlinewidth[cl]
+                    # self.trace[self.name_trace[cl]]['x'] = self.df_entries_onmap[cl]['x_emb']
+                    # self.trace[self.name_trace[cl]]['y'] = self.df_entries_onmap[cl]['y_emb']
+                    self.fig.update_traces(
+                        selector={'name': self.name_trace[cl]},
+                        text=self.hover_text[cl],
+                        customdata=self.hover_custom[cl],
+                        hovertemplate=self.hover_template[cl],
+                        marker_color=color,
+                        visible=True
+                    )
+                # self.trace[self.name_trace[-1]].marker.symbol = []
+                # self.trace[self.name_trace[-1]].marker.size = []
+                # self.trace[self.name_trace[-1]].marker.line.color = []
+                # self.trace[self.name_trace[-1]].marker.line.width = []
+                # self.trace[self.name_trace[-1]]['x'] = []
+                # self.trace[self.name_trace[-1]]['y'] = []
+                # self.fig.update_traces(
+                #     selector={'name': self.name_trace[-1]},
+                #     text=self.hover_text[-1],
+                #     customdata=self.hover_custom[-1],
+                #     hovertemplate=self.hover_template[-1],
+                #     visible=False
+                # )
+            # else:
+            #     self.fig.update_layout(showlegend=False)
+            #     for cl in np.arange(self.n_clusters+1):
+            #         self.trace[self.name_trace[cl]].marker.symbol = []
+            #         self.trace[self.name_trace[cl]].marker.size = []
+            #         self.trace[self.name_trace[cl]].marker.line.color = []
+            #         self.trace[self.name_trace[cl]].marker.line.width = []
+            #         self.trace[self.name_trace[cl]]['x'] = []
+            #         self.trace[self.name_trace[cl]]['y'] = []
+            #         self.fig.update_traces(
+            #             selector={'name': self.name_trace[cl]},
+            #             text=self.hover_text[cl],
+            #             customdata=self.hover_custom[cl],
+            #             hovertemplate=self.hover_template[cl],
+            #             visible=False
+            #         )
+            #     self.trace[self.name_trace[-1]].marker.symbol = self.global_symbols[-1]
+            #     self.trace[self.name_trace[-1]].marker.size = self.global_sizes[-1]
+            #     self.trace[self.name_trace[-1]].marker.line.color = self.global_markerlinecolor[-1]
+            #     self.trace[self.name_trace[-1]].marker.line.width = self.global_markerlinewidth[-1]
+            #     self.trace[self.name_trace[-1]]['x'] = self.df_entries_onmap[-1]['x_emb']
+            #     self.trace[self.name_trace[-1]]['y'] = self.df_entries_onmap[-1]['y_emb']
+            #     color = self.df_entries_onmap[-1][self.widg_colormarkers.value]
+            #     self.fig.update_traces(
+            #         selector={'name': self.name_trace[-1]},
+            #         marker=dict(color=color, colorscale=self.widg_continuouscolors.value),
+            #         text=self.hover_text[-1],
+            #         customdata=self.hover_custom[-1],
+            #         hovertemplate=self.hover_template[-1],
+            #         visible=True,
+            #     )
+
+    def update_appearance_variables(self):
+
+        self.hover_text = []
+        self.hover_custom = []
+        self.hover_template = []
+
+        for cl in range(self.n_classes):
+            self.hover_text.append(self.df_entries_onmap[cl].index)
+            hover_template = r"<b>%{text}</b><br><br>"
+            if self.hover_features:
+                hover_custom = np.dstack([self.df_entries_onmap[cl][str(self.hover_features[0])].to_numpy()])
+                hover_template += str(self.hover_features[0]) + ": %{customdata[0]}<br>"
+                for i in range(1, len(self.hover_features), 1):
+                    hover_custom = np.dstack([hover_custom, self.df_entries_onmap[cl][str(self.hover_features[i])].to_numpy()])
+                    hover_template += str(self.hover_features[i]) + ": %{customdata[" + str(i) + "]}<br>"
+                self.hover_custom.append(hover_custom[0])
+                self.hover_template.append(hover_template)
+            else:
+                self.hover_custom.append([''])
+                self.hover_template.append([''])
+        self.hover_text.append(self.df_entries_onmap[-1].index)
+        hover_template = r"<b>%{text}</b><br><br>"
+        if self.hover_features:
+            hover_custom = np.dstack([self.df_entries_onmap[-1][str(self.hover_features[0])].to_numpy()])
+            hover_template += str(self.hover_features[0]) + ": %{customdata[0]}<br>"
+            for i in range(1, len(self.hover_features), 1):
+                hover_custom = np.dstack([hover_custom, self.df_entries_onmap[-1][str(self.hover_features[i])].to_numpy()])
+                hover_template += str(self.hover_features[i]) + ": %{customdata[" + str(i) + "]}<br>"
+            self.hover_custom.append(hover_custom[0])
+            self.hover_template.append(hover_template)
+        else:
+            self.hover_custom.append([''])
+            self.hover_template.append([''])
+
+        for cl in np.arange(self.n_classes):
+            markerlinewidth = [1] * self.n_points[cl]
+            markerlinecolor = ['white'] * self.n_points[cl]
+            sizes = [self.marker_size] * self.n_points[cl]
+            symbols = self.global_symbols[cl]
+            try:
+                point = symbols.index('x')
+                sizes[point] = self.cross_size
+                markerlinewidth[point] = 2
+                markerlinecolor[point] = 'black'
+            except:
+                pass
+            try:
+                point = symbols.index('cross')
+                sizes[point] = self.cross_size
+                markerlinewidth[point] = 2
+                markerlinecolor[point] = 'black'
+            except:
+                pass
+            self.global_sizes[cl] = sizes
+            # self.global_markerlinecolor[cl] = markerlinecolor
+            # self.global_markerlinewidth[cl] = markerlinewidth
+        self.global_sizes[-1] = [symb for sub in self.global_sizes[:-1] for symb in sub]
+        # self.global_markerlinecolor[-1] = [symb for sub in self.global_markerlinecolor[:-1] for symb in sub]
+        # self.global_markerlinewidth[-1] = [symb for sub in self.global_markerlinewidth[:-1] for symb in sub]
+
+    def handle_yfeat_change(self, change):
+        # changes the feature plotted on the x-axis
+        # separating line is modified accordingly
+        feat_x = change.new
+        feat_y = self.widg_featy.value
+
+        for cl in range(self.n_classes):
+            self.trace[self.name_trace[cl]]['x'] = self.df_classes[cl][str(feat_x)]
+        
+    def handle_xfeat_change(self, change):
+        # changes the feature plotted on the x-axis
+        # separating line is modified accordingly
+        feat_x = self.widg_featx.value
+        feat_y = change.new
+
+        for cl in range(self.n_classes):
+            self.trace[self.name_trace[cl]]['y'] = self.df_classes[cl][str(feat_y)]
+
 
 
     def show(self):
+        
+        self.widg_featx.observe(self.handle_xfeat_change, names='value')
+        self.widg_featy.observe(self.handle_yfeat_change, names='value')      
 
         self.output_l.layout = widgets.Layout(width="400px", height='350px')
         self.output_r.layout = widgets.Layout(width="400px", height='350px')
@@ -168,22 +348,22 @@ class Visualizer:
 
         self.widg_featx = widgets.Dropdown(
             description='x-axis',
-            options=self.features,
-            value=self.features[0]
+            options=self.embedding_features,
+            value=self.embedding_features[0]
         )
         self.widg_featy = widgets.Dropdown(
             description='y-axis',
-            options=self.features,
-            value=self.features[1]
+            options=self.embedding_features,
+            value=self.embedding_features[1]
         )
         self.widg_featmarker = widgets.Dropdown(
             description="Marker",
-            options=['Default size'] + self.features,
+            options=['Default size'] + self.hover_features,
             value='Default size',
         )
         self.widg_featcolor = widgets.Dropdown(
             description='Color',
-            options=['Default color'] + self.features,
+            options=['Default color'] + self.hover_features,
             value='Default color'
         )
         # self.widg_gradient = widgets.Dropdown(
