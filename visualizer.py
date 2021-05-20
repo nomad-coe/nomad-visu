@@ -305,11 +305,25 @@ class Visualizer:
             self.trace[self.name_trace[cl]]['y'] = self.df_classes[cl][str(feat_y)]
 
 
+    def plotappearance_button_clicked(self, button):
+        if self.widg_box_utils.layout.visibility == 'visible':
+            self.widg_box_utils.layout.visibility = 'hidden'
+            for i in range(290, -1, -1):
+                self.widg_box_viewers.layout.top = str(i) + 'px'
+
+            self.widg_box_utils.layout.bottom = '0px'
+        else:
+            for i in range(291):
+                self.widg_box_viewers.layout.top = str(i) + 'px'
+            self.widg_box_utils.layout.bottom = '400px'
+            self.widg_box_utils.layout.visibility = 'visible'
+
 
     def show(self):
         
         self.widg_featx.observe(self.handle_xfeat_change, names='value')
         self.widg_featy.observe(self.handle_yfeat_change, names='value')      
+        self.widg_plotutils_button.on_click(self.plotappearance_button_clicked)
 
         self.output_l.layout = widgets.Layout(width="400px", height='350px')
         self.output_r.layout = widgets.Layout(width="400px", height='350px')
@@ -321,6 +335,13 @@ class Visualizer:
 
         self.widg_box_utils.layout.visibility = 'hidden'
         # self.widg_gradient.layout.visibility = 'hidden'
+
+        self.widg_plotutils_button.layout.left = '50px'
+        self.widg_box_utils.layout.border = 'dashed 1px'
+        self.widg_box_utils.right = '100px'
+        self.widg_box_utils.layout.max_width = '700px'
+
+
 
         self.box_feat.layout.height = '150px'
         self.box_feat.layout.top = '30px'
