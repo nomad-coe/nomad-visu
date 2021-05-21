@@ -89,9 +89,8 @@ class Visualizer:
                             'Vivid'
                             ]
         self.n_points = []
-        self.global_symbols = []
-        self.global_sizes = []
-        self.global_symbols = []
+        self.symbols = []
+        self.sizes = []
         self.name_trace = []
         self.df_classes = []
         self.shuffled_entries = []
@@ -111,8 +110,8 @@ class Visualizer:
             self.df_classes.append(self.df.loc[self.df['Classes']==self.classes[cl]])
             self.shuffled_entries.append(self.df_classes[cl].index.to_numpy()[np.random.permutation(self.df_classes[cl].shape[0])])
             self.n_points.append(int(self.frac * self.df_classes[cl].shape[0]))
-            self.global_symbols.append(["circle"] * self.n_points[cl])
-            self.global_sizes.append([self.marker_size] * self.n_points[cl])
+            self.symbols.append(["circle"] * self.n_points[cl])
+            self.sizes.append([self.marker_size] * self.n_points[cl])
             self.name_trace.append(self.classes[cl])
             self.df_entries_onmap.append(self.df_classes[cl].loc[self.shuffled_entries[cl]].head(self.n_points[cl]))
 
@@ -123,7 +122,7 @@ class Visualizer:
                         mode='markers',
                         x=self.df[df['Classes']==df['Classes'].unique()[cl]][str(self.embedding_features[0])],
                         y=self.df[df['Classes']==df['Classes'].unique()[cl]][str(self.embedding_features[1])],
-                        marker=dict(symbol=self.symbols[cl], color=next(self.palette), size=self.global_sizes[cl])
+                        marker=dict(symbol=self.symbols[cl], color=next(self.palette), size=self.sizes[cl])
                     )))
             self.trace[self.name_trace[cl]] = self.fig['data'][cl]
 
@@ -167,8 +166,8 @@ class Visualizer:
                 self.fig.update_layout(showlegend=True)
                 for cl in np.arange(self.n_classes):
                     color = next(self.palette)
-                    self.trace[self.name_trace[cl]].marker.symbol = self.global_symbols[cl]
-                    self.trace[self.name_trace[cl]].marker.size = self.global_sizes[cl]
+                    self.trace[self.name_trace[cl]].marker.symbol = self.symbols[cl]
+                    self.trace[self.name_trace[cl]].marker.size = self.sizes[cl]
                     # self.trace[self.name_trace[cl]].marker.line.color = self.global_markerlinecolor[cl]
                     # self.trace[self.name_trace[cl]].marker.line.width = self.global_markerlinewidth[cl]
                     # self.trace[self.name_trace[cl]]['x'] = self.df_entries_onmap[cl]['x_emb']
@@ -264,7 +263,7 @@ class Visualizer:
             markerlinewidth = [1] * self.n_points[cl]
             markerlinecolor = ['white'] * self.n_points[cl]
             sizes = [self.marker_size] * self.n_points[cl]
-            symbols = self.global_symbols[cl]
+            symbols = self.symbols[cl]
             try:
                 point = symbols.index('x')
                 sizes[point] = self.cross_size
@@ -279,12 +278,65 @@ class Visualizer:
                 markerlinecolor[point] = 'black'
             except:
                 pass
-            self.global_sizes[cl] = sizes
+            self.sizes[cl] = sizes
             # self.global_markerlinecolor[cl] = markerlinecolor
             # self.global_markerlinewidth[cl] = markerlinewidth
-        self.global_sizes[-1] = [symb for sub in self.global_sizes[:-1] for symb in sub]
+        self.sizes[-1] = [symb for sub in self.sizes[:-1] for symb in sub]
         # self.global_markerlinecolor[-1] = [symb for sub in self.global_markerlinecolor[:-1] for symb in sub]
         # self.global_markerlinewidth[-1] = [symb for sub in self.global_markerlinewidth[:-1] for symb in sub]
+
+    def update_markers(self):
+        # Markers size and symbol are updated simultaneously
+        with self.fig.batch_update():
+            for cl in range (self.n_classes):
+                 
+                self.trace[self.name_trace[cl]].marker.size = self.sizes[cl]
+                self.trace[self.name_trace[cl]].marker.symbol = self.symbols[cl]
+                # self.trace[self.name_trace[cl]].color = self.colors_cls0
+
+    def set_markers_size(self, feature='Default size'):
+    # Defines the size of the markers based on the input feature.
+    # In case of default feature all markers have the same size.
+    # Points marked with x/cross are set with a specific size
+
+        if feature == 'Default size':
+            
+            for cl in range(self.n_classes):
+                
+                sizes = [self.marker_size] * self.n_points[cl]
+                symbols = [self.symbols[cl]] * self.n_points[cl]
+
+                try:
+                    point = symbols.index('x')
+                    sizes[point] = self.cross_size
+                except:
+                    try:
+                        point = symbols.index('x')
+                        sizes[point] = self.cross_size
+                    except:
+                        pass
+                try:
+                    point = symbols.index('cross')
+                    sizes[point] = self.cross_size
+                except:
+                    try:
+                        point = symbols.index('cross')
+                        sizes[point] = self.cross_size
+                    except:
+                        pass
+
+                self.sizes = sizes
+
+        else:
+
+            min_value = min(self.df[feature])
+            max_value = max(self.df[feature])
+            coeff = 2 * self.marker_size / (max_value - min_value)
+
+            for cl in range(self.n_classes):
+                sizes = self.marker_size / 2 + coeff * self.df_classes[cl][feature].to_numpy()
+                self.sizes [cl] = sizes
+    
 
     def handle_yfeat_change(self, change):
         # changes the feature plotted on the x-axis
@@ -318,11 +370,15 @@ class Visualizer:
             self.widg_box_utils.layout.bottom = '400px'
             self.widg_box_utils.layout.visibility = 'visible'
 
+    def handle_markerfeat_change(self, change):
+        self.set_markers_size(feature=change.new)
+        self.update_markers()
 
     def show(self):
         
         self.widg_featx.observe(self.handle_xfeat_change, names='value')
-        self.widg_featy.observe(self.handle_yfeat_change, names='value')      
+        self.widg_featy.observe(self.handle_yfeat_change, names='value')
+        self.widg_featmarker.observe(self.handle_markerfeat_change, names='value')      
         self.widg_plotutils_button.on_click(self.plotappearance_button_clicked)
 
         self.output_l.layout = widgets.Layout(width="400px", height='350px')
