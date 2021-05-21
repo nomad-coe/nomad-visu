@@ -18,6 +18,8 @@ class Visualizer:
         self.n_classes = df['Classes'].unique().size
         self.classes = df['Classes'].unique()
         self.embedding_features = embedding_features
+        self.feat_x = embedding_features[0]
+        self.feat_y = embedding_features[1]
         self.hover_features = hover_features
         self.total_compounds = df.shape[0]
         self.frac = (1000 / self.total_compounds)
@@ -120,8 +122,8 @@ class Visualizer:
                     go.Scatter(
                         name=self.name_trace[cl],
                         mode='markers',
-                        x=self.df[df['Classes']==df['Classes'].unique()[cl]][str(self.embedding_features[0])],
-                        y=self.df[df['Classes']==df['Classes'].unique()[cl]][str(self.embedding_features[1])],
+                        x=self.df[df['Classes']==df['Classes'].unique()[cl]][str(self.feat_x)],
+                        y=self.df[df['Classes']==df['Classes'].unique()[cl]][str(self.feat_y)],
                         marker=dict(symbol=self.symbols[cl], color=next(self.palette), size=self.sizes[cl])
                     )))
             self.trace[self.name_trace[cl]] = self.fig['data'][cl]
@@ -166,12 +168,13 @@ class Visualizer:
                 self.fig.update_layout(showlegend=True)
                 for cl in np.arange(self.n_classes):
                     color = next(self.palette)
+                    self.trace[self.name_trace[cl]]['x'] = self.df_entries_onmap[cl][str(self.feat_x)]
+                    self.trace[self.name_trace[cl]]['y'] = self.df_entries_onmap[cl][str(self.feat_y)]
                     self.trace[self.name_trace[cl]].marker.symbol = self.symbols[cl]
                     self.trace[self.name_trace[cl]].marker.size = self.sizes[cl]
                     # self.trace[self.name_trace[cl]].marker.line.color = self.global_markerlinecolor[cl]
                     # self.trace[self.name_trace[cl]].marker.line.width = self.global_markerlinewidth[cl]
-                    # self.trace[self.name_trace[cl]]['x'] = self.df_entries_onmap[cl]['x_emb']
-                    # self.trace[self.name_trace[cl]]['y'] = self.df_entries_onmap[cl]['y_emb']
+
                     self.fig.update_traces(
                         selector={'name': self.name_trace[cl]},
                         text=self.hover_text[cl],
@@ -224,6 +227,62 @@ class Visualizer:
             #         hovertemplate=self.hover_template[-1],
             #         visible=True,
             #     )
+
+    def make_df_onmap(self):
+
+        # if self.trace_l:
+        #     trace_l, formula_l = self.trace_l
+        # else:
+        #     trace_l = -2
+        # if self.trace_r:
+        #     trace_r, formula_r = self.trace_r
+        # else:
+        #     trace_r = -2
+
+        for cl in range(self.n_classes):
+            self.df_entries_onmap[cl] = self.df_classes[cl].loc[self.shuffled_entries[cl]].head(int(self.frac *self.df_classes[cl].shape[0]))
+            # if cl == trace_l:
+            #     self.df_entries_onmap[cl] = pd.concat([
+            #         self.df_entries_onmap[cl],
+            #         self.df_clusters[trace_l].loc[[formula_l]]
+            #     ], axis=0)
+            # if cl == trace_r:
+            #     self.df_entries_onmap[cl] = pd.concat([
+            #         self.df_entries_onmap[cl],
+            #         self.df_clusters[trace_r].loc[[formula_r]],
+            #     ], axis=0)
+            self.n_points[cl] = self.df_entries_onmap[cl].shape[0]
+
+        # self.reset_markers()
+        # for cl in range(self.n_clusters+1):
+        #     try:
+        #         try:
+        #             point = np.where(self.df_entries_onmap[cl].index.to_numpy() == formula_l)[0][1]
+        #             self.global_symbols[cl][point] = 'x'
+        #         except:
+        #             point = np.where(self.df_entries_onmap[cl].index.to_numpy() == formula_l)[0][0]
+        #             self.global_symbols[cl][point] = 'x'
+        #     except:
+        #         pass
+        #     try:
+        #         try:
+        #             point = np.where(self.df_entries_onmap[cl].index.to_numpy() == formula_r)[0][1]
+        #             self.global_symbols[cl][point] = 'cross'
+        #         except:
+        #             point = np.where(self.df_entries_onmap[cl].index.to_numpy() == formula_r)[0][0]
+        #             self.global_symbols[cl][point] = 'cross'
+        #     except:
+        #         pass
+
+        # if self.widg_outliersbox.value:
+        #     self.df_entries_onmap[-1] = pd.concat(self.df_entries_onmap[:self.n_clusters + 1], axis=0, sort=False)
+        #     self.n_points[-1] = int(self.df_entries_onmap[-1].shape[0])
+        #     self.global_symbols[-1] = [symb for sub in self.global_symbols[:-1] for symb in sub]
+        # else:
+        #     self.df_entries_onmap[-1] = pd.concat(self.df_entries_onmap[:self.n_clusters], axis=0, sort=False)
+        #     self.n_points[-1] = int(self.df_entries_onmap[-1].shape[0])
+        #     self.global_symbols[-1] = [symb for sub in self.global_symbols[:-2] for symb in sub]
+
 
     def update_appearance_variables(self):
 
@@ -342,7 +401,6 @@ class Visualizer:
         # changes the feature plotted on the x-axis
         # separating line is modified accordingly
         feat_x = change.new
-        feat_y = self.widg_featy.value
 
         for cl in range(self.n_classes):
             self.trace[self.name_trace[cl]]['x'] = self.df_classes[cl][str(feat_x)]
@@ -350,7 +408,6 @@ class Visualizer:
     def handle_xfeat_change(self, change):
         # changes the feature plotted on the x-axis
         # separating line is modified accordingly
-        feat_x = self.widg_featx.value
         feat_y = change.new
 
         for cl in range(self.n_classes):
@@ -373,6 +430,18 @@ class Visualizer:
     def handle_markerfeat_change(self, change):
         self.set_markers_size(feature=change.new)
         self.update_markers()
+   
+    def handle_frac_change(self, change):
+        self.frac = change.new
+        self.make_df_onmap()
+        self.update_appearance_variables()
+        self.update_layout_figure()
+
+    def updatefrac_button_clicked(self, button):
+        self.frac = self.widg_frac_slider.value
+        self.make_dfclusters()
+        self.update_appearance_variables()
+        self.update_layout_figure()
 
     def show(self):
         
@@ -380,7 +449,7 @@ class Visualizer:
         self.widg_featy.observe(self.handle_yfeat_change, names='value')
         self.widg_featmarker.observe(self.handle_markerfeat_change, names='value')      
         self.widg_plotutils_button.on_click(self.plotappearance_button_clicked)
-
+        self.widg_frac_slider.observe(self.handle_frac_change, names='value')
         self.output_l.layout = widgets.Layout(width="400px", height='350px')
         self.output_r.layout = widgets.Layout(width="400px", height='350px')
 
@@ -396,8 +465,6 @@ class Visualizer:
         self.widg_box_utils.layout.border = 'dashed 1px'
         self.widg_box_utils.right = '100px'
         self.widg_box_utils.layout.max_width = '700px'
-
-
 
         self.box_feat.layout.height = '150px'
         self.box_feat.layout.top = '30px'
@@ -418,20 +485,32 @@ class Visualizer:
         display(container)
 
 
-    def print(self):
-        print (self.symbols)
-
     def instantiate_widgets(self):
 
+        self.widg_update_frac_button = widgets.Button(
+            description='Click to update',
+            layout=widgets.Layout(width='150px', left='130px')
+        )
+        self.widg_frac_slider = widgets.BoundedFloatText(
+            min=0,
+            max=1,
+            step=0.01,
+            value=self.frac,
+            layout=widgets.Layout(left='130px', width='60px')
+        )
+        self.widg_label_frac = widgets.Label(
+            value='Fraction of compounds visualized in the map: ',
+            layout=widgets.Layout(left='130px')
+        )
         self.widg_featx = widgets.Dropdown(
             description='x-axis',
             options=self.embedding_features,
-            value=self.embedding_features[0]
+            value=self.feat_x
         )
         self.widg_featy = widgets.Dropdown(
             description='y-axis',
             options=self.embedding_features,
-            value=self.embedding_features[1]
+            value=self.feat_y
         )
         self.widg_featmarker = widgets.Dropdown(
             description="Marker",
@@ -647,11 +726,16 @@ class Visualizer:
         self.output_l = widgets.Output()
         self.output_r = widgets.Output()
 
-        self.box_feat = widgets.HBox([widgets.VBox([self.widg_featx, self.widg_featy]),
-                                 widgets.VBox([self.widg_featmarker,
+        self.box_feat = widgets.VBox ([
+            widgets.HBox([
+                widgets.VBox([self.widg_featx, self.widg_featy]),
+                widgets.VBox([self.widg_featmarker,
                                             #    widgets.HBox([self.widg_featcolor, self.widg_gradient])
-                                               ])
-                                 ])
+                                            ]),
+                ]),
+                widgets.HBox([self.widg_label_frac, self.widg_frac_slider, self.widg_update_frac_button]),
+                
+                ])
 
         self.widg_box_viewers = widgets.VBox([self.widg_description, widgets.HBox([
             widgets.VBox([
