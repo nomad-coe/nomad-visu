@@ -27,9 +27,6 @@ class Visualizer:
             self.frac = 1
         self.frac = int(self.frac*100)/100
         self.marker_size = 7
-
-        # self.marker_symbol_cls0 = 'circle'
-        # self.marker_symbol_cls1 = 'square'
         self.compounds_list = df.index.tolist()
         self.symbols = [
             'circle',
@@ -64,11 +61,6 @@ class Visualizer:
                               'Purple scale',
                               'Turquoise scale']
         self.bg_color = 'rgba(229,236,246, 0.5)'
-        # self.color_cls1 = "#EB8273"
-        # self.color_cls0 = "rgb(138, 147, 248)"
-        # self.color_hull0 = 'Grey'
-        # self.color_hull1 = 'Grey'
-        # self.color_line = 'Black'
         self.qualitative_colors = [
                             'Plotly',
                             'D3',
@@ -125,56 +117,60 @@ class Visualizer:
                     go.Scatter(
                         name=self.name_trace[cl],
                         mode='markers',
-                        # x=self.df[df['Classes']==df['Classes'].unique()[cl]][str(self.feat_x)],
-                        # y=self.df[df['Classes']==df['Classes'].unique()[cl]][str(self.feat_y)],
-                        # marker=dict(symbol=self.symbols[cl], color=next(self.palette), size=self.sizes[cl])
                     )))
             self.trace[self.name_trace[cl]] = self.fig['data'][cl]
 
-        # self.fig.update_layout(
-        #     plot_bgcolor=self.bg_color,
-        #     font=dict(
-        #         size=int(self.font_size),
-        #         family=self.font_families[0]
-        #     ),
-        #     xaxis_title=self.features[0],
-        #     yaxis_title=self.features[1],
-        #     # xaxis_range=[x_min - x_delta, x_max + x_delta],
-        #     # yaxis_range=[y_min - y_delta, y_max + y_delta],
-        #     hoverlabel=dict(
-        #         bgcolor="white",
-        #         font_size=16,
-        #         font_family="Rockwell"
-        #     ),
-        #     width=800,
-        #     height=400,
-        #     margin=dict(
-        #         l=50,
-        #         r=50,
-        #         b=70,
-        #         t=20,
-        #         pad=4
-        #     ),
-        # )
+        self.fig.update_layout(
+            plot_bgcolor=self.bg_color,
+            font=dict(
+                size=int(self.font_size),
+                family=self.font_families[0]
+            ),
+            hoverlabel=dict(
+                bgcolor="white",
+                font_size=16,
+                font_family="Rockwell"
+            ),
+            width=800,
+            height=400,
+            margin=dict(
+                l=50,
+                r=50,
+                b=70,
+                t=20,
+                pad=4
+            ),
+        )
         self.fig.update_xaxes(ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor='black')
         self.fig.update_yaxes(ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor='black')
         
-        self.update_appearance_variables ()
+        self.update_hover_variables ()
         self.update_layout_figure ()
+
 
     def update_layout_figure(self):
 
         with self.fig.batch_update():
 
-            self.fig.update_layout(showlegend=True)
+            self.fig.update_layout(
+                showlegend=True,
+                plot_bgcolor=self.bg_color,
+                font=dict(
+                    size=int(self.font_size),
+                    family=self.font_families[0],
+                    ),
+                    xaxis_title=self.widg_featx.value,
+                    yaxis_title=self.widg_featy.value,
+                    # xaxis_range=[x_min - x_delta, x_max + x_delta],
+                    # yaxis_range=[y_min - y_delta, y_max + y_delta],
+            )
             for cl in np.arange(self.n_classes):
-                self.trace[self.name_trace[cl]]['x'] = self.df_entries_onmap[cl][str(self.feat_x)]
-                self.trace[self.name_trace[cl]]['y'] = self.df_entries_onmap[cl][str(self.feat_y)]
+                self.trace[self.name_trace[cl]]['x'] = self.df_entries_onmap[cl][self.feat_x]
+                self.trace[self.name_trace[cl]]['y'] = self.df_entries_onmap[cl][self.feat_y]
                 self.trace[self.name_trace[cl]].marker.symbol = self.symbols[cl]
                 self.trace[self.name_trace[cl]].marker.size = self.sizes[cl]
                 # self.trace[self.name_trace[cl]].marker.line.color = self.global_markerlinecolor[cl]
                 # self.trace[self.name_trace[cl]].marker.line.width = self.global_markerlinewidth[cl]
-
                 self.fig.update_traces(
                     selector={'name': self.name_trace[cl]},
                     text=self.hover_text[cl],
@@ -184,7 +180,8 @@ class Visualizer:
                     visible=True
                 )
 
-    def make_df_onmap(self):
+
+    def update_df_onmap(self):
 
         # if self.trace_l:
         #     trace_l, formula_l = self.trace_l
@@ -240,7 +237,7 @@ class Visualizer:
         #     self.global_symbols[-1] = [symb for sub in self.global_symbols[:-2] for symb in sub]
 
 
-    def update_appearance_variables(self):
+    def update_hover_variables (self):
 
         self.hover_text = []
         self.hover_custom = []
@@ -274,34 +271,34 @@ class Visualizer:
             self.hover_custom.append([''])
             self.hover_template.append([''])
 
-        for cl in np.arange(self.n_classes):
-            markerlinewidth = [1] * self.n_points[cl]
-            markerlinecolor = ['white'] * self.n_points[cl]
-            sizes = [self.marker_size] * self.n_points[cl]
-            symbols = self.symbols[cl]
-            try:
-                point = symbols.index('x')
-                sizes[point] = self.cross_size
-                markerlinewidth[point] = 2
-                markerlinecolor[point] = 'black'
-            except:
-                pass
-            try:
-                point = symbols.index('cross')
-                sizes[point] = self.cross_size
-                markerlinewidth[point] = 2
-                markerlinecolor[point] = 'black'
-            except:
-                pass
-            self.sizes[cl] = sizes
-            # self.global_markerlinecolor[cl] = markerlinecolor
-            # self.global_markerlinewidth[cl] = markerlinewidth
-        self.sizes[-1] = [symb for sub in self.sizes[:-1] for symb in sub]
+        # for cl in np.arange(self.n_classes):
+        #     markerlinewidth = [1] * self.n_points[cl]
+        #     markerlinecolor = ['white'] * self.n_points[cl]
+        #     sizes = [self.marker_size] * self.n_points[cl]
+        #     symbols = self.symbols[cl]
+        #     try:
+        #         point = symbols.index('x')
+        #         sizes[point] = self.cross_size
+        #         markerlinewidth[point] = 2
+        #         markerlinecolor[point] = 'black'
+        #     except:
+        #         pass
+        #     try:
+        #         point = symbols.index('cross')
+        #         sizes[point] = self.cross_size
+        #         markerlinewidth[point] = 2
+        #         markerlinecolor[point] = 'black'
+        #     except:
+        #         pass
+        #     self.sizes[cl] = sizes
+        #     # self.global_markerlinecolor[cl] = markerlinecolor
+        #     # self.global_markerlinewidth[cl] = markerlinewidth
+        # self.sizes[-1] = [symb for sub in self.sizes[:-1] for symb in sub]
         # self.global_markerlinecolor[-1] = [symb for sub in self.global_markerlinecolor[:-1] for symb in sub]
         # self.global_markerlinewidth[-1] = [symb for sub in self.global_markerlinewidth[:-1] for symb in sub]
 
 
-    def set_markers_size(self, feature='Default size'):
+    def update_markers_size(self, feature='Default size'):
     # Defines the size of the markers based on the input feature.
     # In case of default feature all markers have the same size.
     # Points marked with x/cross are set with a specific size
@@ -331,9 +328,7 @@ class Visualizer:
                         sizes[point] = self.cross_size
                     except:
                         pass
-
                 self.sizes = sizes
-
         else:
 
             min_value = min(self.df[feature])
@@ -345,28 +340,25 @@ class Visualizer:
                 self.sizes [cl] = sizes
     
 
-    def handle_yfeat_change(self, change):
-        # changes the feature plotted on the x-axis
-        # separating line is modified accordingly
-        feat_x = change.new
-
-        for cl in range(self.n_classes):
-            self.trace[self.name_trace[cl]]['x'] = self.df_classes[cl][str(feat_x)]
-        
     def handle_xfeat_change(self, change):
         # changes the feature plotted on the x-axis
         # separating line is modified accordingly
-        feat_y = change.new
+        self.feat_x = change.new
+        self.update_layout_figure()
+        
 
-        for cl in range(self.n_classes):
-            self.trace[self.name_trace[cl]]['y'] = self.df_classes[cl][str(feat_y)]
+    def handle_yfeat_change(self, change):
+        # changes the feature plotted on the x-axis
+        # separating line is modified accordingly
+        self.feat_y = change.new
+        self.update_layout_figure()
+
 
     def plotappearance_button_clicked(self, button):
         if self.widg_box_utils.layout.visibility == 'visible':
             self.widg_box_utils.layout.visibility = 'hidden'
             for i in range(290, -1, -1):
                 self.widg_box_viewers.layout.top = str(i) + 'px'
-
             self.widg_box_utils.layout.bottom = '0px'
         else:
             for i in range(291):
@@ -374,101 +366,34 @@ class Visualizer:
             self.widg_box_utils.layout.bottom = '400px'
             self.widg_box_utils.layout.visibility = 'visible'
 
+
     def handle_markerfeat_change(self, change):
-        self.set_markers_size(feature=change.new)
+        self.update_markers_size(feature=change.new)
         self.update_layout_figure()
-   
+
+
     def handle_frac_change(self, change):
         self.frac = change.new
-        self.make_df_onmap()
-        self.update_appearance_variables()
+        self.update_df_onmap()
+        self.update_hover_variables()
         self.update_layout_figure()
+
 
     def handle_colorfeat_change(self, change):
         self.make_colors(feature=change.new, gradient=self.widg_gradient.value)
         self.update_layout_figure()
-  
+
+
     def handle_gradient_change(self, change):
         self.make_colors(feature=self.widg_featcolor.value, gradient=change.new)
         self.update_layout_figure()
 
+
     def updatefrac_button_clicked(self, button):
         self.frac = self.widg_frac_slider.value
         self.make_dfclusters()
-        self.update_appearance_variables()
+        self.update_hover_variables()
         self.update_layout_figure()
-
-    def make_colors(self, feature, gradient):
-
-        if feature == 'Default color':
-            self.palette = cycle(getattr(px.colors.qualitative, self.qualitative_colors[0]))
-
-            for cl in range(self.n_classes):
-    
-                self.color[cl] = [next(self.palette)]*self.n_points[cl]
-
-        else:
-            self.df
-            min_value = self.df[feature].min()
-            max_value = self.df[feature].max()
-
-            if gradient == 'Grey scale':
-                for cl in range(self.n_classes):
-                    shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
-                         (max_value-min_value)
-                    for i, e in enumerate(shade_cl):
-                        value = 255*(0.7-e)
-                        string = 'rgb('+str(value)+","+str(value)+","+str(value)+')'
-                        self.color[cl][i] = string
-
-            if gradient == 'Purple scale':
-                for cl in range(self.n_classes):
-                    shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
-                        (max_value-min_value)
-                    for i, e in enumerate(shade_cl):
-                        value = 255 * (0.7 - e)
-                        string = 'rgb(' + str(value) + "," + str(0) + "," + str(value) + ')'
-                        self.color[cl][i] = string
-
-            if gradient == 'Turquoise scale':
-                for cl in range(self.n_classes):
-                    shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
-                        (max_value-min_value)
-                    for i, e in enumerate(shade_cl):
-                        value = 255 * (0.7 - e)
-                        string = 'rgb(' + str(0) + "," + str(value) + "," + str(value) + ')'
-                        self.color[cl][i] = string
-
-            if gradient == 'Blue to green':
-                for cl in range(self.n_classes):
-                    shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
-                        (max_value-min_value)
-                    for i, e in enumerate(shade_cl):
-                        value = 255 * e
-                        value2 = 255 - value
-                        string = 'rgb(' + str(0) + "," + str(value) + "," + str(value2) + ')'
-                        self.color[cl][i] = string
-
-            if gradient == 'Blue to red':
-                for cl in range(self.n_classes):
-                    shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
-                        (max_value-min_value)
-                    for i, e in enumerate(shade_cl):
-                        value = 255 * e
-                        value2 = 255 - value
-                        string = 'rgb(' + str(value) + "," + str(0) + "," + str(value2) + ')'
-                        self.color[cl][i] = string
-
-            if gradient == 'Green to red':
-                for cl in range(self.n_classes):
-                    shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
-                        (max_value-min_value)
-                    for i, e in enumerate(shade_cl):
-                        value = 255 * e
-                        value2 = 255 - value
-                        string = 'rgb(' + str(value) + "," + str(value2) + "," + str(0) + ')'
-                        self.color[cl][i] = string
-
      
 
     def show(self):
@@ -778,3 +703,73 @@ class Visualizer:
                                self.widg_img2, self.widg_checkbox_r]),
                  self.output_r])
         ])])
+
+    def make_colors(self, feature, gradient):
+
+        if feature == 'Default color':
+            self.palette = cycle(getattr(px.colors.qualitative, self.qualitative_colors[0]))
+
+            for cl in range(self.n_classes):
+                self.color[cl] = [next(self.palette)]*self.n_points[cl]
+
+        else:
+            self.df
+            min_value = self.df[feature].min()
+            max_value = self.df[feature].max()
+
+            if gradient == 'Grey scale':
+                for cl in range(self.n_classes):
+                    shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
+                         (max_value-min_value)
+                    for i, e in enumerate(shade_cl):
+                        value = 255*(0.7-e)
+                        string = 'rgb('+str(value)+","+str(value)+","+str(value)+')'
+                        self.color[cl][i] = string
+
+            if gradient == 'Purple scale':
+                for cl in range(self.n_classes):
+                    shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
+                        (max_value-min_value)
+                    for i, e in enumerate(shade_cl):
+                        value = 255 * (0.7 - e)
+                        string = 'rgb(' + str(value) + "," + str(0) + "," + str(value) + ')'
+                        self.color[cl][i] = string
+
+            if gradient == 'Turquoise scale':
+                for cl in range(self.n_classes):
+                    shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
+                        (max_value-min_value)
+                    for i, e in enumerate(shade_cl):
+                        value = 255 * (0.7 - e)
+                        string = 'rgb(' + str(0) + "," + str(value) + "," + str(value) + ')'
+                        self.color[cl][i] = string
+
+            if gradient == 'Blue to green':
+                for cl in range(self.n_classes):
+                    shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
+                        (max_value-min_value)
+                    for i, e in enumerate(shade_cl):
+                        value = 255 * e
+                        value2 = 255 - value
+                        string = 'rgb(' + str(0) + "," + str(value) + "," + str(value2) + ')'
+                        self.color[cl][i] = string
+
+            if gradient == 'Blue to red':
+                for cl in range(self.n_classes):
+                    shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
+                        (max_value-min_value)
+                    for i, e in enumerate(shade_cl):
+                        value = 255 * e
+                        value2 = 255 - value
+                        string = 'rgb(' + str(value) + "," + str(0) + "," + str(value2) + ')'
+                        self.color[cl][i] = string
+
+            if gradient == 'Green to red':
+                for cl in range(self.n_classes):
+                    shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
+                        (max_value-min_value)
+                    for i, e in enumerate(shade_cl):
+                        value = 255 * e
+                        value2 = 255 - value
+                        string = 'rgb(' + str(value) + "," + str(value2) + "," + str(0) + ')'
+                        self.color[cl][i] = string
