@@ -5,15 +5,15 @@ import ipywidgets as widgets
 
 
 class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
-    def __init__(self,df, embedding_features, hover_features, target, sisso=None, path_to_structures=None):
-        super().__init__(df, embedding_features, hover_features, target, sisso=None, path_to_structures=None)
+    def __init__(self, df, embedding_features, hover_features, target, sisso=None, path_to_structures=None):
+        super().__init__(df, embedding_features, hover_features, target, sisso, path_to_structures)
         from include._instantiate_widgets import instantiate_widgets
         from include._view_structure import view_structure_r, view_structure_l
         from include._colors import make_colors
         from include._updates import update_hover_variables, update_df_on_map, update_layout_figure, update_markers_size
 
-        # for name in self.name_trace:
-        #     self.trace[name].on_click(handle_point_clicked(self))  # actions are performed after clicking points on the map
+        for name in self.name_trace:
+            self.trace[name].on_click(self.handle_point_clicked)  # actions are performed after clicking points on the map
 
         self.widg_featx.observe(self.handle_xfeat_change, names='value')
         self.widg_featy.observe(self.handle_yfeat_change, names='value')
