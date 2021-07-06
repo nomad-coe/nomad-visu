@@ -22,6 +22,9 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         self.widg_gradient.observe(self.handle_gradient_change, names='value')
         self.widg_plotutils_button.on_click(self.plotappearance_button_clicked)
         self.widg_frac_slider.observe(self.handle_frac_change, names='value')
+        self.widg_display_button_l.on_click(self.display_button_l_clicked)
+        self.widg_display_button_r.on_click(self.display_button_r_clicked)
+
         self.output_l.layout = widgets.Layout(width="400px", height='350px')
         self.output_r.layout = widgets.Layout(width="400px", height='350px')
 

@@ -64,10 +64,8 @@ class WidgetsInteractionsMixin:
 
         if self.widg_checkbox_l.value:
             self.trace_l = [trace, formula]
-            # self.replica_l = 0
         if self.widg_checkbox_r.value:
             self.trace_r = [trace, formula]
-            # self.replica_r = 0
 
         # self.make_dfclusters()
         # self.update_appearance_variables()
@@ -79,3 +77,57 @@ class WidgetsInteractionsMixin:
         if self.widg_checkbox_r.value:
             self.widg_compound_text_r.value = formula
             view_structure_r(self, formula)
+
+    def display_button_l_clicked(self, button):
+
+        if self.widg_compound_text_l.value in self.path_to_structures.keys():
+
+            self.replica_l += 1
+            formula_l = self.widg_compound_text_l.value
+            view_structure_l(self, formula_l)
+
+            # trace_l = self.df_grouped.loc[self.df_grouped.index == formula_l]['Cluster_label'][0]
+            # if trace_l == -1:
+            #     trace_l = self.n_clusters
+            #
+            # self.trace_l = [trace_l, formula_l]
+
+            # self.make_dfclusters()
+            # self.update_appearance_variables()
+            # self.update_layout_figure()
+            #
+            # if self.widg_colormarkers.value == 'Clustering':
+            #     name_trace = self.name_trace[trace_l]
+            #     with self.fig.batch_update():
+            #         self.fig.update_traces(
+            #             selector={'name': name_trace},
+            #             visible=True
+            #         )
+
+    def display_button_r_clicked(self, button):
+
+        # Actions are performed only if the string inserted in the text widget corresponds to an existing compound
+        if self.widg_compound_text_r.value in self.path_to_structures.keys():
+
+            self.replica_r += 1
+            formula_r = self.widg_compound_text_r.value
+            self.view_structure_r(formula_r)
+
+            # trace_r = self.df_grouped.loc[self.df_grouped.index == formula_r]['Cluster_label'][0]
+            # if trace_r == -1:
+            #     trace_r = self.n_clusters
+            #
+            # self.trace_r = [trace_r, formula_r]
+            #
+            # self.make_dfclusters()
+            # self.update_appearance_variables()
+            # self.update_layout_figure()
+            #
+            # if self.widg_colormarkers.value == 'Clustering':
+            #     name_trace = self.name_trace[trace_r]
+            #     with self.fig.batch_update():
+            #         self.fig.update_traces(
+            #             selector={'name': name_trace},
+            #             visible=True
+            #         )
+

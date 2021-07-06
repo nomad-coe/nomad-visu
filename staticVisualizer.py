@@ -17,8 +17,6 @@ class StaticVisualizer:
         # hover features - list of features shown while hovering
 
         from include._instantiate_widgets import instantiate_widgets
-        from include._view_structure import view_structure_r, view_structure_l
-        from include._colors import make_colors
         from include._updates import update_hover_variables, update_df_on_map, update_layout_figure, update_markers_size
 
         self.sisso = sisso
@@ -31,7 +29,7 @@ class StaticVisualizer:
         self.feat_y = embedding_features[1]
         self.hover_features = hover_features
         self.total_compounds = df.shape[0]
-        self.path_to_structures=path_to_structures
+        self.path_to_structures = path_to_structures
 
         self.replica_l = 0
         self.replica_r = 0
