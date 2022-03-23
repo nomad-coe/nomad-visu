@@ -18,6 +18,7 @@ def update_layout_figure(self):
         )
         for cl in np.arange(self.n_classes):
             # All elements on the map and their properties are reinitialized at each change
+            self.trace[self.name_trace[cl]]['x'] = self.df_classes_on_map[cl]
             self.trace[self.name_trace[cl]]['x'] = self.df_classes_on_map[cl][self.feat_x]
             self.trace[self.name_trace[cl]]['y'] = self.df_classes_on_map[cl][self.feat_y]
             self.trace[self.name_trace[cl]].marker.symbol = self.symbols[cl]
@@ -184,7 +185,6 @@ def update_markers_size(self, feature='Default size'):
                     pass
             self.sizes = sizes
     else:
-
         min_value = min(self.df[feature])
         max_value = max(self.df[feature])
         coeff = 2 * self.marker_size / (max_value - min_value)

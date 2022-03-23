@@ -22,6 +22,7 @@ class StaticVisualizer:
         self.sisso = sisso
         self.df = df
         self.target = target
+
         self.n_classes = df[target].unique().size
         self.classes = df[target].unique()
         self.embedding_features = embedding_features
@@ -103,7 +104,7 @@ class StaticVisualizer:
         self.df_classes = []  # section of the pandas dataframe containing elements of only a specific class
         self.index_classes_shuffled = []  # index of the dataframe class shuffled - used to avoid bias visualization when only a fraction is visualized
         self.n_points = []  # total points of the class which are visualized - can be less than the total number of data depending on the fraction visualized
-        self.df_classes_on_map = []  # dataframe which contains only the elements that are to be visualized on the map
+        self.df_classes_on_map = []  # dataframe which contains only the elements that are visualized on the map
         self.symbols = []  # each item is a list of symbols
         self.sizes = []  # each item is a list of sizes
         self.colors = []  # each iteindex_classes_shuffled
