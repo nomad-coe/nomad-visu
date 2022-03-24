@@ -14,7 +14,7 @@ def make_colors(self, feature, gradient):
 
         if gradient == 'Grey scale':
             for cl in range(self.n_classes):
-                shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
+                shade_cl = 0.7 * (self.df_classes_on_map[cl][feature].to_numpy() - min_value) / \
                            (max_value - min_value)
                 for i, e in enumerate(shade_cl):
                     value = 255 * (0.7 - e)
@@ -23,7 +23,7 @@ def make_colors(self, feature, gradient):
 
         if gradient == 'Purple scale':
             for cl in range(self.n_classes):
-                shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
+                shade_cl = 0.7 * (self.df_classes_on_map[cl][feature].to_numpy() - min_value) / \
                            (max_value - min_value)
                 for i, e in enumerate(shade_cl):
                     value = 255 * (0.7 - e)
@@ -32,7 +32,7 @@ def make_colors(self, feature, gradient):
 
         if gradient == 'Turquoise scale':
             for cl in range(self.n_classes):
-                shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
+                shade_cl = 0.7 * (self.df_classes_on_map[cl][feature].to_numpy() - min_value) / \
                            (max_value - min_value)
                 for i, e in enumerate(shade_cl):
                     value = 255 * (0.7 - e)
@@ -41,7 +41,7 @@ def make_colors(self, feature, gradient):
 
         if gradient == 'Blue to green':
             for cl in range(self.n_classes):
-                shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
+                shade_cl = 0.7 * (self.df_classes_on_map[cl][feature].to_numpy() - min_value) / \
                            (max_value - min_value)
                 for i, e in enumerate(shade_cl):
                     value = 255 * e
@@ -51,7 +51,7 @@ def make_colors(self, feature, gradient):
 
         if gradient == 'Blue to red':
             for cl in range(self.n_classes):
-                shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
+                shade_cl = 0.7 * (self.df_classes_on_map[cl][feature].to_numpy() - min_value) / \
                            (max_value - min_value)
                 for i, e in enumerate(shade_cl):
                     value = 255 * e
@@ -61,7 +61,7 @@ def make_colors(self, feature, gradient):
 
         if gradient == 'Green to red':
             for cl in range(self.n_classes):
-                shade_cl = 0.7 * (self.df_classes[cl][feature].to_numpy() - min_value) / \
+                shade_cl = 0.7 * (self.df_classes_on_map[cl][feature].to_numpy() - min_value) / \
                            (max_value - min_value)
                 for i, e in enumerate(shade_cl):
                     value = 255 * e

@@ -18,7 +18,6 @@ def update_layout_figure(self):
         )
         for cl in np.arange(self.n_classes):
             # All elements on the map and their properties are reinitialized at each change
-            self.trace[self.name_trace[cl]]['x'] = self.df_classes_on_map[cl]
             self.trace[self.name_trace[cl]]['x'] = self.df_classes_on_map[cl][self.feat_x]
             self.trace[self.name_trace[cl]]['y'] = self.df_classes_on_map[cl][self.feat_y]
             self.trace[self.name_trace[cl]].marker.symbol = self.symbols[cl]
@@ -157,7 +156,6 @@ def update_markers_size(self, feature='Default size'):
     # Defines the size of the markers based on the input feature.
     # In case of default feature all markers have the same size.
     # Points marked with x/cross are set with a specific size
-
     if feature == 'Default size':
 
         for cl in range(self.n_classes):
@@ -190,5 +188,5 @@ def update_markers_size(self, feature='Default size'):
         coeff = 2 * self.marker_size / (max_value - min_value)
 
         for cl in range(self.n_classes):
-            sizes = self.marker_size / 2 + coeff * self.df_classes[cl][feature].to_numpy()
+            sizes = self.marker_size / 2 + coeff * self.df_classes_on_map[cl][feature].to_numpy()
             self.sizes[cl] = sizes
