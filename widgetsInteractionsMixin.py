@@ -53,6 +53,137 @@ class WidgetsInteractionsMixin:
         update_hover_variables(self)
         update_layout_figure(self)
 
+    def handle_fontfamily_change(self, change):
+
+        self.fig.update_layout(
+            font=dict(family=change.new)
+        )
+
+    def handle_fontsize_change(self, change):
+
+        self.fig.update_layout(
+            font=dict(size=change.new)
+        )
+
+    def handle_markersize_change(self, change):
+
+        self.marker_size = int(change.new)
+        print(self.marker_size)
+        update_markers_size(self)
+        update_layout_figure(self)
+
+    # def handle_crossize_change(self, change):
+
+    #     self.cross_size = int(change.new)
+    #     self.set_markers_size(feature=self.widg_featmarker.value)
+    #     self.update_markers()
+
+    # def handle_hullslinewidth_change(self, change):
+
+    #     self.hullsline_width = change.new
+    #     with self.fig.batch_update():
+    #         self.scatter_hull0.line.width = change.new
+    #         self.scatter_hull1.line.width = change.new
+
+    # def handle_hullslinestyle_change(self, change):
+
+    #     with self.fig.batch_update():
+    #         self.scatter_hull0.line.dash = change.new
+    #         self.scatter_hull1.line.dash = change.new
+
+    # def handle_clslinewidth_change(self, change):
+
+    #     self.clsline_width = change.new
+    #     with self.fig.batch_update():
+    #         self.scatter_clsline.line.width = change.new
+
+    # def handle_clslinestyle_change(self, change):
+
+    #     with self.fig.batch_update():
+    #         self.scatter_clsline.line.dash = change.new
+
+    # def handle_markersymbol_cls0_change(self, change):
+
+    #     for i, e in enumerate(self.symbols_cls0):
+    #         if e == self.marker_symbol_cls0:
+    #             self.symbols_cls0[i] = change.new
+    #     self.marker_symbol_cls0 = change.new
+    #     self.update_markers()
+
+    # def handle_markersymbol_cls1_change(self, change):
+
+    #     for i, e in enumerate(self.symbols_cls1):
+    #         if e == self.marker_symbol_cls1:
+    #             self.symbols_cls1[i] = change.new
+    #     self.marker_symbol_cls1 = change.new
+    #     self.update_markers()
+
+    def bgtoggle_button_clicked(self, button):
+
+        if self.bg_toggle:
+            self.bg_toggle = False
+            self.fig.update_layout(
+                plot_bgcolor='white',
+                xaxis=dict(gridcolor='rgb(229,236,246)', showgrid=True, zeroline=False),
+                yaxis=dict(gridcolor='rgb(229,236,246)', showgrid=True, zeroline=False),
+            )
+        else:
+            self.bg_toggle = True
+            self.fig.update_layout(
+                plot_bgcolor=self.widg_bgcolor.value,
+                xaxis=dict(gridcolor='white'),
+                yaxis=dict(gridcolor='white')
+            )
+
+    def print_button_clicked(self, button):
+
+        self.widg_print_out.clear_output()
+        text = "A download link will appear soon."
+        with self.widg_print_out:
+            display(Markdown(text))
+        path = "./data/tetradymite_PRM2020/plots/"
+        try:
+            os.mkdir(path)
+        except:
+            pass
+        file_name = self.widg_plot_name.value + '.' + self.widg_plot_format.value
+        self.fig.write_image(path + file_name, scale=self.widg_scale.value)
+        self.widg_print_out.clear_output()
+        with self.widg_print_out:
+            local_file = FileLink(path + file_name, result_html_prefix="Click here to download: ")
+            display(local_file)
+
+    def reset_button_clicked(self, button):
+
+        self.symbols_cls0 = [self.marker_symbol_cls0] * self.npoints_cls0
+        self.symbols_cls1 = [self.marker_symbol_cls1] * self.npoints_cls1
+        self.set_markers_size(self.widg_featmarker.value)
+        self.update_markers()
+
+    def plotappearance_button_clicked(self, button):
+        if self.widg_box_utils.layout.visibility == 'visible':
+            self.widg_box_utils.layout.visibility = 'hidden'
+            for i in range(490, -1, -1):
+                self.widg_box_viewers.layout.top = str(i) + 'px'
+            self.widg_box_utils.layout.bottom = '0px'
+        else:
+            for i in range(491):
+                self.widg_box_viewers.layout.top = str(i) + 'px'
+            self.widg_box_utils.layout.bottom = '400px'
+            self.widg_box_utils.layout.visibility = 'visible'
+
+    def handle_checkbox_l(self, change):
+        if change.new:
+            self.widg_checkbox_r.value = False
+        else:
+            self.widg_checkbox_r.value = True
+
+    def handle_checkbox_r(self, change):
+        if change.new:
+            self.widg_checkbox_l.value = False
+        else:
+            self.widg_checkbox_l.value = True
+
     def handle_point_clicked(self, trace, points, selector):
         # changes the points labeled with a cross on the map.
 
