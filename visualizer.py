@@ -30,7 +30,7 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
 
         # self.widg_updatecolor_button.on_click(self.updatecolor_button_clicked)
         # self.widg_reset_button.on_click(self.reset_button_clicked)
-        # self.widg_print_button.on_click(self.print_button_clicked)
+        self.widg_print_button.on_click(self.print_button_clicked)
         # self.widg_bgtoggle_button.on_click(self.bgtoggle_button_clicked)
         # self.scatter_cls0.on_click(self.update_point_cls0)
         # self.scatter_cls1.on_click(self.update_point_cls1)

@@ -1,7 +1,7 @@
+from IPython.display import display, Markdown, FileLink
 from include._updates import update_hover_variables, update_df_on_map, update_layout_figure, update_markers_size
 from include._colors import make_colors
 from include._view_structure import view_structure_r, view_structure_l
-
 
 class WidgetsInteractionsMixin:
 
@@ -141,7 +141,7 @@ class WidgetsInteractionsMixin:
         text = "A download link will appear soon."
         with self.widg_print_out:
             display(Markdown(text))
-        path = "./data/tetradymite_PRM2020/plots/"
+        path = "./"
         try:
             os.mkdir(path)
         except:
