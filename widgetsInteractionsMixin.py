@@ -198,13 +198,14 @@ class WidgetsInteractionsMixin:
 
         # self.make_dfclusters()
         # self.update_appearance_variables()
-        update_layout_figure(self)
         if self.widg_checkbox_l.value:
             self.widg_compound_text_l.value = formula
             view_structure_l(self, formula)
         if self.widg_checkbox_r.value:
             self.widg_compound_text_r.value = formula
             view_structure_r(self, formula)
+        update_df_on_map(self)
+        update_layout_figure(self)
 
     def display_button_l_clicked(self, button):
 

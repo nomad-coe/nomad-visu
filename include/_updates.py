@@ -13,7 +13,7 @@ def update_layout_figure(self):
             ),
             xaxis_title=self.widg_featx.value,
             yaxis_title=self.widg_featy.value,
-            # xaxis_range=[x_min - x_delta, x_max + x_delta],
+            # xaxis_range =[x_min - x_delta, x_max + x_delta],
             # yaxis_range=[y_min - y_delta, y_max + y_delta],
         )
         for cl in np.arange(self.n_classes):
@@ -59,26 +59,21 @@ def update_df_on_map(self):
         #     ], axis=0)
         self.n_points[cl] = self.df_classes_on_map[cl].shape[0]
 
-    # self.reset_markers()
-    # for cl in range(self.n_clusters+1):
-    #     try:
-    #         try:
-    #             point = np.where(self.df_entries_onmap[cl].index.to_numpy() == formula_l)[0][1]
-    #             self.global_symbols[cl][point] = 'x'
-    #         except:
-    #             point = np.where(self.df_entries_onmap[cl].index.to_numpy() == formula_l)[0][0]
-    #             self.global_symbols[cl][point] = 'x'
-    #     except:
-    #         pass
-    #     try:
-    #         try:
-    #             point = np.where(self.df_entries_onmap[cl].index.to_numpy() == formula_r)[0][1]
-    #             self.global_symbols[cl][point] = 'cross'
-    #         except:
-    #             point = np.where(self.df_entries_onmap[cl].index.to_numpy() == formula_r)[0][0]
-    #             self.global_symbols[cl][point] = 'cross'
-    #     except:
-    #         pass
+
+    for cl in range(self.n_classes):
+        self.symbols[cl]=['circle']*self.n_points[cl]
+        formula_l = self.widg_compound_text_l.value 
+        formula_r = self.widg_compound_text_r.value 
+        try:
+            point = np.where(self.df_classes_on_map[cl].index.to_numpy() == formula_l)[0][0]
+            self.symbols[cl][point] = 'x'
+        except:
+            pass
+        try:
+            point = np.where(self.df_classes_on_map[cl].index.to_numpy() == formula_r)[0][0]
+            self.symbols[cl][point] = 'cross'
+        except:
+            pass
 
     # if self.widg_outliersbox.value:
     #     self.df_entries_onmap[-1] = pd.concat(self.df_entries_onmap[:self.n_clusters + 1], axis=0, sort=False)
