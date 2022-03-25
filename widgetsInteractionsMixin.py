@@ -68,7 +68,6 @@ class WidgetsInteractionsMixin:
     def handle_markersize_change(self, change):
 
         self.marker_size = int(change.new)
-        print(self.marker_size)
         update_markers_size(self)
         update_layout_figure(self)
 
@@ -186,7 +185,6 @@ class WidgetsInteractionsMixin:
 
     def handle_point_clicked(self, trace, points, selector):
         # changes the points labeled with a cross on the map.
-
         if not points.point_inds:
             return
 
@@ -201,7 +199,6 @@ class WidgetsInteractionsMixin:
         # self.make_dfclusters()
         # self.update_appearance_variables()
         update_layout_figure(self)
-
         if self.widg_checkbox_l.value:
             self.widg_compound_text_l.value = formula
             view_structure_l(self, formula)
@@ -213,7 +210,7 @@ class WidgetsInteractionsMixin:
 
         if self.widg_compound_text_l.value in self.path_to_structures.keys():
 
-            self.replica_l += 1
+            # self.replica_l += 1
             formula_l = self.widg_compound_text_l.value
             view_structure_l(self, formula_l)
 

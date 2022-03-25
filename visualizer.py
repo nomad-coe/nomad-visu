@@ -24,10 +24,8 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         # self.widg_frac_slider.observe(self.handle_frac_change, names='value')
         self.widg_display_button_l.on_click(self.display_button_l_clicked)
         self.widg_display_button_r.on_click(self.display_button_r_clicked)
-
-        # self.widg_checkbox_l.observe(self.handle_checkbox_l, names='value')
-        # self.widg_checkbox_r.observe(self.handle_checkbox_r, names='value')
-
+        self.widg_checkbox_l.observe(self.handle_checkbox_l, names='value')
+        self.widg_checkbox_r.observe(self.handle_checkbox_r, names='value')
         # self.widg_updatecolor_button.on_click(self.updatecolor_button_clicked)
         # self.widg_reset_button.on_click(self.reset_button_clicked)
         self.widg_print_button.on_click(self.print_button_clicked)
