@@ -122,7 +122,7 @@ def update_hover_variables(self):
 
     # for cl in np.arange(self.n_classes):
     #     markerlinewidth = [1] * self.n_points[cl]
-    #     markerlinecolor = ['white'] * self.n_points[cl]
+    #     markerlinecolor = ['white']. * self.n_points[cl]
     #     sizes = [self.marker_size] * self.n_points[cl]
     #     symbols = self.symbols[cl]
     #     try:
@@ -156,7 +156,7 @@ def update_markers_size(self, feature='Default size'):
         for cl in range(self.n_classes):
 
             sizes = [self.marker_size] * self.n_points[cl]
-            symbols = [self.symbols[cl]] * self.n_points[cl]
+            symbols = self.symbols[cl]
 
             try:
                 point = symbols.index('x')
@@ -176,7 +176,7 @@ def update_markers_size(self, feature='Default size'):
                     sizes[point] = self.cross_size
                 except:
                     pass
-            self.sizes = sizes
+            self.sizes[cl] = sizes
     else:
         min_value = min(self.df[feature])
         max_value = max(self.df[feature])

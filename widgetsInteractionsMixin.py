@@ -71,11 +71,11 @@ class WidgetsInteractionsMixin:
         update_markers_size(self)
         update_layout_figure(self)
 
-    # def handle_crossize_change(self, change):
+    def handle_crossize_change(self, change):
 
-    #     self.cross_size = int(change.new)
-    #     self.set_markers_size(feature=self.widg_featmarker.value)
-    #     self.update_markers()
+        self.cross_size = int(change.new)
+        update_markers_size(self, feature=self.widg_featmarker.value)
+        update_layout_figure(self)
 
     # def handle_hullslinewidth_change(self, change):
 
@@ -205,6 +205,7 @@ class WidgetsInteractionsMixin:
             self.widg_compound_text_r.value = formula
             view_structure_r(self, formula)
         update_df_on_map(self)
+        update_markers_size(self, feature=self.widg_featmarker.value)
         update_layout_figure(self)
 
     def display_button_l_clicked(self, button):

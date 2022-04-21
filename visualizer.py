@@ -33,7 +33,7 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         # self.scatter_cls0.on_click(self.update_point_cls0)
         # self.scatter_cls1.on_click(self.update_point_cls1)
         self.widg_markersize.observe(self.handle_markersize_change, names='value')
-        # self.widg_crosssize.observe(self.handle_crossize_change, names='value')
+        self.widg_crosssize.observe(self.handle_crossize_change, names='value')
         # self.widg_hullslinewidth.observe(self.handle_hullslinewidth_change, names='value')
         # self.widg_hullslinestyle.observe(self.handle_hullslinestyle_change, names='value')
         # self.widg_clslinewidth.observe(self.handle_clslinewidth_change, names='value')

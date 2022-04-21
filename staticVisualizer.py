@@ -42,6 +42,8 @@ class StaticVisualizer:
             self.frac = 1
         self.frac = int(self.frac * 100) / 100
         self.marker_size = 7
+        self.cross_size = 15
+
         self.compounds_list = df.index.tolist()
         self.symbols = [
             'circle',
@@ -52,7 +54,6 @@ class StaticVisualizer:
             'circle-x'
         ]
         self.font_size = 12
-        self.cross_size = 15
         self.hullsline_width = 1
         self.clsline_width = 1
         self.font_families = ['Source Sans Pro',
@@ -107,7 +108,7 @@ class StaticVisualizer:
         self.df_classes_on_map = []  # dataframe which contains only the elements that are visualized on the map
         self.symbols = []  # each item is a list of symbols
         self.sizes = []  # each item is a list of sizes
-        self.colors = []  # each iteindex_classes_shuffled
+        self.colors = []  # each item is a list of colors
         self.name_trace = []  # name of the trace that is given by the specific 'target' feature
         self.trace = {}  # trace related to the class
         self.palette = cycle(
@@ -131,14 +132,12 @@ class StaticVisualizer:
                         mode='markers',
                     )))
             self.trace[self.name_trace[cl]] = self.fig['data'][cl]
-
             self.n_points.append(int(self.frac * self.df_classes[cl].shape[0]))
             self.symbols.append(["circle"] * self.n_points[cl])
             self.sizes.append([self.marker_size] * self.n_points[cl])
             self.colors.append([next(self.palette)] * self.n_points[cl])
             self.df_classes_on_map.append(
                 self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[cl]))
-
         # All permanent layout settings are here defined - functions below do not change these fields
         self.fig.update_layout(
             hoverlabel=dict(
@@ -158,10 +157,10 @@ class StaticVisualizer:
         )
         self.fig.update_xaxes(ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor='black')
         self.fig.update_yaxes(ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor='black')
+   
 
         update_hover_variables(self)
         update_layout_figure(self)
-
     def show(self):
         with self.output_l:
             display(self.viewer_l)
