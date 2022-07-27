@@ -118,6 +118,13 @@ def instantiate_widgets(self):
         value=str(self.bg_color),
         layout=widgets.Layout(left='30px', width='200px'),
     )
+    self.widg_colorpalette = widgets.Dropdown(
+        options=self.qualitative_colors,
+        description='Color palette',
+        value=self.qualitative_colors[0],
+        layout=widgets.Layout(left='30px', width='200px')
+    )
+
     # self.widg_rscolor = widgets.Text(
     #     placeholder=str(self.rs_color),
     #     description='RS color',
@@ -209,7 +216,7 @@ def instantiate_widgets(self):
         description='For a high-quality print of the plot, click to access the plot appearance utils',
         layout=widgets.Layout(width='600px')
     )
-    self.widg_box_utils = widgets.VBox([widgets.HBox([self.widg_markersize, self.widg_crosssize]),
+    self.widg_box_utils = widgets.VBox([widgets.HBox([self.widg_markersize, self.widg_crosssize, self.widg_colorpalette]),
                                         #   self.widg_rsmarkersymbol]),
                                         # widgets.HBox([self.widg_linewidth, self.widg_linestyle]),
                                         #   self.widg_zbmarkersymbol]),

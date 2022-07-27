@@ -6,7 +6,6 @@ from IPython.display import display
 from itertools import cycle
 import plotly.express as px
 
-
 class StaticVisualizer:
 
     def __init__(self, df, embedding_features, hover_features, target, sisso=None, path_to_structures=None):
@@ -54,6 +53,9 @@ class StaticVisualizer:
             'circle-x'
         ]
         self.font_size = 12
+        self.color_hull = 'black'
+        self.width_hull = 1
+        self.style_hull = 'dash'
         self.hullsline_width = 1
         self.clsline_width = 1
         self.font_families = ['Source Sans Pro',
@@ -124,21 +126,33 @@ class StaticVisualizer:
             self.df_classes.append(self.df.loc[self.df[self.target] == self.classes[cl]])
             self.index_classes_shuffled.append(
                 self.df_classes[cl].index.to_numpy()[np.random.permutation(self.df_classes[cl].shape[0])])
-            self.name_trace.append(self.classes[cl])
+            name_trace = 'Class ' + str(self.classes[cl])
+            # self.name_trace.append(name_trace)
             self.fig.add_trace(
-                (
                     go.Scatter(
-                        name=self.name_trace[cl],
+                        name=name_trace,
                         mode='markers',
-                    )))
-            self.trace[self.name_trace[cl]] = self.fig['data'][cl]
+                    ))                    
+            self.trace[name_trace] = self.fig['data'][-1]
+
+            if ( self.sisso != None ) :
+                name_trace = 'Hull ' + str(self.classes[cl])
+                # self.name_trace.append(name_trace)
+                self.fig.add_trace(
+                        go.Scatter(
+                            name=name_trace,
+                    ))
+                self.trace[name_trace] = self.fig['data'][-1]
+
+
+
             self.n_points.append(int(self.frac * self.df_classes[cl].shape[0]))
             self.symbols.append(["circle"] * self.n_points[cl])
             self.sizes.append([self.marker_size] * self.n_points[cl])
             self.colors.append([next(self.palette)] * self.n_points[cl])
             self.df_classes_on_map.append(
                 self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[cl]))
-        # All permanent layout settings are here defined - functions below do not change these fields
+        # All permanent layout settings are defined here - functions below do not change these fields
         self.fig.update_layout(
             hoverlabel=dict(
                 bgcolor="white",

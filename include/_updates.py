@@ -1,5 +1,5 @@
 import numpy as np
-
+from include._sisso import make_hull 
 
 def update_layout_figure(self):
     # All batch_update related changes are handled by this function
@@ -18,20 +18,39 @@ def update_layout_figure(self):
         )
         for cl in np.arange(self.n_classes):
             # All elements on the map and their properties are reinitialized at each change
-            self.trace[self.name_trace[cl]]['x'] = self.df_classes_on_map[cl][self.feat_x]
-            self.trace[self.name_trace[cl]]['y'] = self.df_classes_on_map[cl][self.feat_y]
-            self.trace[self.name_trace[cl]].marker.symbol = self.symbols[cl]
-            self.trace[self.name_trace[cl]].marker.size = self.sizes[cl]
+            self.trace['Class ' + str(self.classes[cl])]['x'] = self.df_classes_on_map[cl][self.feat_x]
+            self.trace['Class ' + str(self.classes[cl])]['y'] = self.df_classes_on_map[cl][self.feat_y]
+            self.trace['Class ' + str(self.classes[cl])].marker.symbol = self.symbols[cl]
+            self.trace['Class ' + str(self.classes[cl])].marker.size = self.sizes[cl]
             # self.trace[self.name_trace[cl]].marker.line.color = self.colors[cl]
             # self.trace[self.name_trace[cl]].marker.line.width = self.global_markerlinewidth[cl]
             self.fig.update_traces(
-                selector={'name': str(self.name_trace[cl])},
+                selector={'name': 'Class ' + str(self.classes[cl]) },
                 text=self.hover_text[cl],
                 customdata=self.hover_custom[cl],
                 hovertemplate=self.hover_template[cl],
                 marker_color=self.colors[cl],
                 visible=True
             )
+        if ( self.sisso != None ) :
+
+            if ( self.feat_x == self.feat_y):
+                for cl in np.arange(self.n_classes):
+                    self.fig.update_traces(
+                        selector={'name': 'Hull '+str(self.classes[cl])},
+                        visible=False
+                    )            
+            else:
+                hullx, hully = make_hull(self, self.feat_x, self.feat_y)
+                for cl in np.arange(self.n_classes):
+                    self.trace['Hull '+str(self.classes[cl])]['x'] = hullx[cl]
+                    self.trace['Hull '+str(self.classes[cl])]['y'] = hully[cl]
+                    self.trace['Hull '+str(self.classes[cl])].line = dict (color=self.color_hull, width=self.width_hull, dash=self.style_hull )
+                    self.fig.update_traces(
+                        selector={'name': 'Hull '+str(self.classes[cl])},
+                        visible=True
+                    )
+
 
 
 def update_df_on_map(self):
