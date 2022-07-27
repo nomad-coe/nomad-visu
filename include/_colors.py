@@ -1,14 +1,15 @@
 from itertools import cycle
 import plotly.express as px
 
-def make_colors(self, feature, gradient):
-    if feature == 'Default color':
-        self.palette = cycle(getattr(px.colors.qualitative, self.qualitative_colors[0]))
+def make_colors(self, feature = 'Default color'):
 
+    if feature == 'Default color':
+        self.palette = cycle(getattr(px.colors.qualitative, self.widg_colorpalette.value))
         for cl in range(self.n_classes):
             self.colors[cl] = [next(self.palette)] * self.n_points[cl]
 
     else:
+        gradient = self.widg_gradient.value
         min_value = self.df[feature].min()
         max_value = self.df[feature].max()
 

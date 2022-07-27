@@ -20,6 +20,7 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         self.widg_featmarker.observe(self.handle_markerfeat_change, names='value')
         self.widg_featcolor.observe(self.handle_colorfeat_change, names='value')
         self.widg_gradient.observe(self.handle_gradient_change, names='value')
+        self.widg_colorpalette.observe(self.handle_colorpalette_change, names='value')
         self.widg_plotutils_button.on_click(self.plotappearance_button_clicked)
         self.widg_frac_slider.observe(self.handle_frac_change, names='value')
         self.widg_display_button_l.on_click(self.display_button_l_clicked)

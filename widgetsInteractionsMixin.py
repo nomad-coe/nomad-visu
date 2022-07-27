@@ -40,7 +40,11 @@ class WidgetsInteractionsMixin:
         update_layout_figure(self)
 
     def handle_colorfeat_change(self, change):
-        make_colors(self, feature=change.new, gradient=self.widg_gradient.value)
+        make_colors( self, feature=change.new )
+        update_layout_figure(self)
+
+    def handle_colorpalette_change(self, change):
+        make_colors ( self )
         update_layout_figure(self)
 
     def handle_gradient_change(self, change):
