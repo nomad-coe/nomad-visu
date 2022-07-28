@@ -78,7 +78,9 @@ class StaticVisualizer:
                               'Grey scale',
                               'Purple scale',
                               'Turquoise scale']
-        self.bg_color = 'rgba(229,236,246, 0.5)'
+        self.bg_color_default = 'rgba(229,236,246, 0.5)'
+        self.bg_color = self.bg_color_default
+        self.bg_toggle = True
         self.qualitative_colors = [
             'Plotly',
             'D3',

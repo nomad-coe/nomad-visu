@@ -48,7 +48,7 @@ class WidgetsInteractionsMixin:
         update_layout_figure(self)
 
     def handle_gradient_change(self, change):
-        make_colors(self, feature=self.widg_featcolor.value, gradient=change.new)
+        make_colors(self, feature=self.widg_featcolor.value)
         update_layout_figure(self)
 
     def updatefrac_button_clicked(self, button):
@@ -133,7 +133,7 @@ class WidgetsInteractionsMixin:
         else:
             self.bg_toggle = True
             self.fig.update_layout(
-                plot_bgcolor=self.widg_bgcolor.value,
+                plot_bgcolor=self.plot_bgcolor,
                 xaxis=dict(gridcolor='white'),
                 yaxis=dict(gridcolor='white')
             )
@@ -162,6 +162,27 @@ class WidgetsInteractionsMixin:
         self.symbols_cls1 = [self.marker_symbol_cls1] * self.npoints_cls1
         self.set_markers_size(self.widg_featmarker.value)
         self.update_markers()
+
+    def bgcolor_update_button_clicked(self, button):
+        if (self.widg_bgcolor.value=='Default'):
+                self.fig.update_layout(
+                    plot_bgcolor=self.bg_color_default,
+                    xaxis=dict(gridcolor='white'),
+                    yaxis=dict(gridcolor='white')
+                     )
+                self.plot_bgcolor = self.bg_color_default
+                self.bg_toggle = True
+        else:
+            try:
+                self.fig.update_layout(
+                        plot_bgcolor=self.widg_bgcolor.value,
+                        xaxis=dict(gridcolor='white'),
+                        yaxis=dict(gridcolor='white')
+                )
+                self.plot_bgcolor = self.widg_bgcolor.value
+                self.bg_toggle = True
+            except:
+                pass
 
     def plotappearance_button_clicked(self, button):
         if self.widg_box_utils.layout.visibility == 'visible':

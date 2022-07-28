@@ -112,12 +112,6 @@ def instantiate_widgets(self):
         value=self.font_families[0],
         layout=widgets.Layout(left='30px', width='200px')
     )
-    self.widg_bgcolor = widgets.Text(
-        placeholder=str(self.bg_color),
-        description='Background',
-        value=str(self.bg_color),
-        layout=widgets.Layout(left='30px', width='200px'),
-    )
     self.widg_colorpalette = widgets.Dropdown(
         options=self.qualitative_colors,
         description='Color palette',
@@ -149,14 +143,21 @@ def instantiate_widgets(self):
     #     value=self.marker_symbol_ZB,
     #     layout=widgets.Layout(left='30px', width='200px')
     # )
+
+    self.widg_bgcolor = widgets.Text(
+        placeholder=str('Default'),
+        description='Color',
+        value=str('Default'),
+        layout=widgets.Layout(left='30px', width='200px'),
+    )
     self.widg_bgtoggle_button = widgets.Button(
         description='Toggle on/off background',
         layout=widgets.Layout(left='50px', width='200px'),
     )
-    self.widg_updatecolor_button = widgets.Button(
-        description='Update colors',
+    self.widg_bgcolor_update_button = widgets.Button(
+        description='Update background color',
         layout=widgets.Layout(left='50px', width='200px')
-    )
+    )    
     self.widg_reset_button = widgets.Button(
         description='Reset symbols',
         layout=widgets.Layout(left='50px', width='200px')
@@ -222,9 +223,9 @@ def instantiate_widgets(self):
                                         #   self.widg_zbmarkersymbol]),
                                         widgets.HBox([self.widg_fontsize, self.widg_fontfamily]),
                                         self.widg_colordescription, self.widg_colordescription2,
-                                        # widgets.HBox([self.widg_rscolor, self.widg_zbcolor, self.widg_bgcolor]),
-                                        widgets.HBox([self.widg_bgtoggle_button, self.widg_updatecolor_button,
-                                                      self.widg_reset_button]),
+                                        # widgets.HBox([self.widg_rscolor, self.widg_zbcolor, ]),
+                                        widgets.HBox([self.widg_bgtoggle_button, self.widg_bgcolor,
+                                                      self.widg_bgcolor_update_button]),
                                         self.widg_printdescription, self.widg_printdescription2,
                                         widgets.HBox([self.widg_plot_name, self.widg_plot_format, self.widg_scale]),
                                         self.widg_print_button, self.widg_print_out,
