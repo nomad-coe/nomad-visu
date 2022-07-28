@@ -93,19 +93,24 @@ def instantiate_widgets(self):
         value=str(self.font_size),
         layout=widgets.Layout(left='30px', width='200px')
     )
-    # self.widg_linewidth = widgets.BoundedIntText(
-    #     placeholder=str(self.line_width),
-    #     description='Line width',
-    #     value=str(self.line_width),
-    #     layout = widgets.Layout(left='30px', width='200px')
-    # )
-    # self.widg_linestyle = widgets.Dropdown(
-    #     options=self.line_styles,
-    #     description='Line style',
-    #     value=self.line_styles[0],
-    #     layout=widgets.Layout(left='30px', width='200px')
-    # )
-
+    self.widg_width_hull = widgets.BoundedIntText(
+        placeholder=str(self.width_hull),
+        description='Hull width',
+        value=str(self.width_hull),
+        layout = widgets.Layout(left='30px', width='200px')
+    )
+    self.widg_style_hull = widgets.Dropdown(
+        options=self.line_styles,
+        description='Hull style',
+        value=self.line_styles[0],
+        layout=widgets.Layout(left='30px', width='200px')
+    )
+    self.widg_color_hull = widgets.Dropdown(
+        options=self.color_hull,
+        description='Hull color',
+        value=self.color_hull[0],
+        layout=widgets.Layout(left='30px', width='200px')
+    )
     self.widg_fontfamily = widgets.Dropdown(
         options=self.font_families,
         description='Font family',
@@ -223,7 +228,7 @@ def instantiate_widgets(self):
                                         #   self.widg_zbmarkersymbol]),
                                         widgets.HBox([self.widg_fontsize, self.widg_fontfamily]),
                                         self.widg_colordescription, self.widg_colordescription2,
-                                        # widgets.HBox([self.widg_rscolor, self.widg_zbcolor, ]),
+                                        widgets.HBox([self.widg_color_hull, self.widg_width_hull, self.widg_style_hull ]),
                                         widgets.HBox([self.widg_bgtoggle_button, self.widg_bgcolor,
                                                       self.widg_bgcolor_update_button]),
                                         self.widg_printdescription, self.widg_printdescription2,

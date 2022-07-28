@@ -56,6 +56,17 @@ class StaticVisualizer:
         self.color_hull = 'black'
         self.width_hull = 1
         self.style_hull = 'dash'
+        self.color_hull = [
+            'black',
+            'grey',
+            'green',
+            'blue',
+            'red',
+            "yellow",
+            "cyan",
+            "orange",
+            "purple",
+        ]
         self.hullsline_width = 1
         self.clsline_width = 1
         self.font_families = ['Source Sans Pro',

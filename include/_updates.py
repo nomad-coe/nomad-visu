@@ -45,7 +45,7 @@ def update_layout_figure(self):
                 for cl in np.arange(self.n_classes):
                     self.trace['Hull '+str(self.classes[cl])]['x'] = hullx[cl]
                     self.trace['Hull '+str(self.classes[cl])]['y'] = hully[cl]
-                    self.trace['Hull '+str(self.classes[cl])].line = dict (color=self.color_hull, width=self.width_hull, dash=self.style_hull )
+                    self.trace['Hull '+str(self.classes[cl])].line = dict (color=self.color_hull[0], width=self.width_hull, dash=self.line_styles[0] )
                     self.fig.update_traces(
                         selector={'name': 'Hull '+str(self.classes[cl])},
                         visible=True

@@ -2,6 +2,7 @@ from IPython.display import display, Markdown, FileLink
 from include._updates import update_hover_variables, update_df_on_map, update_layout_figure, update_markers_size
 from include._colors import make_colors
 from include._view_structure import view_structure_r, view_structure_l
+import numpy as np
 
 class WidgetsInteractionsMixin:
 
@@ -58,13 +59,11 @@ class WidgetsInteractionsMixin:
         update_layout_figure(self)
 
     def handle_fontfamily_change(self, change):
-
         self.fig.update_layout(
             font=dict(family=change.new)
         )
 
     def handle_fontsize_change(self, change):
-
         self.fig.update_layout(
             font=dict(size=change.new)
         )
@@ -81,18 +80,28 @@ class WidgetsInteractionsMixin:
         update_markers_size(self, feature=self.widg_featmarker.value)
         update_layout_figure(self)
 
-    # def handle_hullslinewidth_change(self, change):
+    def handle_hullslinewidth_change(self, change):
+        
+        self.hullsline_width = change.new
+        with self.fig.batch_update():
+            for cl in np.arange(self.n_classes):
+                self.trace['Hull '+str(self.classes[cl])].line.width = change.new
 
-    #     self.hullsline_width = change.new
-    #     with self.fig.batch_update():
-    #         self.scatter_hull0.line.width = change.new
-    #         self.scatter_hull1.line.width = change.new
+    def handle_hullslinecolor_change(self, change):
+        
+        self.hullsline_color = change.new
+        print(change.new)
+        with self.fig.batch_update():
+            for cl in np.arange(self.n_classes):
+                self.trace['Hull '+str(self.classes[cl])].line.color = change.new
 
-    # def handle_hullslinestyle_change(self, change):
+    def handle_hullslinestyle_change(self, change):
 
-    #     with self.fig.batch_update():
-    #         self.scatter_hull0.line.dash = change.new
-    #         self.scatter_hull1.line.dash = change.new
+        self.hullsline_style = change.new
+        with self.fig.batch_update():
+            for cl in np.arange(self.n_classes):
+                self.trace['Hull '+str(self.classes[cl])].line.dash = change.new
+
 
     # def handle_clslinewidth_change(self, change):
 
