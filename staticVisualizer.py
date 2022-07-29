@@ -44,7 +44,7 @@ class StaticVisualizer:
         self.cross_size = 15
 
         self.compounds_list = df.index.tolist()
-        self.symbols = [
+        self.symbols_list = [
             'circle',
             'square',
             'triangle-up',
@@ -52,6 +52,7 @@ class StaticVisualizer:
             'circle-cross',
             'circle-x'
         ]
+        self.class_symbol = {}
         self.font_size = 12
         self.color_hull = 'black'
         self.width_hull = 1
@@ -119,9 +120,9 @@ class StaticVisualizer:
         # For each different class a new trace is created
         self.df_classes = []  # section of the pandas dataframe containing elements of only a specific class
         self.index_classes_shuffled = []  # index of the dataframe class shuffled - used to avoid bias visualization when only a fraction is visualized
-        self.n_points = []  # total points of the class which are visualized - can be less than the total number of data depending on the fraction visualized
+        self.n_points = {}  # total points of the class which are visualized - can be less than the total number of data depending on the fraction visualized
         self.df_classes_on_map = []  # dataframe which contains only the elements that are visualized on the map
-        self.symbols = []  # each item is a list of symbols
+        self.symbols = {}  # each item is a list of symbols
         self.sizes = []  # each item is a list of sizes
         self.colors = []  # each item is a list of colors
         self.name_trace = []  # name of the trace that is given by the specific 'target' feature
@@ -132,8 +133,7 @@ class StaticVisualizer:
         self.fig = go.FigureWidget()
         self.viewer_l = JsmolView()
         self.viewer_r = JsmolView()
-        instantiate_widgets(self)
-
+    
         # All different classes are iterated and a class-specific item is added to the list defined above 
         for cl in range(self.n_classes):
             self.df_classes.append(self.df.loc[self.df[self.target] == self.classes[cl]])
@@ -147,6 +147,14 @@ class StaticVisualizer:
                         mode='markers',
                     ))                    
             self.trace[name_trace] = self.fig['data'][-1]
+            self.class_symbol[name_trace] = 'circle'
+
+            self.n_points[name_trace] = int(self.frac * self.df_classes[cl].shape[0])
+            self.symbols[name_trace] = ["circle"] * self.n_points[name_trace]
+            self.sizes.append([self.marker_size] * self.n_points[name_trace])
+            self.colors.append([next(self.palette)] * self.n_points[name_trace])
+            self.df_classes_on_map.append(
+                self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[name_trace]))
 
             if ( self.sisso != None ) :
                 name_trace = 'Hull ' + str(self.classes[cl])
@@ -158,13 +166,6 @@ class StaticVisualizer:
                 self.trace[name_trace] = self.fig['data'][-1]
 
 
-
-            self.n_points.append(int(self.frac * self.df_classes[cl].shape[0]))
-            self.symbols.append(["circle"] * self.n_points[cl])
-            self.sizes.append([self.marker_size] * self.n_points[cl])
-            self.colors.append([next(self.palette)] * self.n_points[cl])
-            self.df_classes_on_map.append(
-                self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[cl]))
         # All permanent layout settings are defined here - functions below do not change these fields
         self.fig.update_layout(
             hoverlabel=dict(
@@ -185,9 +186,10 @@ class StaticVisualizer:
         self.fig.update_xaxes(ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor='black')
         self.fig.update_yaxes(ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor='black')
    
-
+        instantiate_widgets(self)
         update_hover_variables(self)
         update_layout_figure(self)
+
     def show(self):
         with self.output_l:
             display(self.viewer_l)

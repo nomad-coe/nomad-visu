@@ -54,7 +54,6 @@ class WidgetsInteractionsMixin:
 
     def updatefrac_button_clicked(self, button):
         self.frac = self.widg_frac_slider.value
-        # self.make_dfclusters()
         update_hover_variables(self)
         update_layout_figure(self)
 
@@ -80,6 +79,14 @@ class WidgetsInteractionsMixin:
         update_markers_size(self, feature=self.widg_featmarker.value)
         update_layout_figure(self)
 
+    def handle_classes_symbol_change(self, change):
+        self.widg_symbols.value = self.class_symbol['Class ' + str(change.new)]
+
+    def handle_symbols_change(self, change):
+        self.class_symbol['Class ' + str(self.widg_classes_symbol.value) ] = change.new
+        self.symbols['Class ' + str(self.widg_classes_symbol.value)] = [str(change.new)] * self.n_points['Class ' + str(self.widg_classes_symbol.value)]
+        update_layout_figure(self)
+
     def handle_hullslinewidth_change(self, change):
         
         self.hullsline_width = change.new
@@ -90,7 +97,6 @@ class WidgetsInteractionsMixin:
     def handle_hullslinecolor_change(self, change):
         
         self.hullsline_color = change.new
-        print(change.new)
         with self.fig.batch_update():
             for cl in np.arange(self.n_classes):
                 self.trace['Hull '+str(self.classes[cl])].line.color = change.new

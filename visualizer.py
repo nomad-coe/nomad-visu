@@ -34,19 +34,14 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         self.widg_width_hull.observe(self.handle_hullslinewidth_change, names='value')
         self.widg_style_hull.observe(self.handle_hullslinestyle_change, names='value')
         self.widg_color_hull.observe(self.handle_hullslinecolor_change, names='value')
-
+        self.widg_classes_symbol.observe(self.handle_classes_symbol_change, names='value')
+        self.widg_symbols.observe(self.handle_symbols_change, names='value')
         # self.scatter_cls0.on_click(self.update_point_cls0)
         # self.scatter_cls1.on_click(self.update_point_cls1)
         self.widg_markersize.observe(self.handle_markersize_change, names='value')
         self.widg_crosssize.observe(self.handle_crossize_change, names='value')
-        # self.widg_hullslinewidth.observe(self.handle_hullslinewidth_change, names='value')
-        # self.widg_hullslinestyle.observe(self.handle_hullslinestyle_change, names='value')
-        # self.widg_clslinewidth.observe(self.handle_clslinewidth_change, names='value')
-        # self.widg_clslinestyle.observe(self.handle_clslinestyle_change, names='value')
         self.widg_fontfamily.observe(self.handle_fontfamily_change, names='value')
         self.widg_fontsize.observe(self.handle_fontsize_change, names='value')
-        # self.widg_markersymbol_cls1.observe(self.handle_markersymbol_cls1_change, names='value')
-        # self.widg_markersymbol_cls0.observe(self.handle_markersymbol_cls0_change, names='value')
 
 
         self.output_l.layout = widgets.Layout(width="400px", height='350px')

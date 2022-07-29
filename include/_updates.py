@@ -20,7 +20,7 @@ def update_layout_figure(self):
             # All elements on the map and their properties are reinitialized at each change
             self.trace['Class ' + str(self.classes[cl])]['x'] = self.df_classes_on_map[cl][self.feat_x]
             self.trace['Class ' + str(self.classes[cl])]['y'] = self.df_classes_on_map[cl][self.feat_y]
-            self.trace['Class ' + str(self.classes[cl])].marker.symbol = self.symbols[cl]
+            self.trace['Class ' + str(self.classes[cl])].marker.symbol = self.symbols['Class ' + str(self.classes[cl])]
             self.trace['Class ' + str(self.classes[cl])].marker.size = self.sizes[cl]
             # self.trace[self.name_trace[cl]].marker.line.color = self.colors[cl]
             # self.trace[self.name_trace[cl]].marker.line.width = self.global_markerlinewidth[cl]

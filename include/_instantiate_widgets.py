@@ -123,7 +123,18 @@ def instantiate_widgets(self):
         value=self.qualitative_colors[0],
         layout=widgets.Layout(left='30px', width='200px')
     )
-
+    self.widg_classes_symbol = widgets.Dropdown(
+        options=self.classes,
+        description='Classes',
+        value=self.classes[0],
+        layout=widgets.Layout(left='30px', width='200px')
+    )
+    self.widg_symbols = widgets.Dropdown(
+        options=self.symbols_list,
+        description='--symbol',
+        value=self.class_symbol['Class ' + str(self.classes[0])],
+        layout=widgets.Layout(left='30px', width='200px')
+    )
     # self.widg_rscolor = widgets.Text(
     #     placeholder=str(self.rs_color),
     #     description='RS color',
@@ -227,6 +238,8 @@ def instantiate_widgets(self):
                                         # widgets.HBox([self.widg_linewidth, self.widg_linestyle]),
                                         #   self.widg_zbmarkersymbol]),
                                         widgets.HBox([self.widg_fontsize, self.widg_fontfamily]),
+                                        widgets.HBox([self.widg_classes_symbol, self.widg_symbols]),
+
                                         self.widg_colordescription, self.widg_colordescription2,
                                         widgets.HBox([self.widg_color_hull, self.widg_width_hull, self.widg_style_hull ]),
                                         widgets.HBox([self.widg_bgtoggle_button, self.widg_bgcolor,
