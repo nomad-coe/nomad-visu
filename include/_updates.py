@@ -1,8 +1,73 @@
 import numpy as np
 from include._sisso import make_hull 
 
+def update_symbols (self):
+ 
+    for cl in range(self.n_classes):
+        self.symbols['Class ' + str(self.classes[cl])] = [self.class_symbol['Class ' + str(self.classes[cl])]] * self.n_points['Class ' + str(self.classes[cl])]
+        formula_l = self.widg_compound_text_l.value 
+        formula_r = self.widg_compound_text_r.value 
+        try:
+
+            point = np.where(self.df_classes_on_map[cl].index.to_numpy() == formula_l)[0][0]
+            self.symbols['Class ' + str(self.classes[cl])][point] = 'x'
+        except:
+            pass
+        try:
+            point = np.where(self.df_classes_on_map[cl].index.to_numpy() == formula_r)[0][0]
+            self.symbols['Class ' + str(self.classes[cl])][point] = 'cross'
+        except:
+            pass
+            
+
+def update_markers_size(self ):
+    # Defines the size of the markers based on the input feature.
+    # In case of default feature all markers have the same size.
+    # Points marked with x/cross are set with a specific size
+    feature = self.widg_featmarker.value
+
+    if feature == 'Default size':
+
+        for cl in range(self.n_classes):
+
+            sizes = [self.marker_size] * self.n_points['Class ' + str(self.classes[cl])]
+            symbols = self.symbols['Class ' + str(self.classes[cl])]
+
+            try:
+                point = symbols.index('x')
+                sizes[point] = self.cross_size
+            except:
+                try:
+                    point = symbols.index('x')
+                    sizes[point] = self.cross_size
+                except:
+                    pass
+            try:
+                point = symbols.index('cross')
+                sizes[point] = self.cross_size
+            except:
+                try:
+                    point = symbols.index('cross')
+                    sizes[point] = self.cross_size
+                except:
+                    pass
+            self.sizes[cl] = sizes
+    else:
+        min_value = min(self.df[feature])
+        max_value = max(self.df[feature])
+        coeff = 2 * self.marker_size / (max_value - min_value)
+
+        for cl in range(self.n_classes):
+            sizes = self.marker_size / 2 + coeff * self.df_classes_on_map[cl][feature].to_numpy()
+            self.sizes[cl] = sizes
+
+
 def update_layout_figure(self):
+
     # All batch_update related changes are handled by this function
+    update_symbols(self)
+    update_markers_size(self)
+
     with self.fig.batch_update():
         self.fig.update_layout(
             showlegend=True,
@@ -20,8 +85,9 @@ def update_layout_figure(self):
             # All elements on the map and their properties are reinitialized at each change
             self.trace['Class ' + str(self.classes[cl])]['x'] = self.df_classes_on_map[cl][self.feat_x]
             self.trace['Class ' + str(self.classes[cl])]['y'] = self.df_classes_on_map[cl][self.feat_y]
-            self.trace['Class ' + str(self.classes[cl])].marker.symbol = self.symbols['Class ' + str(self.classes[cl])]
             self.trace['Class ' + str(self.classes[cl])].marker.size = self.sizes[cl]
+            self.trace['Class ' + str(self.classes[cl])].marker.symbol = self.symbols['Class ' + str(self.classes[cl])]
+
             # self.trace[self.name_trace[cl]].marker.line.color = self.colors[cl]
             # self.trace[self.name_trace[cl]].marker.line.width = self.global_markerlinewidth[cl]
             self.fig.update_traces(
@@ -34,7 +100,7 @@ def update_layout_figure(self):
             )
         if ( self.sisso != None ) :
 
-            if ( self.feat_x == self.feat_y):
+            if ( self.feat_x == self.feat_y ):
                 for cl in np.arange(self.n_classes):
                     self.fig.update_traces(
                         selector={'name': 'Hull '+str(self.classes[cl])},
@@ -50,6 +116,7 @@ def update_layout_figure(self):
                         selector={'name': 'Hull '+str(self.classes[cl])},
                         visible=True
                     )
+
 
 
 
@@ -79,20 +146,7 @@ def update_df_on_map(self):
         self.n_points[cl] = self.df_classes_on_map[cl].shape[0]
 
 
-    for cl in range(self.n_classes):
-        self.symbols['Class ' + str(self.classes[cl])]=['circle']*self.n_points[cl]
-        formula_l = self.widg_compound_text_l.value 
-        formula_r = self.widg_compound_text_r.value 
-        try:
-            point = np.where(self.df_classes_on_map[cl].index.to_numpy() == formula_l)[0][0]
-            self.symbols['Class ' + str(self.classes[cl])][point] = 'x'
-        except:
-            pass
-        try:
-            point = np.where(self.df_classes_on_map[cl].index.to_numpy() == formula_r)[0][0]
-            self.symbols['Class ' + str(self.classes[cl])][point] = 'cross'
-        except:
-            pass
+
 
     # if self.widg_outliersbox.value:
     #     self.df_entries_onmap[-1] = pd.concat(self.df_entries_onmap[:self.n_clusters + 1], axis=0, sort=False)
@@ -166,41 +220,3 @@ def update_hover_variables(self):
     # self.global_markerlinewidth[-1] = [symb for sub in self.global_markerlinewidth[:-1] for symb in sub]
 
 
-def update_markers_size(self, feature='Default size'):
-    # Defines the size of the markers based on the input feature.
-    # In case of default feature all markers have the same size.
-    # Points marked with x/cross are set with a specific size
-    if feature == 'Default size':
-
-        for cl in range(self.n_classes):
-
-            sizes = [self.marker_size] * self.n_points['Class ' + str(self.classes[cl])]
-            symbols = self.symbols['Class ' + str(self.classes[cl])]
-
-            try:
-                point = symbols.index('x')
-                sizes[point] = self.cross_size
-            except:
-                try:
-                    point = symbols.index('x')
-                    sizes[point] = self.cross_size
-                except:
-                    pass
-            try:
-                point = symbols.index('cross')
-                sizes[point] = self.cross_size
-            except:
-                try:
-                    point = symbols.index('cross')
-                    sizes[point] = self.cross_size
-                except:
-                    pass
-            self.sizes[cl] = sizes
-    else:
-        min_value = min(self.df[feature])
-        max_value = max(self.df[feature])
-        coeff = 2 * self.marker_size / (max_value - min_value)
-
-        for cl in range(self.n_classes):
-            sizes = self.marker_size / 2 + coeff * self.df_classes_on_map[cl][feature].to_numpy()
-            self.sizes[cl] = sizes

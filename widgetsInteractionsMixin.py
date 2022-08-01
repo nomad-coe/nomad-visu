@@ -1,5 +1,5 @@
 from IPython.display import display, Markdown, FileLink
-from include._updates import update_hover_variables, update_df_on_map, update_layout_figure, update_markers_size
+from include._updates import update_hover_variables, update_df_on_map, update_layout_figure
 from include._colors import make_colors
 from include._view_structure import view_structure_r, view_structure_l
 import numpy as np
@@ -31,7 +31,6 @@ class WidgetsInteractionsMixin:
             self.widg_box_utils.layout.visibility = 'visible'
 
     def handle_markerfeat_change(self, change):
-        update_markers_size(self, feature=change.new)
         update_layout_figure(self)
 
     def handle_frac_change(self, change):
@@ -68,15 +67,11 @@ class WidgetsInteractionsMixin:
         )
 
     def handle_markersize_change(self, change):
-
         self.marker_size = int(change.new)
-        update_markers_size(self)
         update_layout_figure(self)
 
     def handle_crossize_change(self, change):
-
         self.cross_size = int(change.new)
-        update_markers_size(self, feature=self.widg_featmarker.value)
         update_layout_figure(self)
 
     def handle_classes_symbol_change(self, change):
@@ -247,18 +242,22 @@ class WidgetsInteractionsMixin:
             view_structure_r(self, structure)
 
         update_df_on_map(self)
-        update_markers_size(self, feature=self.widg_featmarker.value)
         update_layout_figure(self)
 
-    def display_button_l_clicked(self, button):
 
+    def display_button_l_clicked(self, button):
 
         if self.widg_compound_text_r.value in self.df['Structure']:
 
             # self.replica_l += 1
-            formula_l = self.widg_compound_text_l.value
-            view_structure_l(self, formula_l)
+            compound_l = self.widg_compound_text_l.value
+            structure_l = self.df['Structure'].at[compound_l]
 
+            view_structure_l(self, structure_l)
+
+            update_df_on_map(self)
+            update_layout_figure(self)
+            
             # trace_l = self.df_grouped.loc[self.df_grouped.index == formula_l]['Cluster_label'][0]
             # if trace_l == -1:
             #     trace_l = self.n_clusters
@@ -283,8 +282,13 @@ class WidgetsInteractionsMixin:
         if self.widg_compound_text_r.value in self.df['Structure']:
 
             # self.replica_r += 1
-            formula_r = self.widg_compound_text_r.value
-            view_structure_r(self, formula_r)
+            compound_r = self.widg_compound_text_r.value
+            structure_r = self.df['Structure'].at[compound_r]
+
+            view_structure_r(self, structure_r)
+
+            update_df_on_map(self)
+            update_layout_figure(self)
 
             # trace_r = self.df_grouped.loc[self.df_grouped.index == formula_r]['Cluster_label'][0]
             # if trace_r == -1:
