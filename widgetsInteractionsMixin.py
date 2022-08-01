@@ -148,7 +148,7 @@ class WidgetsInteractionsMixin:
         else:
             self.bg_toggle = True
             self.fig.update_layout(
-                plot_bgcolor=self.plot_bgcolor,
+                plot_bgcolor=self.bg_color,
                 xaxis=dict(gridcolor='white'),
                 yaxis=dict(gridcolor='white')
             )
@@ -194,7 +194,7 @@ class WidgetsInteractionsMixin:
                         xaxis=dict(gridcolor='white'),
                         yaxis=dict(gridcolor='white')
                 )
-                self.plot_bgcolor = self.widg_bgcolor.value
+                self.bg_color = self.widg_bgcolor.value
                 self.bg_toggle = True
             except:
                 pass
@@ -225,32 +225,35 @@ class WidgetsInteractionsMixin:
 
     def handle_point_clicked(self, trace, points, selector):
         # changes the points labeled with a cross on the map.
+ 
         if not points.point_inds:
             return
 
         trace = points.trace_index
         formula = self.fig.data[trace].text[points.point_inds[0]]
+        structure = self.df.iloc[points.point_inds[0]]['Structure']
 
+        # trace is used to update the symbol with cross/x
         if self.widg_checkbox_l.value:
             self.trace_l = [trace, formula]
         if self.widg_checkbox_r.value:
             self.trace_r = [trace, formula]
-
-        # self.make_dfclusters()
-        # self.update_appearance_variables()
+        
         if self.widg_checkbox_l.value:
             self.widg_compound_text_l.value = formula
-            view_structure_l(self, formula)
+            view_structure_l(self, structure)
         if self.widg_checkbox_r.value:
             self.widg_compound_text_r.value = formula
-            view_structure_r(self, formula)
+            view_structure_r(self, structure)
+
         update_df_on_map(self)
         update_markers_size(self, feature=self.widg_featmarker.value)
         update_layout_figure(self)
 
     def display_button_l_clicked(self, button):
 
-        if self.widg_compound_text_l.value in self.path_to_structures.keys():
+
+        if self.widg_compound_text_r.value in self.df['Structure']:
 
             # self.replica_l += 1
             formula_l = self.widg_compound_text_l.value
@@ -277,11 +280,11 @@ class WidgetsInteractionsMixin:
     def display_button_r_clicked(self, button):
 
         # Actions are performed only if the string inserted in the text widget corresponds to an existing compound
-        if self.widg_compound_text_r.value in self.path_to_structures.keys():
+        if self.widg_compound_text_r.value in self.df['Structure']:
 
-            self.replica_r += 1
+            # self.replica_r += 1
             formula_r = self.widg_compound_text_r.value
-            self.view_structure_r(formula_r)
+            view_structure_r(self, formula_r)
 
             # trace_r = self.df_grouped.loc[self.df_grouped.index == formula_r]['Cluster_label'][0]
             # if trace_r == -1:

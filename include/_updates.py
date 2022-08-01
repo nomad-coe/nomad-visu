@@ -80,17 +80,17 @@ def update_df_on_map(self):
 
 
     for cl in range(self.n_classes):
-        self.symbols[cl]=['circle']*self.n_points[cl]
+        self.symbols['Class ' + str(self.classes[cl])]=['circle']*self.n_points[cl]
         formula_l = self.widg_compound_text_l.value 
         formula_r = self.widg_compound_text_r.value 
         try:
             point = np.where(self.df_classes_on_map[cl].index.to_numpy() == formula_l)[0][0]
-            self.symbols[cl][point] = 'x'
+            self.symbols['Class ' + str(self.classes[cl])][point] = 'x'
         except:
             pass
         try:
             point = np.where(self.df_classes_on_map[cl].index.to_numpy() == formula_r)[0][0]
-            self.symbols[cl][point] = 'cross'
+            self.symbols['Class ' + str(self.classes[cl])][point] = 'cross'
         except:
             pass
 
@@ -174,8 +174,8 @@ def update_markers_size(self, feature='Default size'):
 
         for cl in range(self.n_classes):
 
-            sizes = [self.marker_size] * self.n_points[cl]
-            symbols = self.symbols[cl]
+            sizes = [self.marker_size] * self.n_points['Class ' + str(self.classes[cl])]
+            symbols = self.symbols['Class ' + str(self.classes[cl])]
 
             try:
                 point = symbols.index('x')

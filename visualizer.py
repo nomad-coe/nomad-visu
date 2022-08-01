@@ -2,7 +2,7 @@ from staticVisualizer import StaticVisualizer
 from widgetsInteractionsMixin import WidgetsInteractionsMixin
 from IPython.display import display, Markdown, FileLink, clear_output
 import ipywidgets as widgets
-
+import numpy as np
 
 class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
     def __init__(self, df, embedding_features, hover_features, target, sisso=None, path_to_structures=None):
@@ -12,8 +12,9 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         from include._colors import make_colors
         from include._updates import update_hover_variables, update_df_on_map, update_layout_figure, update_markers_size
 
-        for name in self.name_trace:
-            self.trace[name].on_click(self.handle_point_clicked)  # actions are performed after clicking points on the map
+
+        for cl in np.arange(self.n_classes):
+            self.trace['Class ' + str(self.classes[cl])].on_click(self.handle_point_clicked)  # actions are performed after clicking points on the map
 
         self.widg_featx.observe(self.handle_xfeat_change, names='value')
         self.widg_featy.observe(self.handle_yfeat_change, names='value')
