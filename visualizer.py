@@ -10,7 +10,7 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         from include._instantiate_widgets import instantiate_widgets
         from include._view_structure import view_structure_r, view_structure_l
         from include._colors import make_colors
-        from include._updates import update_hover_variables, update_df_on_map, update_layout_figure, update_markers_size
+        from include._updates import update_hover_variables, update_layout_figure, update_markers_size
 
 
         for cl in np.arange(self.n_classes):

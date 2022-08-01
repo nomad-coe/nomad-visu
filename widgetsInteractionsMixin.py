@@ -227,12 +227,6 @@ class WidgetsInteractionsMixin:
         trace = points.trace_index
         formula = self.fig.data[trace].text[points.point_inds[0]]
         structure = self.df.iloc[points.point_inds[0]]['Structure']
-
-        # trace is used to update the symbol with cross/x
-        if self.widg_checkbox_l.value:
-            self.trace_l = [trace, formula]
-        if self.widg_checkbox_r.value:
-            self.trace_r = [trace, formula]
         
         if self.widg_checkbox_l.value:
             self.widg_compound_text_l.value = formula

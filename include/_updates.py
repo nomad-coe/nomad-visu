@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from include._sisso import make_hull 
 
 def update_symbols (self):
@@ -8,7 +9,6 @@ def update_symbols (self):
         formula_l = self.widg_compound_text_l.value 
         formula_r = self.widg_compound_text_r.value 
         try:
-
             point = np.where(self.df_classes_on_map[cl].index.to_numpy() == formula_l)[0][0]
             self.symbols['Class ' + str(self.classes[cl])][point] = 'x'
         except:
@@ -121,31 +121,18 @@ def update_layout_figure(self):
 
 
 def update_df_on_map(self):
-    # if self.trace_l:
-    #     trace_l, formula_l = self.trace_l
-    # else:
-    #     trace_l = -2
-    # if self.trace_r:
-    #     trace_r, formula_r = self.trace_r
-    # else:
-    #     trace_r = -2
 
     for cl in range(self.n_classes):
         self.df_classes_on_map[cl] = self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(
             int(self.frac * self.df_classes[cl].shape[0]))
-        # if cl == trace_l:
-        #     self.df_entries_onmap[cl] = pd.concat([
-        #         self.df_entries_onmap[cl],
-        #         self.df_clusters[trace_l].loc[[formula_l]]
-        #     ], axis=0)
-        # if cl == trace_r:
-        #     self.df_entries_onmap[cl] = pd.concat([
-        #         self.df_entries_onmap[cl],
-        #         self.df_clusters[trace_r].loc[[formula_r]],
-        #     ], axis=0)
-        self.n_points[cl] = self.df_classes_on_map[cl].shape[0]
 
+        if self.widg_compound_text_l.value in self.df_classes[cl].index:
+            self.df_classes_on_map[cl] = self.df_classes_on_map[cl].append(self.df.loc[self.widg_compound_text_l.value])
 
+        if self.widg_compound_text_r.value in self.df_classes[cl].index:
+            self.df_classes_on_map[cl] = self.df_classes_on_map[cl].append(self.df.loc[self.widg_compound_text_r.value])
+            
+        self.n_points['Class ' + str(self.classes[cl])]= self.df_classes_on_map[cl].shape[0]
 
 
     # if self.widg_outliersbox.value:

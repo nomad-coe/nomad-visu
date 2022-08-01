@@ -16,7 +16,7 @@ class StaticVisualizer:
         # hover features - list of features shown while hovering
 
         from include._instantiate_widgets import instantiate_widgets
-        from include._updates import update_hover_variables, update_df_on_map, update_layout_figure, update_markers_size
+        from include._updates import update_hover_variables, update_layout_figure, update_markers_size
 
         self.sisso = sisso
         self.df = df
@@ -33,8 +33,10 @@ class StaticVisualizer:
 
         self.replica_l = 0
         self.replica_r = 0
-        self.trace_l = []
-        self.trace_r = []
+        # self.trace_l = ''
+        # self.trace_r = ''
+        # self.formula_l = ''
+        # self.formula_r = ''
 
         self.frac = (1000 / self.total_compounds)
         if self.frac > 1:
