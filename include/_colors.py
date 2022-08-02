@@ -1,12 +1,12 @@
 from itertools import cycle
 import plotly.express as px
 
-def make_colors(self, feature = 'Default color'):
+def make_colors(self, feature = 'default color'):
 
-    if feature == 'Default color':
+    if feature == 'default color':
         self.palette = cycle(getattr(px.colors.qualitative, self.widg_colorpalette.value))
         for cl in range(self.n_classes):
-            self.colors[cl] = [next(self.palette)] * self.n_points[cl]
+            self.colors[cl] = [next(self.palette)] * self.n_points['Class ' + str(self.classes[cl])]
 
     else:
         gradient = self.widg_gradient.value

@@ -26,7 +26,7 @@ def update_markers_size(self ):
     # Points marked with x/cross are set with a specific size
     feature = self.widg_featmarker.value
 
-    if feature == 'Default size':
+    if feature == 'default size':
 
         for cl in range(self.n_classes):
 

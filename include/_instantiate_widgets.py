@@ -2,6 +2,7 @@ import ipywidgets as widgets
 
 
 def instantiate_widgets(self):
+
     self.widg_update_frac_button = widgets.Button(
         description='Click to update',
         layout=widgets.Layout(width='150px', left='130px')
@@ -29,15 +30,16 @@ def instantiate_widgets(self):
     )
     self.widg_featmarker = widgets.Dropdown(
         description="Marker",
-        options=['Default size'] + self.hover_features,
-        value='Default size',
+        options=['default size'] + self.hover_features,
+        value='default size',
     )
     self.widg_featcolor = widgets.Dropdown(
         description='Color',
-        options=['Default color'] + self.hover_features,
-        value='Default color'
+        options=['default color'] + self.hover_features,
+        value='default color'
     )
     self.widg_gradient = widgets.Dropdown(
+        disabled=True,
         description='-gradient',
         options=self.gradient_list,
         value='Grey scale',

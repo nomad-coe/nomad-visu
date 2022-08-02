@@ -40,6 +40,10 @@ class WidgetsInteractionsMixin:
         update_layout_figure(self)
 
     def handle_colorfeat_change(self, change):
+        if change.new == 'default color':
+            self.widg_gradient.disabled = True
+        else:
+            self.widg_gradient.disabled = False
         make_colors( self, feature=change.new )
         update_layout_figure(self)
 
@@ -227,7 +231,7 @@ class WidgetsInteractionsMixin:
         trace = points.trace_index
         formula = self.fig.data[trace].text[points.point_inds[0]]
         structure = self.df.iloc[points.point_inds[0]]['Structure']
-        
+
         if self.widg_checkbox_l.value:
             self.widg_compound_text_l.value = formula
             view_structure_l(self, structure)
