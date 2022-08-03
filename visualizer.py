@@ -5,8 +5,8 @@ import ipywidgets as widgets
 import numpy as np
 
 class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
-    def __init__(self, df, embedding_features, hover_features, target, sisso=None, path_to_structures=None):
-        super().__init__(df, embedding_features, hover_features, target, sisso, path_to_structures)
+    def __init__(self, df, embedding_features, hover_features, target, convex_hull=False, regr_line_coefs=None, path_to_structures=None):
+        super().__init__(df, embedding_features, hover_features, target, convex_hull, regr_line_coefs, path_to_structures)
         from include._instantiate_widgets import instantiate_widgets
         from include._view_structure import view_structure_r, view_structure_l
         from include._colors import make_colors
@@ -35,10 +35,11 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         self.widg_width_hull.observe(self.handle_hullslinewidth_change, names='value')
         self.widg_style_hull.observe(self.handle_hullslinestyle_change, names='value')
         self.widg_color_hull.observe(self.handle_hullslinecolor_change, names='value')
+        self.widg_width_line.observe(self.handle_linelinewidth_change, names='value')
+        self.widg_style_line.observe(self.handle_linelinestyle_change, names='value')
+        self.widg_color_line.observe(self.handle_linelinecolor_change, names='value')
         self.widg_classes_symbol.observe(self.handle_classes_symbol_change, names='value')
         self.widg_symbols.observe(self.handle_symbols_change, names='value')
-        # self.scatter_cls0.on_click(self.update_point_cls0)
-        # self.scatter_cls1.on_click(self.update_point_cls1)
         self.widg_markersize.observe(self.handle_markersize_change, names='value')
         self.widg_crosssize.observe(self.handle_crossize_change, names='value')
         self.widg_fontfamily.observe(self.handle_fontfamily_change, names='value')

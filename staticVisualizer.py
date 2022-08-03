@@ -1,3 +1,5 @@
+from turtle import update
+from xml.etree.ElementInclude import include
 import plotly.graph_objects as go
 import ipywidgets as widgets
 from jupyter_jsmol import JsmolView
@@ -5,10 +7,11 @@ import numpy as np
 from IPython.display import display
 from itertools import cycle
 import plotly.express as px
+from include._sisso  import regr_line
 
 class StaticVisualizer:
 
-    def __init__(self, df, embedding_features, hover_features, target, sisso=None, path_to_structures=None):
+    def __init__(self, df, embedding_features, hover_features, target, convex_hull=False, regr_line_coefs=None, path_to_structures=None):
 
         # df - pandas dataframe containing all data to be visualized
         # sisso - sisso objects 
@@ -18,7 +21,7 @@ class StaticVisualizer:
         from include._instantiate_widgets import instantiate_widgets
         from include._updates import update_hover_variables, update_layout_figure, update_markers_size
 
-        self.sisso = sisso
+        self.convex_hull = convex_hull
         self.df = df
         self.target = target
 
@@ -33,10 +36,6 @@ class StaticVisualizer:
 
         self.replica_l = 0
         self.replica_r = 0
-        # self.trace_l = ''
-        # self.trace_r = ''
-        # self.formula_l = ''
-        # self.formula_r = ''
 
         self.frac = (1000 / self.total_compounds)
         if self.frac > 1:
@@ -56,10 +55,22 @@ class StaticVisualizer:
         ]
         self.class_symbol = {}
         self.font_size = 12
-        self.color_hull = 'black'
         self.width_hull = 1
         self.style_hull = 'dash'
         self.color_hull = [
+            'black',
+            'grey',
+            'green',
+            'blue',
+            'red',
+            "yellow",
+            "cyan",
+            "orange",
+            "purple",
+        ]
+        self.width_line = 1
+        self.style_line = 'solid'
+        self.color_line = [
             'black',
             'grey',
             'green',
@@ -116,7 +127,9 @@ class StaticVisualizer:
             'Safe',
             'Vivid'
         ]
+        self.regr_line_coefs = regr_line_coefs
 
+        
         # The 'target' feature is used to divide data into different classes 
         # Each item in the following lists will be related to a different class in the dataframe
         # For each different class a new trace is created
@@ -142,7 +155,7 @@ class StaticVisualizer:
             self.index_classes_shuffled.append(
                 self.df_classes[cl].index.to_numpy()[np.random.permutation(self.df_classes[cl].shape[0])])
             name_trace = 'Class ' + str(self.classes[cl])
-            # self.name_trace.append(name_trace)
+
             self.fig.add_trace(
                     go.Scatter(
                         name=name_trace,
@@ -150,7 +163,6 @@ class StaticVisualizer:
                     ))                    
             self.trace[name_trace] = self.fig['data'][-1]
             self.class_symbol[name_trace] = 'circle'
-
             self.n_points[name_trace] = int(self.frac * self.df_classes[cl].shape[0])
             self.symbols[name_trace] = ["circle"] * self.n_points[name_trace]
             self.sizes.append([self.marker_size] * self.n_points[name_trace])
@@ -158,15 +170,22 @@ class StaticVisualizer:
             self.df_classes_on_map.append(
                 self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[name_trace]))
 
-            if ( self.sisso != None ) :
+            if ( self.convex_hull == True ) :
                 name_trace = 'Hull ' + str(self.classes[cl])
-                # self.name_trace.append(name_trace)
                 self.fig.add_trace(
                         go.Scatter(
                             name=name_trace,
                     ))
                 self.trace[name_trace] = self.fig['data'][-1]
 
+        if self.regr_line_coefs :
+            name_trace = 'Regression line'
+            self.fig.add_trace(
+                go.Scatter(
+                    name=name_trace
+                ))
+            self.trace[name_trace] = self.fig['data'][-1]
+            
 
         # All permanent layout settings are defined here - functions below do not change these fields
         self.fig.update_layout(
@@ -213,6 +232,16 @@ class StaticVisualizer:
         self.widg_box_utils.layout.border = 'dashed 1px'
         self.widg_box_utils.right = '100px'
         self.widg_box_utils.layout.max_width = '700px'
+
+        if self.convex_hull == False:
+            self.widg_color_hull.disabled = True
+            self.widg_width_hull.disabled = True
+            self.widg_style_hull.disabled = True
+
+        if self.regr_line_coefs == None:
+            self.widg_color_line.disabled = True
+            self.widg_width_line.disabled = True
+            self.widg_style_line.disabled = True
 
         container = widgets.VBox([
             self.box_feat,

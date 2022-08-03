@@ -8,7 +8,7 @@ class WidgetsInteractionsMixin:
 
     def handle_xfeat_change(self, change):
         # changes the feature plotted on the x-axis
-        # separating line is modified accordingly
+        # separating line is modified accordinglysI
         self.feat_x = change.new
         update_layout_figure(self)
 
@@ -87,53 +87,23 @@ class WidgetsInteractionsMixin:
         update_layout_figure(self)
 
     def handle_hullslinewidth_change(self, change):
+        update_layout_figure(self)
         
-        self.hullsline_width = change.new
-        with self.fig.batch_update():
-            for cl in np.arange(self.n_classes):
-                self.trace['Hull '+str(self.classes[cl])].line.width = change.new
-
     def handle_hullslinecolor_change(self, change):
+        update_layout_figure(self)
         
-        self.hullsline_color = change.new
-        with self.fig.batch_update():
-            for cl in np.arange(self.n_classes):
-                self.trace['Hull '+str(self.classes[cl])].line.color = change.new
-
     def handle_hullslinestyle_change(self, change):
+        update_layout_figure(self)
 
-        self.hullsline_style = change.new
-        with self.fig.batch_update():
-            for cl in np.arange(self.n_classes):
-                self.trace['Hull '+str(self.classes[cl])].line.dash = change.new
+    def handle_linelinewidth_change(self, change):
+        update_layout_figure(self)
+        
+    def handle_linelinecolor_change(self, change):
+        update_layout_figure(self)
+        
+    def handle_linelinestyle_change(self, change):
+        update_layout_figure(self)
 
-
-    # def handle_clslinewidth_change(self, change):
-
-    #     self.clsline_width = change.new
-    #     with self.fig.batch_update():
-    #         self.scatter_clsline.line.width = change.new
-
-    # def handle_clslinestyle_change(self, change):
-
-    #     with self.fig.batch_update():
-    #         self.scatter_clsline.line.dash = change.new
-
-    # def handle_markersymbol_cls0_change(self, change):
-
-    #     for i, e in enumerate(self.symbols_cls0):
-    #         if e == self.marker_symbol_cls0:
-    #             self.symbols_cls0[i] = change.new
-    #     self.marker_symbol_cls0 = change.new
-    #     self.update_markers()
-
-    # def handle_markersymbol_cls1_change(self, change):
-
-    #     for i, e in enumerate(self.symbols_cls1):
-    #         if e == self.marker_symbol_cls1:
-    #             self.symbols_cls1[i] = change.new
-    #     self.marker_symbol_cls1 = change.new
-    #     self.update_markers()
 
     def bgtoggle_button_clicked(self, button):
 
