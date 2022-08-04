@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from include._sisso import make_hull 
+from include._sisso import make_hull, regr_line
 
 def update_symbols (self):
  
@@ -30,8 +30,10 @@ def update_markers_size(self ):
 
         for cl in range(self.n_classes):
 
-            sizes = [self.marker_size] * self.n_points['Class ' + str(self.classes[cl])]
-            symbols = self.symbols['Class ' + str(self.classes[cl])]
+            name_trace = 'Class ' + str(self.classes[cl])
+
+            sizes = [self.marker_size] * self.n_points[name_trace]
+            symbols = self.symbols[name_trace]
 
             try:
                 point = symbols.index('x')
@@ -51,20 +53,39 @@ def update_markers_size(self ):
                     sizes[point] = self.cross_size
                 except:
                     pass
-            self.sizes[cl] = sizes
+            self.sizes[name_trace] = sizes
     else:
         min_value = min(self.df[feature])
         max_value = max(self.df[feature])
         coeff = 2 * self.marker_size / (max_value - min_value)
 
         for cl in range(self.n_classes):
+            name_trace = 'Class ' + str(self.classes[cl])
             sizes = self.marker_size / 2 + coeff * self.df_classes_on_map[cl][feature].to_numpy()
-            self.sizes[cl] = sizes
+            self.sizes[name_trace] = sizes
 
 
 def update_layout_figure(self):
-
     # All batch_update related changes are handled by this function
+
+    x_min = []
+    x_max = []
+    y_min = []
+    y_max = []
+    for cl in np.arange(self.n_classes):
+        x_min.append(min(self.df_classes_on_map[cl][self.feat_x]))
+        x_max.append(max(self.df_classes_on_map[cl][self.feat_x]))
+        y_min.append(min(self.df_classes_on_map[cl][self.feat_y]))
+        y_max.append(max(self.df_classes_on_map[cl][self.feat_y]))
+    x_min = min(x_min)
+    y_min = min(y_min)
+    x_max = max(x_max)
+    y_max = max(y_max)
+    x_delta = 0.05 * abs(x_max - x_min)
+    y_delta = 0.05 * abs(y_max - y_min)
+    xaxis_range =[x_min - x_delta, x_max + x_delta]
+    yaxis_range=[y_min - y_delta, y_max + y_delta]
+
     update_symbols(self)
     update_markers_size(self)
 
@@ -78,16 +99,16 @@ def update_layout_figure(self):
             ),
             xaxis_title=self.widg_featx.value,
             yaxis_title=self.widg_featy.value,
-            # xaxis_range =[x_min - x_delta, x_max + x_delta],
-            # yaxis_range=[y_min - y_delta, y_max + y_delta],
+            xaxis_range = xaxis_range,
+            yaxis_range = yaxis_range,
         )
-        for cl in np.arange(self.n_classes):
+        for  cl in np.arange(self.n_classes):
             # All elements on the map and their properties are reinitialized at each change
             self.trace['Class ' + str(self.classes[cl])]['x'] = self.df_classes_on_map[cl][self.feat_x]
             self.trace['Class ' + str(self.classes[cl])]['y'] = self.df_classes_on_map[cl][self.feat_y]
-            self.trace['Class ' + str(self.classes[cl])].marker.size = self.sizes[cl]
+            self.trace['Class ' + str(self.classes[cl])].marker.size = self.sizes['Class ' + str(self.classes[cl])]
             self.trace['Class ' + str(self.classes[cl])].marker.symbol = self.symbols['Class ' + str(self.classes[cl])]
-
+        
             # self.trace[self.name_trace[cl]].marker.line.color = self.colors[cl]
             # self.trace[self.name_trace[cl]].marker.line.width = self.global_markerlinewidth[cl]
             self.fig.update_traces(
@@ -95,10 +116,10 @@ def update_layout_figure(self):
                 text=self.hover_text[cl],
                 customdata=self.hover_custom[cl],
                 hovertemplate=self.hover_template[cl],
-                marker_color=self.colors[cl],
+                marker_color=self.colors['Class ' + str(self.classes[cl])],
                 visible=True
             )
-        if ( self.sisso != None ) :
+        if ( self.convex_hull == True ) :
 
             if ( self.feat_x == self.feat_y ):
                 for cl in np.arange(self.n_classes):
@@ -111,11 +132,17 @@ def update_layout_figure(self):
                 for cl in np.arange(self.n_classes):
                     self.trace['Hull '+str(self.classes[cl])]['x'] = hullx[cl]
                     self.trace['Hull '+str(self.classes[cl])]['y'] = hully[cl]
-                    self.trace['Hull '+str(self.classes[cl])].line = dict (color=self.color_hull[0], width=self.width_hull, dash=self.line_styles[0] )
+                    self.trace['Hull '+str(self.classes[cl])].line = dict (color=self.widg_color_hull.value, width=self.widg_width_hull.value, dash=self.widg_style_hull    .value )
                     self.fig.update_traces(
                         selector={'name': 'Hull '+str(self.classes[cl])},
                         visible=True
                     )
+        if ( self.regr_line_coefs ) :
+
+            line_x, line_y = regr_line(self, self.feat_x, self.feat_y)
+            self.trace['Regression line'].line = dict (color=self.widg_color_line.value, width=self.widg_width_line.value, dash=self.widg_style_line.value )
+            self.trace['Regression line']['x'] = line_x
+            self.trace['Regression line']['y'] = line_y
 
 
 
@@ -123,6 +150,9 @@ def update_layout_figure(self):
 def update_df_on_map(self):
 
     for cl in range(self.n_classes):
+
+        name_trace = 'Class ' + str(self.classes[cl])
+
         self.df_classes_on_map[cl] = self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(
             int(self.frac * self.df_classes[cl].shape[0]))
 

@@ -95,6 +95,24 @@ def instantiate_widgets(self):
         value=str(self.font_size),
         layout=widgets.Layout(left='30px', width='200px')
     )
+    self.widg_width_line = widgets.BoundedIntText(
+        placeholder=str(self.width_line),
+        description='Line width',
+        value=str(self.width_line),
+        layout = widgets.Layout(left='30px', width='200px')
+    )
+    self.widg_style_line = widgets.Dropdown(
+        options=self.line_styles,
+        description='Line style',
+        value='solid',
+        layout=widgets.Layout(left='30px', width='200px')
+    )
+    self.widg_color_line = widgets.Dropdown(
+        options=self.color_line,
+        description='Line color',
+        value='grey',
+        layout=widgets.Layout(left='30px', width='200px')
+    )
     self.widg_width_hull = widgets.BoundedIntText(
         placeholder=str(self.width_hull),
         description='Hull width',
@@ -104,13 +122,13 @@ def instantiate_widgets(self):
     self.widg_style_hull = widgets.Dropdown(
         options=self.line_styles,
         description='Hull style',
-        value=self.line_styles[0],
+        value='dash',
         layout=widgets.Layout(left='30px', width='200px')
     )
     self.widg_color_hull = widgets.Dropdown(
         options=self.color_hull,
         description='Hull color',
-        value=self.color_hull[0],
+        value='black',
         layout=widgets.Layout(left='30px', width='200px')
     )
     self.widg_fontfamily = widgets.Dropdown(
@@ -137,31 +155,6 @@ def instantiate_widgets(self):
         value=self.class_symbol['Class ' + str(self.classes[0])],
         layout=widgets.Layout(left='30px', width='200px')
     )
-    # self.widg_rscolor = widgets.Text(
-    #     placeholder=str(self.rs_color),
-    #     description='RS color',
-    #     value=str(self.rs_color),
-    #     layout=widgets.Layout(left='30px', width='200px'),
-    # )
-    # self.widg_zbcolor = widgets.Text(
-    #     placeholder=str(self.zb_color),
-    #     description='ZB color',
-    #     value=str(self.zb_color),
-    #     layout=widgets.Layout(left='30px', width='200px'),
-    # )
-    # self.widg_rsmarkersymbol = widgets.Dropdown(
-    #     description='RS symbol',
-    #     options=self.symbols,
-    #     value=self.marker_symbol_RS,
-    #     layout=widgets.Layout(left='30px', width='200px')
-    # )
-    # self.widg_zbmarkersymbol = widgets.Dropdown(
-    #     description='ZB symbol',
-    #     options=self.symbols,
-    #     value=self.marker_symbol_ZB,
-    #     layout=widgets.Layout(left='30px', width='200px')
-    # )
-
     self.widg_bgcolor = widgets.Text(
         placeholder=str('Default'),
         description='Color',
@@ -236,14 +229,13 @@ def instantiate_widgets(self):
         layout=widgets.Layout(width='600px')
     )
     self.widg_box_utils = widgets.VBox([widgets.HBox([self.widg_markersize, self.widg_crosssize, self.widg_colorpalette]),
-                                        #   self.widg_rsmarkersymbol]),
-                                        # widgets.HBox([self.widg_linewidth, self.widg_linestyle]),
-                                        #   self.widg_zbmarkersymbol]),
+
                                         widgets.HBox([self.widg_fontsize, self.widg_fontfamily]),
                                         widgets.HBox([self.widg_classes_symbol, self.widg_symbols]),
 
                                         self.widg_colordescription, self.widg_colordescription2,
                                         widgets.HBox([self.widg_color_hull, self.widg_width_hull, self.widg_style_hull ]),
+                                        widgets.HBox([self.widg_color_line, self.widg_width_line, self.widg_style_line ]),
                                         widgets.HBox([self.widg_bgtoggle_button, self.widg_bgcolor,
                                                       self.widg_bgcolor_update_button]),
                                         self.widg_printdescription, self.widg_printdescription2,

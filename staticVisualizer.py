@@ -8,6 +8,7 @@ from IPython.display import display
 from itertools import cycle
 import plotly.express as px
 from include._sisso  import regr_line
+import os
 
 class StaticVisualizer:
 
@@ -133,15 +134,15 @@ class StaticVisualizer:
         # The 'target' feature is used to divide data into different classes 
         # Each item in the following lists will be related to a different class in the dataframe
         # For each different class a new trace is created
+        self.name_trace = []  # name of the trace that is given by the specific 'target' feature
+        self.trace = {}  # trace related to the class
         self.df_classes = []  # section of the pandas dataframe containing elements of only a specific class
         self.index_classes_shuffled = []  # index of the dataframe class shuffled - used to avoid bias visualization when only a fraction is visualized
         self.n_points = {}  # total points of the class which are visualized - can be less than the total number of data depending on the fraction visualized
         self.df_classes_on_map = []  # dataframe which contains only the elements that are visualized on the map
         self.symbols = {}  # each item is a list of symbols
-        self.sizes = []  # each item is a list of sizes
-        self.colors = []  # each item is a list of colors
-        self.name_trace = []  # name of the trace that is given by the specific 'target' feature
-        self.trace = {}  # trace related to the class
+        self.sizes = {}  # each item is a list of sizes
+        self.colors = {}  # each item is a list of colors
         self.palette = cycle(
             getattr(px.colors.qualitative, self.qualitative_colors[0]))  # each class has by default a different color
 
@@ -165,8 +166,8 @@ class StaticVisualizer:
             self.class_symbol[name_trace] = 'circle'
             self.n_points[name_trace] = int(self.frac * self.df_classes[cl].shape[0])
             self.symbols[name_trace] = ["circle"] * self.n_points[name_trace]
-            self.sizes.append([self.marker_size] * self.n_points[name_trace])
-            self.colors.append([next(self.palette)] * self.n_points[name_trace])
+            self.sizes[name_trace] = ([self.marker_size] * self.n_points[name_trace])
+            self.colors[name_trace] = ([next(self.palette)] * self.n_points[name_trace])
             self.df_classes_on_map.append(
                 self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[name_trace]))
 
@@ -207,10 +208,14 @@ class StaticVisualizer:
         self.fig.update_xaxes(ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor='black')
         self.fig.update_yaxes(ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor='black')
    
+        self.df['File'] = self.df['Structure'].apply( lambda x :  os.listdir( x))
+        self.df['Replicas'] = self.df['Structure'].apply( lambda x :  len(os.listdir(x)) )
+
         instantiate_widgets(self)
         update_hover_variables(self)
         update_layout_figure(self)
 
+    
     def show(self):
         with self.output_l:
             display(self.viewer_l)

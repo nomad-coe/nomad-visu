@@ -36,6 +36,14 @@ class WidgetsInteractionsMixin:
     def handle_frac_change(self, change):
         self.frac = change.new
         update_df_on_map(self)
+        make_colors(self)
+        update_hover_variables(self)
+        update_layout_figure(self)
+
+    def updatefrac_button_clicked(self, button):
+        self.frac = self.widg_frac_slider.value
+        update_df_on_map(self)
+        make_colors(self)
         update_hover_variables(self)
         update_layout_figure(self)
 
@@ -44,7 +52,7 @@ class WidgetsInteractionsMixin:
             self.widg_gradient.disabled = True
         else:
             self.widg_gradient.disabled = False
-        make_colors( self, feature=change.new )
+        make_colors( self )
         update_layout_figure(self)
 
     def handle_colorpalette_change(self, change):
@@ -52,13 +60,10 @@ class WidgetsInteractionsMixin:
         update_layout_figure(self)
 
     def handle_gradient_change(self, change):
-        make_colors(self, feature=self.widg_featcolor.value)
+        make_colors(self )
         update_layout_figure(self)
 
-    def updatefrac_button_clicked(self, button):
-        self.frac = self.widg_frac_slider.value
-        update_hover_variables(self)
-        update_layout_figure(self)
+
 
     def handle_fontfamily_change(self, change):
         self.fig.update_layout(
@@ -204,10 +209,10 @@ class WidgetsInteractionsMixin:
 
         if self.widg_checkbox_l.value:
             self.widg_compound_text_l.value = formula
-            view_structure_l(self, structure)
+            view_structure_l(self, formula)
         if self.widg_checkbox_r.value:
             self.widg_compound_text_r.value = formula
-            view_structure_r(self, structure)
+            view_structure_r(self, formula)
 
         update_df_on_map(self)
         update_layout_figure(self)
@@ -217,11 +222,10 @@ class WidgetsInteractionsMixin:
 
         if self.widg_compound_text_r.value in self.df['Structure']:
 
-            # self.replica_l += 1
             compound_l = self.widg_compound_text_l.value
             structure_l = self.df['Structure'].at[compound_l]
 
-            view_structure_l(self, structure_l)
+            view_structure_l(self, compound_l)
 
             update_df_on_map(self)
             update_layout_figure(self)
@@ -253,7 +257,7 @@ class WidgetsInteractionsMixin:
             compound_r = self.widg_compound_text_r.value
             structure_r = self.df['Structure'].at[compound_r]
 
-            view_structure_r(self, structure_r)
+            view_structure_r(self, compound_r)
 
             update_df_on_map(self)
             update_layout_figure(self)

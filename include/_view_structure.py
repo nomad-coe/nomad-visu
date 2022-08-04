@@ -1,20 +1,23 @@
 def view_structure_l(self, formula):
-    # replicas = len(self.path_to_structures[formula])
-    # if self.replica_l >= replicas:
-    #     self.replica_l = 0
-    # self.viewer_l.script("load " + self.path_to_structures[formula][self.replica_l])
-    # string = "load " + self.path_to_structures + '/' + formula + '.xyz'
 
-    string = "load " + self.path_to_structures + '/' + formula 
+
+    if (self.replica_l >= self.df['Replicas'].at[formula]):
+        self.replica_l = 0
+
+    path = self.df['Structure'].at[formula] + "/" + self.df['File'].at[formula][self.replica_l]
+    string = "load " + path
     self.viewer_l.script(string)
+    self.replica_l = self.replica_l + 1
 
 
 def view_structure_r(self, formula):
-    # replicas = len(self.path_to_structures[formula])
-    # if self.replica_r >= replicas:
-    #     self.replica_r = 0
-    # self.viewer_r.script("load " + self.path_to_structures[formula][self.replica_r])
-    # string = "load " + self.path_to_structures + '/' + formula + '.xyz'
-    string = "load " + self.path_to_structures + '/' + formula 
 
+
+    if (self.replica_r >= self.df['Replicas'].at[formula]):
+        self.replica_r = 0
+
+    path = self.df['Structure'].at[formula] + "/" + self.df['File'].at[formula][self.replica_r]
+    string = "load " + path
     self.viewer_r.script(string)
+    self.replica_r += 1
+
