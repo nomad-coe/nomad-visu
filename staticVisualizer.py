@@ -8,11 +8,22 @@ from IPython.display import display
 from itertools import cycle
 import plotly.express as px
 from include._sisso  import regr_line
+from include._max_covering import max_covering_shuffle
 import os
 
 class StaticVisualizer:
 
-    def __init__(self, df, embedding_features, hover_features, target, convex_hull=False, regr_line_coefs=None, path_to_structures=None):
+    def __init__(
+        self, 
+        df, 
+        embedding_features, 
+        hover_features, 
+        target,
+        max_covering=False, 
+        convex_hull=False, 
+        regr_line_coefs=None, 
+        path_to_structures=None
+        ):
 
         # df - pandas dataframe containing all data to be visualized
         # sisso - sisso objects 
@@ -25,6 +36,7 @@ class StaticVisualizer:
         self.convex_hull = convex_hull
         self.df = df
         self.target = target
+        self.max_covering = max_covering
 
         self.n_classes = df[target].unique().size
         self.classes = df[target].unique()
@@ -129,8 +141,9 @@ class StaticVisualizer:
             'Vivid'
         ]
         self.regr_line_coefs = regr_line_coefs
+            
 
-        
+
         # The 'target' feature is used to divide data into different classes 
         # Each item in the following lists will be related to a different class in the dataframe
         # For each different class a new trace is created
@@ -152,11 +165,15 @@ class StaticVisualizer:
     
         # All different classes are iterated and a class-specific item is added to the list defined above 
         for cl in range(self.n_classes):
-            self.df_classes.append(self.df.loc[self.df[self.target] == self.classes[cl]])
-            self.index_classes_shuffled.append(
-                self.df_classes[cl].index.to_numpy()[np.random.permutation(self.df_classes[cl].shape[0])])
+
             name_trace = 'Class ' + str(self.classes[cl])
 
+            self.df_classes.append(self.df.loc[self.df[self.target] == self.classes[cl]])
+            if ( self.max_covering == False):
+                self.index_classes_shuffled.append(
+                    self.df_classes[cl].index.to_numpy()[np.random.permutation(self.df_classes[cl].shape[0])])
+            else:
+                self.index_classes_shuffled.append(max_covering_shuffle(self, self.df_classes[cl]))
             self.fig.add_trace(
                     go.Scatter(
                         name=name_trace,
@@ -168,9 +185,14 @@ class StaticVisualizer:
             self.symbols[name_trace] = ["circle"] * self.n_points[name_trace]
             self.sizes[name_trace] = ([self.marker_size] * self.n_points[name_trace])
             self.colors[name_trace] = ([next(self.palette)] * self.n_points[name_trace])
-            self.df_classes_on_map.append(
-                self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[name_trace]))
 
+            if ( self.max_covering == False):
+                self.df_classes_on_map.append(
+                    self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[name_trace]))
+            else:
+                self.df_classes_on_map.append(
+                    self.df_classes[cl].loc[self.index_classes_shuffled[cl][(self.feat_x,self.feat_y)]].head(self.n_points[name_trace]))
+            
             if ( self.convex_hull == True ) :
                 name_trace = 'Hull ' + str(self.classes[cl])
                 self.fig.add_trace(

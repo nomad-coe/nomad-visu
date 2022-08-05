@@ -72,11 +72,18 @@ def update_layout_figure(self):
     x_max = []
     y_min = []
     y_max = []
+
     for cl in np.arange(self.n_classes):
+        # if len(self.df_classes_on_map[cl][self.feat_x]) > 1:
         x_min.append(min(self.df_classes_on_map[cl][self.feat_x]))
         x_max.append(max(self.df_classes_on_map[cl][self.feat_x]))
         y_min.append(min(self.df_classes_on_map[cl][self.feat_y]))
         y_max.append(max(self.df_classes_on_map[cl][self.feat_y]))
+        # else:
+        #     x_min.append(self.df_classes_on_map.iloc[0][cl][self.feat_x]))
+        #     x_max.append((self.df_classes_on_map.iloc[0][cl][self.feat_x]))
+        #     y_min.append(min(self.df_classes_on_map.iloc[0][cl][self.feat_y]))
+        #     y_max.append(max(self.df_classes_on_map.iloc[0][cl][self.feat_y]))
     x_min = min(x_min)
     y_min = min(y_min)
     x_max = max(x_max)
@@ -108,7 +115,7 @@ def update_layout_figure(self):
             self.trace['Class ' + str(self.classes[cl])]['y'] = self.df_classes_on_map[cl][self.feat_y]
             self.trace['Class ' + str(self.classes[cl])].marker.size = self.sizes['Class ' + str(self.classes[cl])]
             self.trace['Class ' + str(self.classes[cl])].marker.symbol = self.symbols['Class ' + str(self.classes[cl])]
-        
+
             # self.trace[self.name_trace[cl]].marker.line.color = self.colors[cl]
             # self.trace[self.name_trace[cl]].marker.line.width = self.global_markerlinewidth[cl]
             self.fig.update_traces(
@@ -152,9 +159,17 @@ def update_df_on_map(self):
     for cl in range(self.n_classes):
 
         name_trace = 'Class ' + str(self.classes[cl])
+        n_points = int(self.frac * self.df_classes[cl].shape[0])
+        if n_points < 1:
+            n_points = 1
+        self.n_points[name_trace]= n_points
 
-        self.df_classes_on_map[cl] = self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(
-            int(self.frac * self.df_classes[cl].shape[0]))
+        if ( self.max_covering == False):
+            self.df_classes_on_map[cl] = self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(n_points)
+        else:
+            self.df_classes_on_map[cl] = self.df_classes[cl].loc[self.index_classes_shuffled[cl][(self.feat_x,self.feat_y)]].head(n_points)
+
+                
 
         if self.widg_compound_text_l.value in self.df_classes[cl].index:
             self.df_classes_on_map[cl] = self.df_classes_on_map[cl].append(self.df.loc[self.widg_compound_text_l.value])
@@ -162,7 +177,6 @@ def update_df_on_map(self):
         if self.widg_compound_text_r.value in self.df_classes[cl].index:
             self.df_classes_on_map[cl] = self.df_classes_on_map[cl].append(self.df.loc[self.widg_compound_text_r.value])
             
-        self.n_points['Class ' + str(self.classes[cl])]= self.df_classes_on_map[cl].shape[0]
 
 
     # if self.widg_outliersbox.value:

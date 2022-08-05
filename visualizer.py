@@ -5,8 +5,8 @@ import ipywidgets as widgets
 import numpy as np
 
 class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
-    def __init__(self, df, embedding_features, hover_features, target, convex_hull=False, regr_line_coefs=None, path_to_structures=None):
-        super().__init__(df, embedding_features, hover_features, target, convex_hull, regr_line_coefs, path_to_structures)
+    def __init__(self, df, embedding_features, hover_features, target, max_covering=False, convex_hull=False, regr_line_coefs=None, path_to_structures=None):
+        super().__init__(df, embedding_features, hover_features, target, max_covering, convex_hull, regr_line_coefs, path_to_structures)
         from include._instantiate_widgets import instantiate_widgets
         from include._view_structure import view_structure_r, view_structure_l
         from include._colors import make_colors
