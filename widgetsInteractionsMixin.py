@@ -75,8 +75,6 @@ class WidgetsInteractionsMixin:
         make_colors(self )
         update_layout_figure(self)
 
-
-
     def handle_fontfamily_change(self, change):
         self.fig.update_layout(
             font=dict(family=change.new)
@@ -85,6 +83,10 @@ class WidgetsInteractionsMixin:
     def handle_fontsize_change(self, change):
         self.fig.update_layout(
             font=dict(size=change.new)
+        )
+    def handle_fontcolor_change(self, change):
+        self.fig.update_layout(
+            font=dict(color=change.new)
         )
 
     def handle_markersize_change(self, change):
@@ -102,6 +104,25 @@ class WidgetsInteractionsMixin:
         self.class_symbol['Class ' + str(self.widg_classes_symbol.value) ] = change.new
         self.symbols['Class ' + str(self.widg_classes_symbol.value)] = [str(change.new)] * self.n_points['Class ' + str(self.widg_classes_symbol.value)]
         update_layout_figure(self)
+
+
+    def reset_button_clicked(self, button):
+
+        self.widg_symbols.value = 'circle'
+
+        with self.fig.batch_update():
+ 
+            for cl in range(self.n_classes):
+                name_trace = 'Class ' + str(self.classes[cl])
+
+                self.class_symbol[name_trace] = 'circle'
+                self.symbols[name_trace] = ['circle'] * self.n_points[name_trace]
+                self.sizes[name_trace] = [self.marker_size] * self.n_points[name_trace]
+                self.trace[name_trace].marker.symbol = self.symbols[name_trace]
+                self.trace[name_trace].marker.size = self.sizes[name_trace]
+
+
+
 
     def handle_hullslinewidth_change(self, change):
         update_layout_figure(self)
@@ -156,13 +177,6 @@ class WidgetsInteractionsMixin:
         with self.widg_print_out:
             local_file = FileLink(path + file_name, result_html_prefix="Click here to download: ")
             display(local_file)
-
-    def reset_button_clicked(self, button):
-
-        self.symbols_cls0 = [self.marker_symbol_cls0] * self.npoints_cls0
-        self.symbols_cls1 = [self.marker_symbol_cls1] * self.npoints_cls1
-        self.set_markers_size(self.widg_featmarker.value)
-        self.update_markers()
 
     def bgcolor_update_button_clicked(self, button):
         if (self.widg_bgcolor.value=='Default'):

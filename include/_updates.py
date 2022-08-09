@@ -102,7 +102,8 @@ def update_layout_figure(self):
             plot_bgcolor=self.bg_color,
             font=dict(
                 size=int(self.font_size),
-                family=self.font_families[0],
+                family=self.widg_fontfamily.value,
+                color=self.widg_fontcolor.value
             ),
             xaxis_title=self.widg_featx.value,
             yaxis_title=self.widg_featy.value,

@@ -95,6 +95,18 @@ def instantiate_widgets(self):
         value=str(self.font_size),
         layout=widgets.Layout(left='30px', width='200px')
     )
+    self.widg_fontcolor = widgets.Dropdown(
+        options=self.font_color,
+        description='Font color',
+        value='Black',
+        layout=widgets.Layout(left='30px', width='200px')
+    )
+    self.widg_fontfamily = widgets.Dropdown(
+        options=self.font_families,
+        description='Font family',
+        value=self.font_families[0],
+        layout=widgets.Layout(left='30px', width='200px')
+    )
     self.widg_width_line = widgets.BoundedIntText(
         placeholder=str(self.width_line),
         description='Line width',
@@ -110,7 +122,7 @@ def instantiate_widgets(self):
     self.widg_color_line = widgets.Dropdown(
         options=self.color_line,
         description='Line color',
-        value='grey',
+        value='Grey',
         layout=widgets.Layout(left='30px', width='200px')
     )
     self.widg_width_hull = widgets.BoundedIntText(
@@ -128,13 +140,7 @@ def instantiate_widgets(self):
     self.widg_color_hull = widgets.Dropdown(
         options=self.color_hull,
         description='Hull color',
-        value='black',
-        layout=widgets.Layout(left='30px', width='200px')
-    )
-    self.widg_fontfamily = widgets.Dropdown(
-        options=self.font_families,
-        description='Font family',
-        value=self.font_families[0],
+        value='Black',
         layout=widgets.Layout(left='30px', width='200px')
     )
     self.widg_colorpalette = widgets.Dropdown(
@@ -151,7 +157,7 @@ def instantiate_widgets(self):
     )
     self.widg_symbols = widgets.Dropdown(
         options=self.symbols_list,
-        description='--symbol',
+        description='-- symbol',
         value=self.class_symbol['Class ' + str(self.classes[0])],
         layout=widgets.Layout(left='30px', width='200px')
     )
@@ -230,8 +236,8 @@ def instantiate_widgets(self):
     )
     self.widg_box_utils = widgets.VBox([widgets.HBox([self.widg_markersize, self.widg_crosssize, self.widg_colorpalette]),
 
-                                        widgets.HBox([self.widg_fontsize, self.widg_fontfamily]),
-                                        widgets.HBox([self.widg_classes_symbol, self.widg_symbols]),
+                                        widgets.HBox([self.widg_fontsize, self.widg_fontfamily, self.widg_fontcolor]),
+                                        widgets.HBox([self.widg_classes_symbol, self.widg_symbols, self.widg_reset_button]),
 
                                         self.widg_colordescription, self.widg_colordescription2,
                                         widgets.HBox([self.widg_color_hull, self.widg_width_hull, self.widg_style_hull ]),

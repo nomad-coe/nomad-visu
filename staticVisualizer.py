@@ -73,39 +73,47 @@ class StaticVisualizer:
         self.width_hull = 1
         self.style_hull = 'dash'
         self.color_hull = [
-            'black',
-            'grey',
-            'green',
-            'blue',
-            'red',
-            "yellow",
-            "cyan",
-            "orange",
-            "purple",
+            'Black',
+            'Blue',
+            "Cyan",
+            'Green',
+            'Grey',
+            "Orange",
+            'Red',
+            "Yellow",
         ]
         self.width_line = 1
         self.style_line = 'solid'
         self.color_line = [
-            'black',
-            'grey',
-            'green',
-            'blue',
-            'red',
-            "yellow",
-            "cyan",
-            "orange",
-            "purple",
+            'Black',
+            'Blue',
+            "Cyan",
+            'Green',
+            'Grey',
+            "Orange",
+            'Red',
+            "Yellow",
         ]
         self.hullsline_width = 1
         self.clsline_width = 1
-        self.font_families = ['Source Sans Pro',
-                              'Helvetica',
-                              'Open Sans',
-                              'Times New Roman',
+        self.font_families = [
                               'Arial',
-                              'Verdana',
                               'Courier New',
-                              'Comic Sans MS']
+                              'Helvetica',
+                              "Open Sans", 
+                              'Times New Roman',
+                              'Verdana'                              
+                            ]
+        self.font_color = [
+            'Black',
+            'Blue',
+            "Cyan",
+            'Green',
+            'Grey',
+            "Orange",
+            'Red',
+            "Yellow",
+        ]
         self.line_styles = ["dash",
                             "solid",
                             "dot",

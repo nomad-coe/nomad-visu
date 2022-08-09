@@ -28,7 +28,7 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         self.widg_display_button_r.on_click(self.display_button_r_clicked)
         self.widg_checkbox_l.observe(self.handle_checkbox_l, names='value')
         self.widg_checkbox_r.observe(self.handle_checkbox_r, names='value')
-        # self.widg_reset_button.on_click(self.reset_button_clicked)
+        self.widg_reset_button.on_click(self.reset_button_clicked)
         self.widg_bgcolor_update_button.on_click(self.bgcolor_update_button_clicked)
         self.widg_print_button.on_click(self.print_button_clicked)
         self.widg_bgtoggle_button.on_click(self.bgtoggle_button_clicked)
@@ -44,6 +44,7 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         self.widg_crosssize.observe(self.handle_crossize_change, names='value')
         self.widg_fontfamily.observe(self.handle_fontfamily_change, names='value')
         self.widg_fontsize.observe(self.handle_fontsize_change, names='value')
+        self.widg_fontcolor.observe(self.handle_fontcolor_change, names='value')
 
 
         self.output_l.layout = widgets.Layout(width="400px", height='350px')
