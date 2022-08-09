@@ -50,10 +50,12 @@ class StaticVisualizer:
         self.replica_l = 0
         self.replica_r = 0
 
-        self.frac = (1000 / self.total_compounds)
-        if self.frac > 1:
-            self.frac = 1
-        self.frac = int(self.frac * 100) / 100
+        self.frac_init = []
+        self.frac = 1
+        # self.frac = (1000 / self.total_compounds)
+        # if self.frac > 1:
+        #     self.frac = 1
+        # self.frac = int(self.frac * 100) / 100
         self.marker_size = 7
         self.cross_size = 15
 
@@ -162,37 +164,22 @@ class StaticVisualizer:
         self.fig = go.FigureWidget()
         self.viewer_l = JsmolView()
         self.viewer_r = JsmolView()
-    
+
         # All different classes are iterated and a class-specific item is added to the list defined above 
         for cl in range(self.n_classes):
 
             name_trace = 'Class ' + str(self.classes[cl])
 
             self.df_classes.append(self.df.loc[self.df[self.target] == self.classes[cl]])
-            if ( self.max_covering == False):
-                self.index_classes_shuffled.append(
-                    self.df_classes[cl].index.to_numpy()[np.random.permutation(self.df_classes[cl].shape[0])])
-            else:
-                self.index_classes_shuffled.append(max_covering_shuffle(self, self.df_classes[cl]))
+
+
             self.fig.add_trace(
                     go.Scatter(
                         name=name_trace,
                         mode='markers',
                     ))                    
             self.trace[name_trace] = self.fig['data'][-1]
-            self.class_symbol[name_trace] = 'circle'
-            self.n_points[name_trace] = int(self.frac * self.df_classes[cl].shape[0])
-            self.symbols[name_trace] = ["circle"] * self.n_points[name_trace]
-            self.sizes[name_trace] = ([self.marker_size] * self.n_points[name_trace])
-            self.colors[name_trace] = ([next(self.palette)] * self.n_points[name_trace])
-
-            if ( self.max_covering == False):
-                self.df_classes_on_map.append(
-                    self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[name_trace]))
-            else:
-                self.df_classes_on_map.append(
-                    self.df_classes[cl].loc[self.index_classes_shuffled[cl][(self.feat_x,self.feat_y)]].head(self.n_points[name_trace]))
-            
+ 
             if ( self.convex_hull == True ) :
                 name_trace = 'Hull ' + str(self.classes[cl])
                 self.fig.add_trace(
@@ -208,7 +195,31 @@ class StaticVisualizer:
                     name=name_trace
                 ))
             self.trace[name_trace] = self.fig['data'][-1]
-            
+        
+        frac_dict, frac_thres = max_covering_shuffle(self)
+        self.frac_dict = frac_dict
+        self.frac_thres = frac_thres
+        self.frac = self.frac_thres[(self.feat_x,self.feat_y)]
+
+        for cl in range(self.n_classes):
+
+            name_trace = 'Class ' + str(self.classes[cl])
+
+            if ( self.max_covering == False):
+                self.index_classes_shuffled.append(
+                    self.df_classes[cl].index.to_numpy()[np.random.permutation(self.df_classes[cl].shape[0])])
+            else:
+                self.index_classes_shuffled.append(
+                    self.frac_dict[(self.feat_x,self.feat_y)][cl]
+                    )
+
+            self.class_symbol[name_trace] = 'circle'
+            self.n_points[name_trace] = int(self.frac * self.df_classes[cl].shape[0])
+            self.symbols[name_trace] = ["circle"] * self.n_points[name_trace]
+            self.sizes[name_trace] = ([self.marker_size] * self.n_points[name_trace])
+            self.colors[name_trace] = ([next(self.palette)] * self.n_points[name_trace])
+            self.df_classes_on_map.append(
+                self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[name_trace]))
 
         # All permanent layout settings are defined here - functions below do not change these fields
         self.fig.update_layout(
@@ -229,7 +240,7 @@ class StaticVisualizer:
         )
         self.fig.update_xaxes(ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor='black')
         self.fig.update_yaxes(ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor='black')
-   
+        # self.frac = self.frac_init[(self.feat_x,self.feat_y)]
         self.df['File'] = self.df['Structure'].apply( lambda x :  os.listdir( x))
         self.df['Replicas'] = self.df['Structure'].apply( lambda x :  len(os.listdir(x)) )
 

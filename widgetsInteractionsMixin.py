@@ -10,12 +10,24 @@ class WidgetsInteractionsMixin:
         # changes the feature plotted on the x-axis
         # separating line is modified accordinglysI
         self.feat_x = change.new
+        if (self.feat_x != self.feat_y):
+            self.frac = self.frac_thres[(self.feat_x,self.feat_y)]
+            self.widg_frac_slider.value = self.frac
+            update_df_on_map(self)
+            make_colors(self)
+            update_hover_variables(self)
         update_layout_figure(self)
 
     def handle_yfeat_change(self, change):
         # changes the feature plotted on the x-axis
         # separating line is modified accordingly
         self.feat_y = change.new
+        if (self.feat_x != self.feat_y):
+            self.frac = self.frac_thres[(self.feat_x,self.feat_y)]
+            self.widg_frac_slider.value = self.frac
+            update_df_on_map(self)
+            make_colors(self)
+            update_hover_variables(self)        
         update_layout_figure(self)
 
     def plotappearance_button_clicked(self, button):

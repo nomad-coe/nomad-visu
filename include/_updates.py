@@ -164,12 +164,8 @@ def update_df_on_map(self):
             n_points = 1
         self.n_points[name_trace]= n_points
 
-        if ( self.max_covering == False):
-            self.df_classes_on_map[cl] = self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(n_points)
-        else:
-            self.df_classes_on_map[cl] = self.df_classes[cl].loc[self.index_classes_shuffled[cl][(self.feat_x,self.feat_y)]].head(n_points)
 
-                
+        self.df_classes_on_map[cl] = self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[name_trace])
 
         if self.widg_compound_text_l.value in self.df_classes[cl].index:
             self.df_classes_on_map[cl] = self.df_classes_on_map[cl].append(self.df.loc[self.widg_compound_text_l.value])
@@ -177,8 +173,6 @@ def update_df_on_map(self):
         if self.widg_compound_text_r.value in self.df_classes[cl].index:
             self.df_classes_on_map[cl] = self.df_classes_on_map[cl].append(self.df.loc[self.widg_compound_text_r.value])
             
-
-
     # if self.widg_outliersbox.value:
     #     self.df_entries_onmap[-1] = pd.concat(self.df_entries_onmap[:self.n_clusters + 1], axis=0, sort=False)
     #     self.n_points[-1] = int(self.df_entries_onmap[-1].shape[0])
