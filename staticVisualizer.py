@@ -196,10 +196,11 @@ class StaticVisualizer:
                 ))
             self.trace[name_trace] = self.fig['data'][-1]
         
-        frac_dict, frac_thres = max_covering_shuffle(self)
-        self.frac_dict = frac_dict
-        self.frac_thres = frac_thres
-        self.frac = self.frac_thres[(self.feat_x,self.feat_y)]
+        if (self.max_covering):
+            frac_dict, frac_thres = max_covering_shuffle(self)
+            self.frac_dict = frac_dict
+            self.frac_thres = frac_thres
+            self.frac = self.frac_thres[(self.feat_x,self.feat_y)]
 
         for cl in range(self.n_classes):
 

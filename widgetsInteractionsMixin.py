@@ -10,7 +10,7 @@ class WidgetsInteractionsMixin:
         # changes the feature plotted on the x-axis
         # separating line is modified accordinglysI
         self.feat_x = change.new
-        if (self.feat_x != self.feat_y):
+        if (self.feat_x != self.feat_y and self.max_covering):
             self.frac = self.frac_thres[(self.feat_x,self.feat_y)]
             self.widg_frac_slider.value = self.frac
             update_df_on_map(self)
@@ -22,7 +22,7 @@ class WidgetsInteractionsMixin:
         # changes the feature plotted on the x-axis
         # separating line is modified accordingly
         self.feat_y = change.new
-        if (self.feat_x != self.feat_y):
+        if (self.feat_x != self.feat_y and self.max_covering):
             self.frac = self.frac_thres[(self.feat_x,self.feat_y)]
             self.widg_frac_slider.value = self.frac
             update_df_on_map(self)
