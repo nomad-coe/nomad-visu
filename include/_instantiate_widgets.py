@@ -3,47 +3,71 @@ import ipywidgets as widgets
 
 def instantiate_widgets(self):
 
-    self.widg_update_frac_button = widgets.Button(
-        description='Click to update',
-        layout=widgets.Layout(width='150px', left='130px')
-    )
+    # self.widg_update_frac_button = widgets.Button(
+    #     description='Update',
+    #     layout=widgets.Layout(width='90px', left='50px')
+    # )
     self.widg_frac_slider = widgets.BoundedFloatText(
         min=0,
         max=1,
         step=0.01,
         value=self.frac,
-        layout=widgets.Layout(left='130px', width='60px')
+        layout=widgets.Layout(left='78px', width='60px')
     )
     self.widg_label_frac = widgets.Label(
-        value='Fraction of compounds visualized in the map: ',
-        layout=widgets.Layout(left='130px')
+        value="Fraction displayed: ",
+        layout=widgets.Layout(left='80px')
     )
     self.widg_featx = widgets.Dropdown(
         description='x-axis',
         options=self.embedding_features,
-        value=self.feat_x
+        value=self.feat_x,
+        layout=widgets.Layout(width='250px')
     )
     self.widg_featy = widgets.Dropdown(
         description='y-axis',
         options=self.embedding_features,
-        value=self.feat_y
+        value=self.feat_y,
+        layout=widgets.Layout(width='250px')
+
     )
     self.widg_featmarker = widgets.Dropdown(
         description="Marker",
         options=['default size'] + self.hover_features,
         value='default size',
+        layout=widgets.Layout(width='250px')
     )
     self.widg_featcolor = widgets.Dropdown(
         description='Color',
         options=['default color'] + self.hover_features,
-        value='default color'
+        value='default color',
+        layout=widgets.Layout(width='250px')
+    )
+    self.widg_featcolor_type = widgets.RadioButtons(
+        options=['Continuous gradient', 'Discrete palette'],
+        value='Continuous gradient',
+        layout=widgets.Layout(width='140px', left='40px'),
+        disabled = True
+    )
+    self.widg_featcolor_list = widgets.Dropdown(
+        disabled=True,
+        options=self.gradient_list,
+        value='Grey scale',
+        layout=widgets.Layout(width='65px', height='35px', left='40px')
     )
     self.widg_gradient = widgets.Dropdown(
         disabled=True,
         description='-gradient',
         options=self.gradient_list,
         value='Grey scale',
-        layout=widgets.Layout(width='150px', right='20px')
+        layout=widgets.Layout(width='150px', left='70px')
+    )
+    self.widg_palette = widgets.Dropdown(
+        disabled=True,
+        description='-palette',
+        options=self.gradient_list,
+        value='Grey scale',
+        layout=widgets.Layout(width='150px', left='30px')
     )
     self.widg_compound_text_l = widgets.Combobox(
         placeholder='...',
@@ -157,7 +181,7 @@ def instantiate_widgets(self):
     )
     self.widg_symbols = widgets.Dropdown(
         options=self.symbols_list,
-        description='-- symbol',
+        description='--- symbol',
         value=self.class_symbol['Class ' + str(self.classes[0])],
         layout=widgets.Layout(left='30px', width='200px')
     )
@@ -270,12 +294,13 @@ def instantiate_widgets(self):
 
     self.box_feat = widgets.VBox([
         widgets.HBox([
-            widgets.VBox([self.widg_featx, self.widg_featy]),
-            widgets.VBox([self.widg_featmarker,
-                          widgets.HBox([self.widg_featcolor, self.widg_gradient])
-                          ]),
+            widgets.VBox([self.widg_featx, self.widg_featy,widgets.HBox([self.widg_label_frac, self.widg_frac_slider])]), 
+            widgets.VBox ([self.widg_featcolor, widgets.HBox([self.widg_featcolor_type, self.widg_featcolor_list], layout=widgets.Layout(top='10px')
+)]),
+            self.widg_featmarker,  
         ]),
-        widgets.HBox([self.widg_label_frac, self.widg_frac_slider, self.widg_update_frac_button]),
+ 
+        # self.widg_gradient, self.widg_palette]),
 
     ])
 

@@ -11,8 +11,24 @@ def make_colors(self):
             name_trace = 'Class ' + str(self.classes[cl])
             self.colors[name_trace] = [next(self.palette)] * self.n_points[name_trace]
 
-    else:
-        gradient = self.widg_gradient.value
+    elif (self.widg_featcolor_type.value == 'Discrete palette'):
+
+        colors_dict = {}
+        self.palette = cycle(getattr(px.colors.qualitative, self.widg_featcolor_list.value))
+        for value in self.df[feature].unique():
+                colors_dict[value]=next(self.palette)
+
+        for cl in range(self.n_classes):
+
+            name_trace = 'Class ' + str(self.classes[cl])
+            self.colors[name_trace] = [' '] * self.n_points[name_trace]
+ 
+            for i,point in enumerate(self.df_classes_on_map[cl][feature]):
+                self.colors[name_trace][i] = colors_dict[point]
+
+
+    elif (self.widg_featcolor_type.value == 'Continuous gradient'):
+        gradient = self.widg_featcolor_list.value
         min_value = self.df[feature].min()
         max_value = self.df[feature].max()
 
@@ -21,9 +37,11 @@ def make_colors(self):
             name_trace = 'Class ' + str(self.classes[cl])
             self.colors[name_trace] = [' '] * self.n_points[name_trace]
 
+
             if gradient == 'Grey scale':
                 shade_cl = 0.7 * (self.df_classes_on_map[cl][feature].to_numpy() - min_value) / \
                         (max_value - min_value)
+
                 for i, e in enumerate(shade_cl):
                     value = 255 * (0.7 - e)
                     string = 'rgb(' + str(value) + "," + str(value) + "," + str(value) + ')'

@@ -61,14 +61,30 @@ class WidgetsInteractionsMixin:
 
     def handle_colorfeat_change(self, change):
         if change.new == 'default color':
-            self.widg_gradient.disabled = True
+            self.widg_featcolor_type.disabled = True
+            self.widg_featcolor_list.disabled = True
         else:
-            self.widg_gradient.disabled = False
+            self.widg_featcolor_type.disabled = False
+            self.widg_featcolor_list.disabled = False
         make_colors( self )
         update_layout_figure(self)
 
     def handle_colorpalette_change(self, change):
         make_colors ( self )
+        update_layout_figure(self)
+
+    def handle_featcolor_list_change(self, change):
+        make_colors(self )
+        update_layout_figure(self)
+
+    def handle_featcolor_type_change(self, change):
+        if change.new == 'Continuous gradient':
+            self.widg_featcolor_list.options = self.gradient_list
+            self.widg_featcolor_list.value = 'Grey scale'
+        if change.new == 'Discrete palette':
+            self.widg_featcolor_list.options = self.qualitative_colors
+            self.widg_featcolor_list.value = 'Plotly'
+        make_colors(self )
         update_layout_figure(self)
 
     def handle_gradient_change(self, change):
@@ -246,6 +262,7 @@ class WidgetsInteractionsMixin:
 
     def display_button_l_clicked(self, button):
 
+        # Actions are performed only if the string inserted in the text widget corresponds to an existing compound
         if self.widg_compound_text_r.value in self.df['Structure']:
 
             compound_l = self.widg_compound_text_l.value
@@ -256,30 +273,12 @@ class WidgetsInteractionsMixin:
             update_df_on_map(self)
             update_layout_figure(self)
             
-            # trace_l = self.df_grouped.loc[self.df_grouped.index == formula_l]['Cluster_label'][0]
-            # if trace_l == -1:
-            #     trace_l = self.n_clusters
-            #
-            # self.trace_l = [trace_l, formula_l]
-
-            # self.make_dfclusters()
-            # self.update_appearance_variables()
-            # self.update_layout_figure()
-            #
-            # if self.widg_colormarkers.value == 'Clustering':
-            #     name_trace = self.name_trace[trace_l]
-            #     with self.fig.batch_update():
-            #         self.fig.update_traces(
-            #             selector={'name': name_trace},
-            #             visible=True
-            #         )
 
     def display_button_r_clicked(self, button):
 
         # Actions are performed only if the string inserted in the text widget corresponds to an existing compound
         if self.widg_compound_text_r.value in self.df['Structure']:
 
-            # self.replica_r += 1
             compound_r = self.widg_compound_text_r.value
             structure_r = self.df['Structure'].at[compound_r]
 
@@ -287,22 +286,3 @@ class WidgetsInteractionsMixin:
 
             update_df_on_map(self)
             update_layout_figure(self)
-
-            # trace_r = self.df_grouped.loc[self.df_grouped.index == formula_r]['Cluster_label'][0]
-            # if trace_r == -1:
-            #     trace_r = self.n_clusters
-            #
-            # self.trace_r = [trace_r, formula_r]
-            #
-            # self.make_dfclusters()
-            # self.update_appearance_variables()
-            # self.update_layout_figure()
-            #
-            # if self.widg_colormarkers.value == 'Clustering':
-            #     name_trace = self.name_trace[trace_r]
-            #     with self.fig.batch_update():
-            #         self.fig.update_traces(
-            #             selector={'name': name_trace},
-            #             visible=True
-            #         )
-

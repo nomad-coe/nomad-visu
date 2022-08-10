@@ -74,16 +74,10 @@ def update_layout_figure(self):
     y_max = []
 
     for cl in np.arange(self.n_classes):
-        # if len(self.df_classes_on_map[cl][self.feat_x]) > 1:
         x_min.append(min(self.df_classes_on_map[cl][self.feat_x]))
         x_max.append(max(self.df_classes_on_map[cl][self.feat_x]))
         y_min.append(min(self.df_classes_on_map[cl][self.feat_y]))
         y_max.append(max(self.df_classes_on_map[cl][self.feat_y]))
-        # else:
-        #     x_min.append(self.df_classes_on_map.iloc[0][cl][self.feat_x]))
-        #     x_max.append((self.df_classes_on_map.iloc[0][cl][self.feat_x]))
-        #     y_min.append(min(self.df_classes_on_map.iloc[0][cl][self.feat_y]))
-        #     y_max.append(max(self.df_classes_on_map.iloc[0][cl][self.feat_y]))
     x_min = min(x_min)
     y_min = min(y_min)
     x_max = max(x_max)
@@ -154,7 +148,6 @@ def update_layout_figure(self):
 
 
 
-
 def update_df_on_map(self):
 
     for cl in range(self.n_classes):
@@ -174,15 +167,6 @@ def update_df_on_map(self):
         if self.widg_compound_text_r.value in self.df_classes[cl].index:
             self.df_classes_on_map[cl] = self.df_classes_on_map[cl].append(self.df.loc[self.widg_compound_text_r.value])
             
-    # if self.widg_outliersbox.value:
-    #     self.df_entries_onmap[-1] = pd.concat(self.df_entries_onmap[:self.n_clusters + 1], axis=0, sort=False)
-    #     self.n_points[-1] = int(self.df_entries_onmap[-1].shape[0])
-    #     self.global_symbols[-1] = [symb for sub in self.global_symbols[:-1] for symb in sub]
-    # else:
-    #     self.df_entries_onmap[-1] = pd.concat(self.df_entries_onmap[:self.n_clusters], axis=0, sort=False)
-    #     self.n_points[-1] = int(self.df_entries_onmap[-1].shape[0])
-    #     self.global_symbols[-1] = [symb for sub in self.global_symbols[:-2] for symb in sub]
-
 
 def update_hover_variables(self):
     self.hover_text = []
@@ -218,31 +202,5 @@ def update_hover_variables(self):
     else:
         self.hover_custom.append([''])
         self.hover_template.append([''])
-
-    # for cl in np.arange(self.n_classes):
-    #     markerlinewidth = [1] * self.n_points[cl]
-    #     markerlinecolor = ['white']. * self.n_points[cl]
-    #     sizes = [self.marker_size] * self.n_points[cl]
-    #     symbols = self.symbols[cl]
-    #     try:
-    #         point = symbols.index('x')
-    #         sizes[point] = self.cross_size
-    #         markerlinewidth[point] = 2
-    #         markerlinecolor[point] = 'black'
-    #     except:
-    #         pass
-    #     try:
-    #         point = symbols.index('cross')
-    #         sizes[point] = self.cross_size
-    #         markerlinewidth[point] = 2
-    #         markerlinecolor[point] = 'black'
-    #     except:
-    #         pass
-    #     self.sizes[cl] = sizes
-    #     # self.global_markerlinecolor[cl] = markerlinecolor
-    #     # self.global_markerlinewidth[cl] = markerlinewidth
-    # self.sizes[-1] = [symb for sub in self.sizes[:-1] for symb in sub]
-    # self.global_markerlinecolor[-1] = [symb for sub in self.global_markerlinecolor[:-1] for symb in sub]
-    # self.global_markerlinewidth[-1] = [symb for sub in self.global_markerlinewidth[:-1] for symb in sub]
 
 
