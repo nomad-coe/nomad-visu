@@ -55,13 +55,16 @@ def update_markers_size(self ):
                     pass
             self.sizes[name_trace] = sizes
     else:
-        min_value = min(self.df[feature])
-        max_value = max(self.df[feature])
-        coeff = 2 * self.marker_size / (max_value - min_value)
+        min_value = self.min_value_markerfeat
+        max_value = self.max_value_markerfeat
+        min_feat = min([min(cl[feature].to_numpy()) for cl in self.df_classes_on_map])
+        max_feat = max([max(cl[feature].to_numpy()) for cl in self.df_classes_on_map])
+
+        coeff = (max_value-min_value)/(max_feat-min_feat)
 
         for cl in range(self.n_classes):
             name_trace = 'Class ' + str(self.classes[cl])
-            sizes = self.marker_size / 2 + coeff * self.df_classes_on_map[cl][feature].to_numpy()
+            sizes = min_value + coeff * (self.df_classes_on_map[cl][feature].to_numpy()-min_feat)
             self.sizes[name_trace] = sizes
 
 

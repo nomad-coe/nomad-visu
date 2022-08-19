@@ -23,6 +23,8 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         # self.widg_gradient.observe(self.handle_gradient_change, names='value')
         self.widg_featcolor_list.observe(self.handle_featcolor_list_change, names='value')
         self.widg_featcolor_type.observe(self.handle_featcolor_type_change, names='value')
+        self.widg_featmarker_maxvalue.observe(self.handle_featmarker_maxvalue_change, names='value')
+        self.widg_featmarker_minvalue.observe(self.handle_featmarker_minvalue_change, names='value')
         self.widg_colorpalette.observe(self.handle_colorpalette_change, names='value')
         self.widg_plotutils_button.on_click(self.plotappearance_button_clicked)
         self.widg_frac_slider.observe(self.handle_frac_change, names='value')

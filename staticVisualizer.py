@@ -58,6 +58,8 @@ class StaticVisualizer:
         # self.frac = int(self.frac * 100) / 100
         self.marker_size = 7
         self.cross_size = 15
+        self.min_value_markerfeat = 4
+        self.max_value_markerfeat = 20
 
         self.compounds_list = df.index.tolist()
         self.symbols_list = [

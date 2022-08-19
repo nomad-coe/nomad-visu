@@ -37,6 +37,38 @@ def instantiate_widgets(self):
         value='default size',
         layout=widgets.Layout(width='250px')
     )
+    self.widg_featmarker_minvalue = widgets.BoundedFloatText(
+        min=0,
+        max=self.max_value_markerfeat,
+        step=1,
+        value=self.min_value_markerfeat,
+        disabled= True,
+        layout=widgets.Layout
+        (
+            left='91px', 
+        width='60px')
+    )
+    self.widg_featmarker_minvalue_label = widgets.Label(
+        value='Min value: ',
+        layout=widgets.Layout(
+            left='89px', 
+            width='70px')
+    )
+    self.widg_featmarker_maxvalue = widgets.BoundedFloatText(
+        min=self.min_value_markerfeat,
+        step=1,
+        value=self.max_value_markerfeat,
+        layout=widgets.Layout(
+            left='91px',
+             width='60px'),
+        disabled = True
+    )
+    self.widg_featmarker_maxvalue_label = widgets.Label(
+        value='Max value: ',
+        layout=widgets.Layout(
+            left='89px',
+             width='70px')
+    )
     self.widg_featcolor = widgets.Dropdown(
         description='Color',
         options=['default color'] + self.hover_features,
@@ -295,9 +327,21 @@ def instantiate_widgets(self):
     self.box_feat = widgets.VBox([
         widgets.HBox([
             widgets.VBox([self.widg_featx, self.widg_featy,widgets.HBox([self.widg_label_frac, self.widg_frac_slider])]), 
-            widgets.VBox ([self.widg_featcolor, widgets.HBox([self.widg_featcolor_type, self.widg_featcolor_list], layout=widgets.Layout(top='10px')
+            widgets.VBox ([
+                self.widg_featcolor, 
+                widgets.HBox([self.widg_featcolor_type, self.widg_featcolor_list], layout=widgets.Layout(top='10px')
 )]),
-            self.widg_featmarker,  
+            widgets.VBox ([self.widg_featmarker, 
+            widgets.VBox([ 
+                widgets.HBox([self.widg_featmarker_minvalue_label, self.widg_featmarker_minvalue],
+                # layout=widgets.Layout(left='10px'),
+                ), 
+                widgets.HBox([self.widg_featmarker_maxvalue_label,self.widg_featmarker_maxvalue], 
+                # layout=widgets.Layout(left='10px'),
+                ),
+
+                ])
+            ])  
         ]),
  
         # self.widg_gradient, self.widg_palette]),

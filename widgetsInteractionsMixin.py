@@ -43,6 +43,12 @@ class WidgetsInteractionsMixin:
             self.widg_box_utils.layout.visibility = 'visible'
 
     def handle_markerfeat_change(self, change):
+        if change.new == 'default size':
+            self.widg_featmarker_maxvalue.disabled = True
+            self.widg_featmarker_minvalue.disabled = True
+        else:
+            self.widg_featmarker_maxvalue.disabled = False
+            self.widg_featmarker_minvalue.disabled = False
         update_layout_figure(self)
 
     def handle_frac_change(self, change):
@@ -85,6 +91,16 @@ class WidgetsInteractionsMixin:
             self.widg_featcolor_list.options = self.qualitative_colors
             self.widg_featcolor_list.value = 'Plotly'
         make_colors(self )
+        update_layout_figure(self)
+
+    def handle_featmarker_maxvalue_change(self, change):
+        self.max_value_markerfeat = change.new
+        self.widg_featmarker_minvalue.max = change.new
+        update_layout_figure(self)
+
+    def handle_featmarker_minvalue_change(self, change):
+        self.min_value_markerfeat = change.new
+        self.widg_featmarker_maxvalue.min = change.new
         update_layout_figure(self)
 
     def handle_gradient_change(self, change):
