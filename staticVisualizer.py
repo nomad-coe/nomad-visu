@@ -164,7 +164,7 @@ class StaticVisualizer:
         self.df_classes = []  # section of the pandas dataframe containing elements of only a specific class
         self.index_classes_shuffled = []  # index of the dataframe class shuffled - used to avoid bias visualization when only a fraction is visualized
         self.n_points = {}  # total points of the class which are visualized - can be less than the total number of data depending on the fraction visualized
-        self.df_classes_on_map = []  # dataframe which contains only the elements that are visualized on the map
+        self.df_classes_on_map = {}  # dataframe which contains only the elements that are visualized on the map
         self.symbols = {}  # each item is a list of symbols
         self.sizes = {}  # each item is a list of sizes
         self.colors = {}  # each item is a list of colors
@@ -229,8 +229,7 @@ class StaticVisualizer:
             self.symbols[name_trace] = ["circle"] * self.n_points[name_trace]
             self.sizes[name_trace] = ([self.marker_size] * self.n_points[name_trace])
             self.colors[name_trace] = ([next(self.palette)] * self.n_points[name_trace])
-            self.df_classes_on_map.append(
-                self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[name_trace]))
+            self.df_classes_on_map[name_trace] = self.df_classes[cl].loc[self.index_classes_shuffled[cl]].head(self.n_points[name_trace])
 
         # All permanent layout settings are defined here - functions below do not change these fields
         self.fig.update_layout(

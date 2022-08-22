@@ -133,8 +133,9 @@ class WidgetsInteractionsMixin:
         self.widg_symbols.value = self.class_symbol['Class ' + str(change.new)]
 
     def handle_symbols_change(self, change):
-        self.class_symbol['Class ' + str(self.widg_classes_symbol.value) ] = change.new
-        self.symbols['Class ' + str(self.widg_classes_symbol.value)] = [str(change.new)] * self.n_points['Class ' + str(self.widg_classes_symbol.value)]
+        name_trace = 'Class ' + str(self.widg_classes_symbol.value)
+        self.class_symbol[name_trace] = change.new
+        self.symbols[name_trace] = [str(change.new)] * len(self.df_classes_on_map[name_trace])
         update_layout_figure(self)
 
 
@@ -273,6 +274,8 @@ class WidgetsInteractionsMixin:
             view_structure_r(self, formula)
 
         update_df_on_map(self)
+        make_colors(self)
+        update_hover_variables(self)
         update_layout_figure(self)
 
 
@@ -287,6 +290,8 @@ class WidgetsInteractionsMixin:
             view_structure_l(self, compound_l)
 
             update_df_on_map(self)
+            make_colors(self)
+            update_hover_variables(self)
             update_layout_figure(self)
             
 
@@ -301,4 +306,6 @@ class WidgetsInteractionsMixin:
             view_structure_r(self, compound_r)
 
             update_df_on_map(self)
+            make_colors(self)
+            update_hover_variables(self)
             update_layout_figure(self)
