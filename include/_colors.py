@@ -4,7 +4,7 @@ import plotly.express as px
 def make_colors(self):
 
     feature=self.widg_featcolor.value
-    if feature == 'default color':
+    if feature == 'Default color':
 
         self.palette = cycle(getattr(px.colors.qualitative, self.widg_colorpalette.value))
         for cl in range(self.n_classes):

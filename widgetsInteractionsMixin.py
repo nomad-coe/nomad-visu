@@ -43,7 +43,7 @@ class WidgetsInteractionsMixin:
             self.widg_box_utils.layout.visibility = 'visible'
 
     def handle_markerfeat_change(self, change):
-        if change.new == 'default size':
+        if change.new == 'Default size':
             self.widg_featmarker_maxvalue.disabled = True
             self.widg_featmarker_minvalue.disabled = True
         else:
@@ -66,7 +66,7 @@ class WidgetsInteractionsMixin:
         update_layout_figure(self)
 
     def handle_colorfeat_change(self, change):
-        if change.new == 'default color':
+        if change.new == 'Default color':
             self.widg_featcolor_type.disabled = True
             self.widg_featcolor_list.disabled = True
         else:
@@ -141,7 +141,7 @@ class WidgetsInteractionsMixin:
 
     def reset_button_clicked(self, button):
 
-        self.widg_symbols.value = 'circle'
+        self.widg_symbols.value = 'Circle'
 
         with self.fig.batch_update():
  
