@@ -126,33 +126,29 @@ def update_layout_figure( self ):
             self.trace['Class ' + str(self.classes[cl])].marker.size = self.sizes[name_trace]
             self.trace['Class ' + str(self.classes[cl])].marker.symbol = self.symbols[name_trace]
 
-            # self.trace[self.name_trace[cl]].marker.line.color = self.colors[cl]
-            # self.trace[self.name_trace[cl]].marker.line.width = self.global_markerlinewidth[cl]
             self.fig.update_traces(
                 selector={'name': 'Class ' + str(self.classes[cl]) },
                 text=self.hover_text[cl],
                 customdata=self.hover_custom[cl],
                 hovertemplate=self.hover_template[cl],
                 marker_color=self.colors['Class ' + str(self.classes[cl])],
-                visible=True
             )
         if ( self.convex_hull == True ) :
 
             if ( self.feat_x == self.feat_y ):
                 for cl in np.arange(self.n_classes):
+                    self.trace['Hull '+str(self.classes[cl])].line = dict ( width=0 )
                     self.fig.update_traces(
                         selector={'name': 'Hull '+str(self.classes[cl])},
-                        visible=False
                     )            
             else:
                 hullx, hully = make_hull(self, self.feat_x, self.feat_y)
                 for cl in np.arange(self.n_classes):
                     self.trace['Hull '+str(self.classes[cl])]['x'] = hullx[cl]
                     self.trace['Hull '+str(self.classes[cl])]['y'] = hully[cl]
-                    self.trace['Hull '+str(self.classes[cl])].line = dict (color=self.widg_color_hull.value, width=self.widg_width_hull.value, dash=self.widg_style_hull    .value )
+                    self.trace['Hull '+str(self.classes[cl])].line = dict (color=self.widg_color_hull.value, width=self.widg_width_hull.value, dash=self.widg_style_hull.value )
                     self.fig.update_traces(
                         selector={'name': 'Hull '+str(self.classes[cl])},
-                        visible=True
                     )
         if ( self.regr_line_coefs ) :
 
