@@ -212,13 +212,13 @@ class WidgetsInteractionsMixin:
             display(local_file)
 
     def bgcolor_update_button_clicked(self, button):
-        if (self.widg_bgcolor.value=='Default'):
+        if (self.widg_bgcolor.value=='Default' or self.widg_bgcolor.value=='default' ):
                 self.fig.update_layout(
                     plot_bgcolor=self.bg_color_default,
                     xaxis=dict(gridcolor='white'),
                     yaxis=dict(gridcolor='white')
                      )
-                self.plot_bgcolor = self.bg_color_default
+                self.bg_color = self.bg_color_default
                 self.bg_toggle = True
         else:
             try:
