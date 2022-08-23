@@ -3,10 +3,6 @@ import ipywidgets as widgets
 
 def instantiate_widgets(self):
 
-    # self.widg_update_frac_button = widgets.Button(
-    #     description='Update',
-    #     layout=widgets.Layout(width='90px', left='50px')
-    # )
     self.widg_frac_slider = widgets.BoundedFloatText(
         min=0,
         max=1,
@@ -43,10 +39,7 @@ def instantiate_widgets(self):
         step=1,
         value=self.min_value_markerfeat,
         disabled= True,
-        layout=widgets.Layout
-        (
-            left='91px', 
-        width='60px')
+        layout=widgets.Layout(left='91px', width='60px')
     )
     self.widg_featmarker_minvalue_label = widgets.Label(
         value='Min value: ',
@@ -261,11 +254,7 @@ def instantiate_widgets(self):
         layout=widgets.Layout(left='150px', width='400px')
     )
     self.widg_printdescription = widgets.Label(
-        value="Click 'Print' to export the plot in the desired format.",
-        layout=widgets.Layout(left='50px', width='640px')
-    )
-    self.widg_printdescription2 = widgets.Label(
-        value="The resolution of the image can be increased by increasing the 'Scale' value.",
+        value="Click 'Print' to export the plot in the desired format and resolution.",
         layout=widgets.Layout(left='50px', width='640px')
     )
     self.widg_featuredescription = widgets.Label(
@@ -275,32 +264,17 @@ def instantiate_widgets(self):
         value='Tick the box next to the cross symbols in order to choose which windows visualizes the next '
               'structure selected in the map above.'
     )
-    self.widg_colordescription = widgets.Label(
-        value='Colors in the boxes below can be written as a text string, i.e. red, '
-              'green,...,  or in a rgb/a, hex format. ',
-        layout=widgets.Layout(left='50px', width='640px')
-
-    )
-    self.widg_colordescription2 = widgets.Label(
-        value="After modifying a specific field, click on the 'Update colors' button to display the changes in "
-              "the plot.",
-        layout=widgets.Layout(left='50px', width='640px')
-    )
     self.widg_plotutils_button = widgets.Button(
         description='For a high-quality print of the plot, click to access the plot appearance utils',
         layout=widgets.Layout(width='600px')
     )
     self.widg_box_utils = widgets.VBox([widgets.HBox([self.widg_markersize, self.widg_crosssize, self.widg_colorpalette]),
-
                                         widgets.HBox([self.widg_fontsize, self.widg_fontfamily, self.widg_fontcolor]),
                                         widgets.HBox([self.widg_classes_symbol, self.widg_symbols, self.widg_reset_button]),
-
-                                        self.widg_colordescription, self.widg_colordescription2,
                                         widgets.HBox([self.widg_color_hull, self.widg_width_hull, self.widg_style_hull ]),
                                         widgets.HBox([self.widg_color_line, self.widg_width_line, self.widg_style_line ]),
-                                        widgets.HBox([self.widg_bgtoggle_button, self.widg_bgcolor,
-                                                      self.widg_bgcolor_update_button]),
-                                        self.widg_printdescription, self.widg_printdescription2,
+                                        widgets.HBox([self.widg_bgtoggle_button, self.widg_bgcolor,self.widg_bgcolor_update_button]),
+                                        self.widg_printdescription,
                                         widgets.HBox([self.widg_plot_name, self.widg_plot_format, self.widg_scale]),
                                         self.widg_print_button, self.widg_print_out,
                                         ])
@@ -329,8 +303,7 @@ def instantiate_widgets(self):
             widgets.VBox([self.widg_featx, self.widg_featy,widgets.HBox([self.widg_label_frac, self.widg_frac_slider])]), 
             widgets.VBox ([
                 self.widg_featcolor, 
-                widgets.HBox([self.widg_featcolor_type, self.widg_featcolor_list], layout=widgets.Layout(top='10px')
-)]),
+                widgets.HBox([self.widg_featcolor_type, self.widg_featcolor_list], layout=widgets.Layout(top='10px'))]),
             widgets.VBox ([self.widg_featmarker, 
             widgets.VBox([ 
                 widgets.HBox([self.widg_featmarker_minvalue_label, self.widg_featmarker_minvalue],
@@ -344,8 +317,6 @@ def instantiate_widgets(self):
             ])  
         ]),
  
-        # self.widg_gradient, self.widg_palette]),
-
     ])
 
     self.widg_box_viewers = widgets.VBox([self.widg_description, widgets.HBox([

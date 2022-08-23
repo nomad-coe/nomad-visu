@@ -233,16 +233,24 @@ class WidgetsInteractionsMixin:
                 pass
 
     def plotappearance_button_clicked(self, button):
-        if self.widg_box_utils.layout.visibility == 'visible':
-            self.widg_box_utils.layout.visibility = 'hidden'
-            for i in range(490, -1, -1):
-                self.widg_box_viewers.layout.top = str(i) + 'px'
-            self.widg_box_utils.layout.bottom = '0px'
+        if self.path_to_structures:
+            if self.widg_box_utils.layout.visibility == 'visible':
+                self.widg_box_utils.layout.visibility = 'hidden'
+                for i in range(340, -1, -1):
+                    self.widg_box_viewers.layout.top = str(i) + 'px'
+                self.widg_box_utils.layout.bottom = '0px'
+            else:
+                for i in range(341):
+                    self.widg_box_viewers.layout.top = str(i) + 'px'
+                self.widg_box_utils.layout.bottom = '400px'
+                self.widg_box_utils.layout.visibility = 'visible'
         else:
-            for i in range(491):
-                self.widg_box_viewers.layout.top = str(i) + 'px'
-            self.widg_box_utils.layout.bottom = '400px'
-            self.widg_box_utils.layout.visibility = 'visible'
+            if self.widg_box_utils.layout.visibility == 'visible':
+                self.widg_box_utils.layout.visibility = 'hidden'
+            else:
+                self.widg_box_utils.layout.visibility = 'visible'
+
+
 
     def handle_checkbox_l(self, change):
         if change.new:

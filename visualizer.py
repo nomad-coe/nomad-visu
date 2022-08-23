@@ -12,9 +12,9 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         from include._colors import make_colors
         from include._updates import update_hover_variables, update_layout_figure, update_markers_size
 
-
-        for cl in np.arange(self.n_classes):
-            self.trace['Class ' + str(self.classes[cl])].on_click(self.handle_point_clicked)  # actions are performed after clicking points on the map
+        if self.path_to_structures:
+            for cl in np.arange(self.n_classes):
+                self.trace['Class ' + str(self.classes[cl])].on_click(self.handle_point_clicked)  # actions are performed after clicking points on the map
 
         self.widg_featx.observe(self.handle_xfeat_change, names='value')
         self.widg_featy.observe(self.handle_yfeat_change, names='value')
