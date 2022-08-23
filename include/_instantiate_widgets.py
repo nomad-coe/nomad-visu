@@ -77,21 +77,21 @@ def instantiate_widgets(self):
     self.widg_featcolor_list = widgets.Dropdown(
         disabled=True,
         options=self.gradient_list,
-        value='Grey scale',
+        value='Blue to red',
         layout=widgets.Layout(width='65px', height='35px', left='40px')
     )
     self.widg_gradient = widgets.Dropdown(
         disabled=True,
         description='-gradient',
         options=self.gradient_list,
-        value='Grey scale',
+        value='Blue to red',
         layout=widgets.Layout(width='150px', left='70px')
     )
     self.widg_palette = widgets.Dropdown(
         disabled=True,
         description='-palette',
         options=self.gradient_list,
-        value='Grey scale',
+        value='Blue to red',
         layout=widgets.Layout(width='150px', left='30px')
     )
     self.widg_compound_text_l = widgets.Combobox(

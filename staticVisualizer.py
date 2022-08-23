@@ -64,11 +64,32 @@ class StaticVisualizer:
         self.compounds_list = df.index.tolist()
         self.symbols_list = [
             'circle',
-            'square',
-            'triangle-up',
-            'triangle-down',
+            'circle-open',
+            'circle-dot',
+            'circle-open-dot',
             'circle-cross',
-            'circle-x'
+            'circle-x',
+            'square',
+            'square-open',
+            'square-dot',
+            'square-open-dot',
+            'square-cross',
+            'square-x',
+            'diamond',
+            'diamond-open',
+            'diamond-dot',
+            'diamond-open-dot',
+            'diamond-cross',
+            'diamond-x',
+            'triangle-up',
+            'triangle-up-open',
+            'triangle-up-dot',
+            'triangle-up-open-dot',
+            'triangle-down',
+            'triangle-down-open',
+            'triangle-down-dot',
+            'triangle-down-open-dot',
+
         ]
         self.class_symbol = {}
         self.font_size = 12
@@ -122,12 +143,15 @@ class StaticVisualizer:
                             "longdash",
                             "dashdot",
                             "longdashdot"]
-        self.gradient_list = ['Blue to red',
-                              'Blue to green',
-                              'Green to red',
-                              'Grey scale',
-                              'Purple scale',
-                              'Turquoise scale']
+        self.gradient_list = [
+            'Blue to red',
+            'Blue to green',
+            'Green to purple',
+            'Green to red',
+            'Yellow to red',
+            'Grey scale',
+            ]        
+        
         self.bg_color_default = 'rgba(229,236,246, 0.5)'
         self.bg_color = self.bg_color_default
         self.bg_toggle = True
@@ -265,21 +289,24 @@ class StaticVisualizer:
         with self.output_r:
             display(self.viewer_r)
 
-        self.widg_box_utils.layout.visibility = 'hidden'
         # self.widg_gradient.layout.visibility = 'hidden'
 
-        self.widg_plotutils_button.layout.left = '50px'
-        self.widg_box_utils.layout.border = 'dashed 1px'
-        self.widg_box_utils.right = '100px'
-        self.widg_box_utils.layout.max_width = '700px'
-
-        self.box_feat.layout.height = '150px'
+        self.box_feat.layout.height = '140px'
         self.box_feat.layout.top = '30px'
+
+
         self.widg_plotutils_button.layout.left = '50px'
+        self.widg_plotutils_button.layout.left = '50px'
+
 
         self.widg_box_utils.layout.border = 'dashed 1px'
         self.widg_box_utils.right = '100px'
+        self.widg_box_utils.layout.border = 'dashed 1px'
+        self.widg_box_utils.right = '100px'
         self.widg_box_utils.layout.max_width = '700px'
+        self.widg_box_utils.layout.visibility = 'hidden'
+        self.widg_box_utils.layout.max_width = '700px'
+
 
         if self.convex_hull == False:
             self.widg_color_hull.disabled = True
@@ -291,12 +318,20 @@ class StaticVisualizer:
             self.widg_width_line.disabled = True
             self.widg_style_line.disabled = True
 
-        container = widgets.VBox([
-            self.box_feat,
-            self.fig,
-            self.widg_plotutils_button,
-            self.widg_box_viewers,
-            self.widg_box_utils
-        ])
-
+        if self.path_to_structures:
+            container = widgets.VBox([
+                self.box_feat,
+                self.fig,
+                self.widg_plotutils_button,
+                self.widg_box_viewers,
+                self.widg_box_utils
+            ])
+        else :
+            self.widg_box_utils.layout.top = '10px'
+            container = widgets.VBox([
+                self.box_feat,
+                self.fig,
+                self.widg_plotutils_button,
+                self.widg_box_utils
+            ])
         display(container)

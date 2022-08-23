@@ -1,5 +1,7 @@
 from itertools import cycle
+import numpy as np
 import plotly.express as px
+from colour import Color
 
 def make_colors(self):
 
@@ -11,7 +13,7 @@ def make_colors(self):
             name_trace = 'Class ' + str(self.classes[cl])
             self.colors[name_trace] = [next(self.palette)] * len(self.df_classes_on_map[name_trace])
 
-    elif (self.widg_featcolor_type.value == 'Discrete palette'):
+    elif (self.widg_featcolor_type.value == 'Discrete'):
 
         colors_dict = {}
         self.palette = cycle(getattr(px.colors.qualitative, self.widg_featcolor_list.value))
@@ -27,10 +29,13 @@ def make_colors(self):
                 self.colors[name_trace][i] = colors_dict[value]
 
 
-    elif (self.widg_featcolor_type.value == 'Continuous gradient'):
+    elif (self.widg_featcolor_type.value == 'Gradient'):
+
         gradient = self.widg_featcolor_list.value
         min_value = self.df[feature].min()
         max_value = self.df[feature].max()
+
+        intervals = 100        
 
         for cl in range(self.n_classes):
 
@@ -39,53 +44,35 @@ def make_colors(self):
 
 
             if gradient == 'Grey scale':
-                shade_cl = 0.7 * (self.df_classes_on_map[name_trace][feature].to_numpy() - min_value) / \
+                shade_cl = 0.85 * (self.df_classes_on_map[name_trace][feature].to_numpy() - min_value) / \
                         (max_value - min_value)
 
                 for i, e in enumerate(shade_cl):
-                    value = 255 * (0.7 - e)
+                    value = 255 * (0.85 - e)
                     string = 'rgb(' + str(value) + "," + str(value) + "," + str(value) + ')'
                     self.colors[name_trace][i] = string
 
-            if gradient == 'Purple scale':
-                    shade_cl = 0.7 * (self.df_classes_on_map[name_trace][feature].to_numpy() - min_value) / \
-                            (max_value - min_value)
-                    for i, e in enumerate(shade_cl):
-                        value = 255 * (0.7 - e)
-                        string = 'rgb(' + str(value) + "," + str(0) + "," + str(value) + ')'
-                        self.colors[name_trace][i] = string
-
-            if gradient == 'Turquoise scale':
-                    shade_cl = 0.7 * (self.df_classes_on_map[name_trace][feature].to_numpy() - min_value) / \
-                            (max_value - min_value)
-                    for i, e in enumerate(shade_cl):
-                        value = 255 * (0.7 - e)
-                        string = 'rgb(' + str(0) + "," + str(value) + "," + str(value) + ')'
-                        self.colors[name_trace][i] = string
-
             if gradient == 'Blue to green':
-                    shade_cl = 0.7 * (self.df_classes_on_map[name_trace][feature].to_numpy() - min_value) / \
-                            (max_value - min_value)
-                    for i, e in enumerate(shade_cl):
-                        value = 255 * e
-                        value2 = 255 - value
-                        string = 'rgb(' + str(0) + "," + str(value) + "," + str(value2) + ')'
-                        self.colors[name_trace][i] = string
+                    colors = list(Color('blue').range_to(Color('green'), intervals+1))
+                    shade_cl = np.trunc(intervals * ((self.df_classes_on_map[name_trace][feature].to_numpy() - min_value) / (max_value - min_value))).astype(int)
+                    self.colors[name_trace]=[ str(color) for color in np.array(colors)[shade_cl]]
 
             if gradient == 'Blue to red':
-                    shade_cl = 0.7 * (self.df_classes_on_map[name_trace][feature].to_numpy() - min_value) / \
-                            (max_value - min_value)
-                    for i, e in enumerate(shade_cl):
-                        value = 255 * e
-                        value2 = 255 - value
-                        string = 'rgb(' + str(value) + "," + str(0) + "," + str(value2) + ')'
-                        self.colors[name_trace][i] = string
+                    colors = list(Color('blue').range_to(Color('red'), intervals+1))
+                    shade_cl = np.trunc(intervals * ((self.df_classes_on_map[name_trace][feature].to_numpy() - min_value) / (max_value - min_value))).astype(int)
+                    self.colors[name_trace]=[ str(color) for color in np.array(colors)[shade_cl]]
+
+            if gradient == 'Green to purple':
+                    colors = list(Color('green').range_to(Color('purple'), intervals+1))
+                    shade_cl = np.trunc(intervals * ((self.df_classes_on_map[name_trace][feature].to_numpy() - min_value) / (max_value - min_value))).astype(int)
+                    self.colors[name_trace]=[ str(color) for color in np.array(colors)[shade_cl]]
 
             if gradient == 'Green to red':
-                    shade_cl = 0.7 * (self.df_classes_on_map[name_trace][feature].to_numpy() - min_value) / \
-                            (max_value - min_value)
-                    for i, e in enumerate(shade_cl):
-                        value = 255 * e
-                        value2 = 255 - value
-                        string = 'rgb(' + str(value) + "," + str(value2) + "," + str(0) + ')'
-                        self.colors[name_trace][i] = string
+                    colors = list(Color('green').range_to(Color('red'), intervals+1))
+                    shade_cl = np.trunc(intervals * ((self.df_classes_on_map[name_trace][feature].to_numpy() - min_value) / (max_value - min_value))).astype(int)
+                    self.colors[name_trace]=[ str(color) for color in np.array(colors)[shade_cl]]
+
+            if gradient == 'Yellow to red':
+                    colors = list(Color('yellow').range_to(Color('red'), intervals+1))
+                    shade_cl = np.trunc(intervals * ((self.df_classes_on_map[name_trace][feature].to_numpy() - min_value) / (max_value - min_value))).astype(int)
+                    self.colors[name_trace]=[ str(color) for color in np.array(colors)[shade_cl]]

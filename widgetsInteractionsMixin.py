@@ -84,10 +84,10 @@ class WidgetsInteractionsMixin:
         update_layout_figure(self)
 
     def handle_featcolor_type_change(self, change):
-        if change.new == 'Continuous gradient':
+        if change.new == 'Gradient':
             self.widg_featcolor_list.options = self.gradient_list
-            self.widg_featcolor_list.value = 'Grey scale'
-        if change.new == 'Discrete palette':
+            self.widg_featcolor_list.value = 'Blue to red'
+        if change.new == 'Discrete':
             self.widg_featcolor_list.options = self.qualitative_colors
             self.widg_featcolor_list.value = 'Plotly'
         make_colors(self )
@@ -141,7 +141,7 @@ class WidgetsInteractionsMixin:
 
     def reset_button_clicked(self, button):
 
-        self.widg_symbols.value = 'Circle'
+        self.widg_symbols.value = 'circle'
 
         with self.fig.batch_update():
  
