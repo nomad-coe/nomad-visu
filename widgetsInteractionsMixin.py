@@ -86,7 +86,7 @@ class WidgetsInteractionsMixin:
     def handle_featcolor_type_change(self, change):
         if change.new == 'Gradient':
             self.widg_featcolor_list.options = self.gradient_list
-            self.widg_featcolor_list.value = 'Blue to red'
+            self.widg_featcolor_list.value = 'viridis'
         if change.new == 'Discrete':
             self.widg_featcolor_list.options = self.qualitative_colors
             self.widg_featcolor_list.value = 'Plotly'

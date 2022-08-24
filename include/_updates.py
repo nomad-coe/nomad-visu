@@ -118,6 +118,7 @@ def update_layout_figure( self ):
             xaxis_range = xaxis_range,
             yaxis_range = yaxis_range,
         )
+
         for  cl in np.arange(self.n_classes):
             # All elements on the map and their properties are reinitialized at each change
             name_trace = 'Class ' + str(self.classes[cl])
@@ -131,7 +132,9 @@ def update_layout_figure( self ):
                 text=self.hover_text[cl],
                 customdata=self.hover_custom[cl],
                 hovertemplate=self.hover_template[cl],
-                marker_color=self.colors['Class ' + str(self.classes[cl])],
+                # marker_color=self.colors['Class ' + str(self.classes[cl])],
+                # marker=dict(color=self.colors['Class ' + str(self.classes[cl])],colorbar=dict(thickness=20))
+                # marker = dict (colorscale='viridis', color=self.df_classes_on_map[name_trace][self.feat_y], cmin=0, cmax=0.25, colorbar=dict(thickness=10, orientation='v', len=0.6, y=0.3) )    
             )
         if ( self.convex_hull == True ) :
 
@@ -149,6 +152,7 @@ def update_layout_figure( self ):
                     self.trace['Hull '+str(self.classes[cl])].line = dict (color=self.widg_color_hull.value, width=self.widg_width_hull.value, dash=self.widg_style_hull.value )
                     self.fig.update_traces(
                         selector={'name': 'Hull '+str(self.classes[cl])},
+                        showlegend=False
                     )
         if ( self.regr_line_coefs ) :
 
@@ -156,6 +160,9 @@ def update_layout_figure( self ):
             self.trace['Regression line'].line = dict (color=self.widg_color_line.value, width=self.widg_width_line.value, dash=self.widg_style_line.value )
             self.trace['Regression line']['x'] = line_x
             self.trace['Regression line']['y'] = line_y
+            self.fig.update_traces(
+                        selector={'name': 'Regression line'},
+                        showlegend=False)
 
 
 
