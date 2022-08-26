@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.metrics import pairwise_distances
 from sklearn.preprocessing import MinMaxScaler
 
-def max_covering_shuffle (self):
+def smart_fract_make (self):
 
     n_neighbors = 10
 
@@ -15,21 +15,21 @@ def max_covering_shuffle (self):
 
             feat_y = self.embedding_features[j]
             
-            fractions_dict [(feat_x,feat_y)]=[]
-            fractions_dict [(feat_y,feat_x)]=[]
+            fractions_dict [(feat_x,feat_y)]={}
+            fractions_dict [(feat_y,feat_x)]={}
             
             fractions_thres_cl = []
 
-            for cl in range(self.n_classes):
+            for name_trace in self.trace_name:
 
-                feat_x_norm = MinMaxScaler().fit_transform(self.df_classes[cl][feat_x].values.reshape(-1,1))
-                feat_y_norm = MinMaxScaler().fit_transform(self.df_classes[cl][feat_y].values.reshape(-1,1))            
+                feat_x_norm = MinMaxScaler().fit_transform(self.df_trace[name_trace][feat_x].values.reshape(-1,1))
+                feat_y_norm = MinMaxScaler().fit_transform(self.df_trace[name_trace][feat_y].values.reshape(-1,1))            
 
                 distances = pairwise_distances ( 
                     np.concatenate((feat_x_norm, feat_y_norm), 
                     axis=1)
                 )
-                n_values = len(self.df_classes[cl])
+                n_values = len(self.df_trace[name_trace])
 
                 remaininig_indexes = np.arange(n_values)
                 new_index = np.array([
@@ -75,8 +75,8 @@ def max_covering_shuffle (self):
                         remaininig_indexes = np.delete(remaininig_indexes,np.where(remaininig_indexes==new_index))
                         selected_indexes = np.concatenate((selected_indexes, new_index))
 
-                fractions_dict[(feat_x,feat_y)].append(self.df_classes[cl].index.to_numpy()[selected_indexes])
-                fractions_dict[(feat_y,feat_x)].append(self.df_classes[cl].index.to_numpy()[selected_indexes]) 
+                fractions_dict[(feat_x,feat_y)][name_trace] = self.df_trace[name_trace].index.to_numpy()[selected_indexes]
+                fractions_dict[(feat_y,feat_x)][name_trace] = self.df_trace[name_trace].index.to_numpy()[selected_indexes]
 
         fractions_thres[(feat_x,feat_y)] = min(fractions_thres_cl)
         fractions_thres[(feat_y,feat_x)] = min(fractions_thres_cl)

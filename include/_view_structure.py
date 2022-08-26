@@ -1,6 +1,5 @@
 def view_structure_l(self, formula):
 
-
     if (self.replica_l >= self.df['Replicas'].at[formula]):
         self.replica_l = 0
 
@@ -10,8 +9,8 @@ def view_structure_l(self, formula):
     self.replica_l = self.replica_l + 1
 
 
-def view_structure_r(self, formula):
 
+def view_structure_r(self, formula):
 
     if (self.replica_r >= self.df['Replicas'].at[formula]):
         self.replica_r = 0

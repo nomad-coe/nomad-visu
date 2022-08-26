@@ -1,20 +1,16 @@
 from staticVisualizer import StaticVisualizer
 from widgetsInteractionsMixin import WidgetsInteractionsMixin
-from IPython.display import display, Markdown, FileLink, clear_output
 import ipywidgets as widgets
-import numpy as np
+
 
 class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
-    def __init__(self, df, embedding_features, hover_features, target, max_covering=False, convex_hull=False, regr_line_coefs=None, path_to_structures=None):
-        super().__init__(df, embedding_features, hover_features, target, max_covering, convex_hull, regr_line_coefs, path_to_structures)
-        from include._instantiate_widgets import instantiate_widgets
-        from include._view_structure import view_structure_r, view_structure_l
-        from include._colors import make_colors
-        from include._updates import update_hover_variables, update_layout_figure, update_markers_size
+    def __init__(self, df, embedding_features, hover_features, target, smart_fract=False, convex_hull=False, regr_line_coefs=None, path_to_structures=None):
+        super().__init__(df, embedding_features, hover_features, target, smart_fract, convex_hull, regr_line_coefs, path_to_structures)
+
 
         if self.path_to_structures:
-            for cl in np.arange(self.n_classes):
-                self.trace['Class ' + str(self.classes[cl])].on_click(self.handle_point_clicked)  # actions are performed after clicking points on the map
+            for name_trace in self.trace_name:
+                self.trace[name_trace].on_click(self.handle_point_clicked)  # actions are performed after clicking points on the map
 
         self.widg_featx.observe(self.handle_xfeat_change, names='value')
         self.widg_featy.observe(self.handle_yfeat_change, names='value')
@@ -24,9 +20,9 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         self.widg_featcolor_type.observe(self.handle_featcolor_type_change, names='value')
         self.widg_featmarker_maxvalue.observe(self.handle_featmarker_maxvalue_change, names='value')
         self.widg_featmarker_minvalue.observe(self.handle_featmarker_minvalue_change, names='value')
-        self.widg_colorpalette.observe(self.handle_colorpalette_change, names='value')
-        self.widg_plotutils_button.on_click(self.plotappearance_button_clicked)
-        self.widg_frac_slider.observe(self.handle_frac_change, names='value')
+        self.widg_color_palette.observe(self.handle_colorpalette_change, names='value')
+        self.widg_utils_button.on_click(self.utils_button_clicked)
+        self.widg_fract_slider.observe(self.handle_fract_change, names='value')
         self.widg_display_button_l.on_click(self.display_button_l_clicked)
         self.widg_display_button_r.on_click(self.display_button_r_clicked)
         self.widg_checkbox_l.observe(self.handle_checkbox_l, names='value')
@@ -35,21 +31,19 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         self.widg_bgcolor_update_button.on_click(self.bgcolor_update_button_clicked)
         self.widg_print_button.on_click(self.print_button_clicked)
         self.widg_bgtoggle_button.on_click(self.bgtoggle_button_clicked)
-        self.widg_width_hull.observe(self.handle_hullslinewidth_change, names='value')
-        self.widg_style_hull.observe(self.handle_hullslinestyle_change, names='value')
-        self.widg_color_hull.observe(self.handle_hullslinecolor_change, names='value')
-        self.widg_width_line.observe(self.handle_linelinewidth_change, names='value')
-        self.widg_style_line.observe(self.handle_linelinestyle_change, names='value')
-        self.widg_color_line.observe(self.handle_linelinecolor_change, names='value')
-        self.widg_classes_symbol.observe(self.handle_classes_symbol_change, names='value')
-        self.widg_symbols.observe(self.handle_symbols_change, names='value')
-        self.widg_markersize.observe(self.handle_markersize_change, names='value')
-        self.widg_crosssize.observe(self.handle_crossize_change, names='value')
-        self.widg_fontfamily.observe(self.handle_fontfamily_change, names='value')
-        self.widg_fontsize.observe(self.handle_fontsize_change, names='value')
-        self.widg_fontcolor.observe(self.handle_fontcolor_change, names='value')
-
-
+        self.widg_width_hull.observe(self.handle_width_hull_change, names='value')
+        self.widg_style_hull.observe(self.handle_style_hull_change, names='value')
+        self.widg_color_hull.observe(self.handle_color_hull_change, names='value')
+        self.widg_width_line.observe(self.handle_width_line_change, names='value')
+        self.widg_style_line.observe(self.handle_style_line_change, names='value')
+        self.widg_color_line.observe(self.handle_color_line_change, names='value')
+        self.widg_trace_symbol.observe(self.handle_trace_symbol_change, names='value')
+        self.widg_markers_symbol.observe(self.handle_markers_symbol_change, names='value')
+        self.widg_markers_size.observe(self.handle_markers_size_change, names='value')
+        self.widg_cross_size.observe(self.handle_cross_size_change, names='value')
+        self.widg_font_family.observe(self.handle_font_family_change, names='value')
+        self.widg_font_size.observe(self.handle_font_size_change, names='value')
+        self.widg_font_color.observe(self.handle_font_color_change , names='value')
         self.output_l.layout = widgets.Layout(width="400px", height='350px')
         self.output_r.layout = widgets.Layout(width="400px", height='350px')
 

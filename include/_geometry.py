@@ -3,12 +3,12 @@ import numpy as np
 
 def make_hull(self, feat_x, feat_y):
 
-    xhull_classes = []
-    yhull_classes = []
+    xhull_classes = {}
+    yhull_classes = {}
 
-    for cl in range (self.n_classes):
+    for name_trace in self.trace_name:
 
-        points = self.df_classes[cl][[feat_x, feat_y]].to_numpy()
+        points = self.df_trace[name_trace][[feat_x, feat_y]].to_numpy()
 
         delta_0 = max(points[:, 0]) - min(points[:, 0])
         delta_1 = max(points[:, 1]) - min(points[:, 1])
@@ -19,7 +19,7 @@ def make_hull(self, feat_x, feat_y):
         if exp_0 > 6:
             points[:, 0] = points[:, 0] * 10 ** exp_0
         hull = ConvexHull(points)
-        vertexes = self.df_classes[cl][[feat_x, feat_y]].to_numpy()[hull.vertices]
+        vertexes = self.df_trace[name_trace][[feat_x, feat_y]].to_numpy()[hull.vertices]
 
         x_hullvx = vertexes[:, 0]
         y_hullvx = vertexes[:, 1]
@@ -31,8 +31,8 @@ def make_hull(self, feat_x, feat_y):
             xhull = np.concatenate([xhull, np.linspace(xhull[-1], xy[0], n_intervals)])
             yhull = np.concatenate([yhull, np.linspace(yhull[-1], xy[1], n_intervals)])
 
-        xhull_classes.append (np.concatenate([xhull, np.linspace(xhull[-1], x_hullvx[0], n_intervals)]))
-        yhull_classes.append (np.concatenate([yhull, np.linspace(yhull[-1], y_hullvx[0], n_intervals)]))
+        xhull_classes [name_trace] = np.concatenate([xhull, np.linspace(xhull[-1], x_hullvx[0], n_intervals)])
+        yhull_classes [name_trace] = np.concatenate([yhull, np.linspace(yhull[-1], y_hullvx[0], n_intervals)])
 
 
     return xhull_classes, yhull_classes
