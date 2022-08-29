@@ -2,6 +2,7 @@ import ipywidgets as widgets
 
 
 def instantiate_widgets(self):
+    # instantiate all widgets that are used to construct the visualizer
 
     self.widg_featx = widgets.Dropdown(
         description='x-axis',
@@ -14,7 +15,6 @@ def instantiate_widgets(self):
         options=self.embedding_features,
         value=self.feat_y,
         layout=widgets.Layout(width='250px')
-
     )
     self.widg_fract_slider = widgets.BoundedFloatText(
         min=0,
@@ -41,23 +41,9 @@ def instantiate_widgets(self):
     )
     self.widg_featcolor_list = widgets.Dropdown(
         disabled=True,
-        options=self.gradient_list,
+        options=self.continuous_gradient_colors,
         value='viridis',
         layout=widgets.Layout(width='65px', height='35px', left='40px')
-    )
-    self.widg_gradient = widgets.Dropdown(
-        disabled=True,
-        description='-gradient',
-        options=self.gradient_list,
-        value='viridis',
-        layout=widgets.Layout(width='150px', left='70px')
-    )
-    self.widg_palette = widgets.Dropdown(
-        disabled=True,
-        description='-palette',
-        options=self.gradient_list,
-        value='viridis',
-        layout=widgets.Layout(width='150px', left='30px')
     )
     self.widg_featmarker = widgets.Dropdown(
         description="Marker",
@@ -102,10 +88,9 @@ def instantiate_widgets(self):
         value='Tick the box next to the cross symbols in order to choose which windows visualizes the next '
               'structure selected in the map above.'
     )
-
-    self.widg_compound_text_l = widgets.Combobox(
+    self.widg_structure_text_l = widgets.Combobox(
         placeholder='...',
-        description='Compound:',
+        description='Structure:',
         options=self.structures_list,
         layout=widgets.Layout(width='200px')
     )
@@ -118,9 +103,9 @@ def instantiate_widgets(self):
         indent=False,
         layout=widgets.Layout(width='50px')
     )
-    self.widg_compound_text_r = widgets.Combobox(
+    self.widg_structure_text_r = widgets.Combobox(
         placeholder='...',
-        description='Compound:',
+        description='Structure:',
         options=self.structures_list,
         layout=widgets.Layout(width='200px')
     )
@@ -148,9 +133,9 @@ def instantiate_widgets(self):
     )
 
     self.widg_color_palette = widgets.Dropdown(
-        options=self.qualitative_colors,
+        options=self.discrete_palette_colors,
         description='Color palette',
-        value=self.qualitative_colors[0],
+        value=self.discrete_palette_colors[0],
         layout=widgets.Layout(left='30px', width='200px')
     )
     self.widg_font_size = widgets.BoundedIntText(
@@ -191,42 +176,38 @@ def instantiate_widgets(self):
     self.widg_color_hull = widgets.Dropdown(
         options=self.color_hull,
         description='Hull color',
-        value='Black',
+        value=self.hull_color,
         layout=widgets.Layout(left='30px', width='200px')
     )
     self.widg_width_hull = widgets.BoundedIntText(
-        placeholder=str(self.width_hull),
         description='Hull width',
-        value=str(self.width_hull),
+        value=str(self.hull_width),
         layout = widgets.Layout(left='30px', width='200px')
     )
-    self.widg_style_hull = widgets.Dropdown(
-        options=self.line_styles,
-        description='Hull style',
-        value='dash',
+    self.widg_dash_hull = widgets.Dropdown(
+        options=self.hull_dashs,
+        description='Hull dash',
+        value=self.hull_dash,
         layout=widgets.Layout(left='30px', width='200px')
     )
 
     self.widg_color_line = widgets.Dropdown(
         options=self.color_line,
         description='Line color',
-        value='Grey',
+        value=self.line_color,
         layout=widgets.Layout(left='30px', width='200px')
     )
     self.widg_width_line = widgets.BoundedIntText(
-        placeholder=str(self.width_line),
         description='Line width',
-        value=str(self.width_line),
+        value=self.line_width,
         layout = widgets.Layout(left='30px', width='200px')
     )
-    self.widg_style_line = widgets.Dropdown(
-        options=self.line_styles,
-        description='Line style',
-        value='solid',
+    self.widg_dash_line = widgets.Dropdown(
+        options=self.line_dashs,
+        description='Line dash',
+        value=self.line_dash,
         layout=widgets.Layout(left='30px', width='200px')
     )
-
-
     self.widg_bgcolor = widgets.Text(
         placeholder=str('Default'),
         description='Color',
@@ -241,7 +222,7 @@ def instantiate_widgets(self):
         description='Update background color',
         layout=widgets.Layout(left='50px', width='200px')
     )    
-    self.widg_printdescription = widgets.Label(
+    self.widg_print_description = widgets.Label(
         value="Click 'Print' to export the plot in the desired format and resolution.",
         layout=widgets.Layout(left='50px', width='640px')
     )
@@ -257,7 +238,7 @@ def instantiate_widgets(self):
         description='Format',
         layout=widgets.Layout(width='150px')
     )
-    self.widg_scale = widgets.Text(
+    self.widg_resolution = widgets.Text(
         placeholder='1',
         value='1',
         description="Resolution",
@@ -275,11 +256,11 @@ def instantiate_widgets(self):
     self.widg_box_utils = widgets.VBox([widgets.HBox([self.widg_markers_size, self.widg_cross_size, self.widg_color_palette]),
                                         widgets.HBox([self.widg_font_size, self.widg_font_family, self.widg_font_color]),
                                         widgets.HBox([self.widg_trace_symbol, self.widg_markers_symbol, self.widg_reset_button]),
-                                        widgets.HBox([self.widg_color_hull, self.widg_width_hull, self.widg_style_hull ]),
-                                        widgets.HBox([self.widg_color_line, self.widg_width_line, self.widg_style_line ]),
+                                        widgets.HBox([self.widg_color_hull, self.widg_width_hull, self.widg_dash_hull ]),
+                                        widgets.HBox([self.widg_color_line, self.widg_width_line, self.widg_dash_line ]),
                                         widgets.HBox([self.widg_bgtoggle_button, self.widg_bgcolor,self.widg_bgcolor_update_button]),
-                                        self.widg_printdescription,
-                                        widgets.HBox([self.widg_plot_name, self.widg_plot_format, self.widg_scale]),
+                                        self.widg_print_description,
+                                        widgets.HBox([self.widg_plot_name, self.widg_plot_format, self.widg_resolution]),
                                         self.widg_print_button, self.widg_print_out,
                                         ])
 
@@ -324,11 +305,11 @@ def instantiate_widgets(self):
 
     self.widg_box_viewers = widgets.VBox([self.widg_description, widgets.HBox([
         widgets.VBox([
-            widgets.HBox([self.widg_compound_text_l, self.widg_display_button_l,
+            widgets.HBox([self.widg_structure_text_l, self.widg_display_button_l,
                           self.widg_img1, self.widg_checkbox_l]),
             self.output_l]),
         widgets.VBox(
-            [widgets.HBox([self.widg_compound_text_r, self.widg_display_button_r,
+            [widgets.HBox([self.widg_structure_text_r, self.widg_display_button_r,
                            self.widg_img2, self.widg_checkbox_r]),
              self.output_r])
     ])])

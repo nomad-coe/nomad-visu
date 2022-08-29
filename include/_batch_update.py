@@ -1,7 +1,7 @@
-from include._geometry import make_hull, regr_line
+from include._geometry import make_hull, make_line
 
 def batch_update( self ):
-    # All batch_update related changes are handled by this function
+    # updates the layout of the map with all values stored in the staticVisualizer
 
     x_min = []
     x_max = []
@@ -21,8 +21,10 @@ def batch_update( self ):
     y_max = max(y_max)
     x_delta = 0.05 * abs(x_max - x_min)
     y_delta = 0.05 * abs(y_max - y_min)
-    xaxis_range =[x_min - x_delta, x_max + x_delta]
-    yaxis_range=[y_min - y_delta, y_max + y_delta]
+
+    # range of the x-,y- values that are visualized on the map 
+    xaxis_range = [x_min - x_delta, x_max + x_delta]
+    yaxis_range = [y_min - y_delta, y_max + y_delta]
 
     with self.fig.batch_update():
         self.fig.update_layout(
@@ -40,18 +42,16 @@ def batch_update( self ):
         )
 
         for name_trace in self.trace_name:
-            # All elements on the map and their properties are reinitialized at each change
-
-            self.trace[name_trace]['x'] = self.df_trace_on_map[name_trace][self.feat_x]
-            self.trace[name_trace]['y'] = self.df_trace_on_map[name_trace][self.feat_y]
-            self.trace[name_trace].marker.size = self.sizes[name_trace]
-            self.trace[name_trace].marker.symbol = self.symbols[name_trace]
-
+            # all elements on the map and their properties are reinitialized at each change
+            
             self.fig.update_traces(
                 selector={'name':  name_trace },
                 text=self.hover_text[name_trace],
                 customdata=self.hover_custom[name_trace],
                 hovertemplate=self.hover_template[name_trace],
+                x=self.df_trace_on_map[name_trace][self.feat_x], 
+                y=self.df_trace_on_map[name_trace][self.feat_y],
+                marker = dict( size=self.sizes[name_trace], symbol=self.symbols[name_trace])
             )
             if (self.widg_featcolor.value != 'Default color' and self.widg_featcolor_type.value == 'Gradient'):
 
@@ -87,15 +87,23 @@ def batch_update( self ):
 
                     self.trace['Hull '+ name_trace]['x'] = hullx[name_trace]
                     self.trace['Hull '+ name_trace]['y'] = hully[name_trace]
-                    self.trace['Hull '+ name_trace].line = dict (color=self.widg_color_hull.value, width=self.widg_width_hull.value, dash=self.widg_style_hull.value )
+                    self.trace['Hull '+ name_trace].line = dict (
+                        color=self.hull_color, 
+                        width=self.hull_width, 
+                        dash=self.hull_dash
+                        )
                     self.fig.update_traces(
                         selector={'name': 'Hull '+ name_trace},
                         showlegend=False
                     )
         if ( self.regr_line_coefs ) :
 
-            line_x, line_y = regr_line(self, self.feat_x, self.feat_y)
-            self.trace['Line'].line = dict (color=self.widg_color_line.value, width=self.widg_width_line.value, dash=self.widg_style_line.value )
+            line_x, line_y = make_line(self, self.feat_x, self.feat_y)
+            self.trace['Line'].line = dict (
+                color=self.line_color, 
+                width=self.line_width, 
+                dash=self.line_dash 
+                )
             self.trace['Line']['x'] = line_x
             self.trace['Line']['y'] = line_y
             self.fig.update_traces(

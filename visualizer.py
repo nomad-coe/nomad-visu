@@ -4,13 +4,15 @@ import ipywidgets as widgets
 
 
 class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
+    # in 'Visualizer' all widgets defined in 'staticVisualizer' are given a specific action  
+
     def __init__(self, df, embedding_features, hover_features, target, smart_fract=False, convex_hull=False, regr_line_coefs=None, path_to_structures=None):
         super().__init__(df, embedding_features, hover_features, target, smart_fract, convex_hull, regr_line_coefs, path_to_structures)
 
 
         if self.path_to_structures:
             for name_trace in self.trace_name:
-                self.trace[name_trace].on_click(self.handle_point_clicked)  # actions are performed after clicking points on the map
+                self.trace[name_trace].on_click(self.handle_point_clicked)  # actions performed after clicking points on the map
 
         self.widg_featx.observe(self.handle_xfeat_change, names='value')
         self.widg_featy.observe(self.handle_yfeat_change, names='value')
@@ -20,7 +22,7 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         self.widg_featcolor_type.observe(self.handle_featcolor_type_change, names='value')
         self.widg_featmarker_maxvalue.observe(self.handle_featmarker_maxvalue_change, names='value')
         self.widg_featmarker_minvalue.observe(self.handle_featmarker_minvalue_change, names='value')
-        self.widg_color_palette.observe(self.handle_colorpalette_change, names='value')
+        
         self.widg_utils_button.on_click(self.utils_button_clicked)
         self.widg_fract_slider.observe(self.handle_fract_change, names='value')
         self.widg_display_button_l.on_click(self.display_button_l_clicked)
@@ -31,11 +33,13 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         self.widg_bgcolor_update_button.on_click(self.bgcolor_update_button_clicked)
         self.widg_print_button.on_click(self.print_button_clicked)
         self.widg_bgtoggle_button.on_click(self.bgtoggle_button_clicked)
+        self.widg_color_palette.observe(self.handle_colorpalette_change, names='value')
+
         self.widg_width_hull.observe(self.handle_width_hull_change, names='value')
-        self.widg_style_hull.observe(self.handle_style_hull_change, names='value')
+        self.widg_dash_hull.observe(self.handle_dash_hull_change, names='value')
         self.widg_color_hull.observe(self.handle_color_hull_change, names='value')
         self.widg_width_line.observe(self.handle_width_line_change, names='value')
-        self.widg_style_line.observe(self.handle_style_line_change, names='value')
+        self.widg_dash_line.observe(self.handle_dash_line_change, names='value')
         self.widg_color_line.observe(self.handle_color_line_change, names='value')
         self.widg_trace_symbol.observe(self.handle_trace_symbol_change, names='value')
         self.widg_markers_symbol.observe(self.handle_markers_symbol_change, names='value')

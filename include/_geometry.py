@@ -37,7 +37,7 @@ def make_hull(self, feat_x, feat_y):
 
     return xhull_classes, yhull_classes
 
-def regr_line(self, feat_x, feat_y):
+def make_line(self, feat_x, feat_y):
 
         idx_x = self.embedding_features.index(feat_x)
         idx_y = self.embedding_features.index(feat_y)
