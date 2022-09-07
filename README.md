@@ -21,12 +21,12 @@ Visualize octet binaries:
 
 ```python
 import pandas as pd
-from visualizer import Visualizer
+from nomad_lab_visualizer import Visualizer
 ```
 
 Load the data:
 ```python
-df=pd.read_pickle('data/octet_binaries/df')
+df=pd.read_pickle('examples/octet_binaries/df')
 
 regr_line_coefs = [0.11425013108281612, -1.48249992475763]
 intercept = -0.1447151781886926
