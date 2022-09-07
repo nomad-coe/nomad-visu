@@ -3,7 +3,7 @@
 [![Documetation]()]()
 [![Python package]()]()
 
-This is plot/visualizer widget for atomistic structures which can be used in Jupyter Notebooks and JupyterLab
+This is plot/visualizer widget for atomistic structures which can be used in Jupyter Notebooks.
 
 
 ## Installation
@@ -61,7 +61,7 @@ Install the python. This will also build the TS package.
 
 ```bash
 # First install the python package. This will also build the JS packages.
-pip install -e ".[test, examples]"
+pip install -e ".[test]"
 
 # Run the python tests. This should not give you a few successful example tests
 py.test
