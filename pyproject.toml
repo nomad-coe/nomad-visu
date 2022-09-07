@@ -22,9 +22,9 @@ dependencies = [
 ]
 # keywords = ["one", "two"]
 # license = {text = "BSD 3-Clause License"}
-# dynamic = ["version"]
+dynamic = ["version"]
 
-[project.optional-dependencies] 
+[project.optional-dependencies]
 test = ["pytest"]
 
 # [project.scripts]
