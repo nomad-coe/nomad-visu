@@ -77,7 +77,7 @@ class StaticVisualizer:
         self.line_color = 'Black' # color of the regression line
         self.bg_color = self.bg_color_default # background color initially set to its default value
         self.bg_toggle = True # background color is shown
-
+        self.structures_list = []
         if self.path_to_structures:
             # each row in the dataframe is expected to be identified with a different structure 
             self.structures_list = df.index.tolist()

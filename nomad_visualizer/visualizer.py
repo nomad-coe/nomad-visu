@@ -50,5 +50,3 @@ class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
         self.widg_font_color.observe(self.handle_font_color_change , names='value')
         self.output_l.layout = widgets.Layout(width="400px", height='350px')
         self.output_r.layout = widgets.Layout(width="400px", height='350px')
-
-
