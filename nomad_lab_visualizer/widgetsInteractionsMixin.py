@@ -1,5 +1,5 @@
 from IPython.display import display, Markdown, FileLink
-from include._updates import (
+from .updates import (
     update_hover_variables,
     update_df_on_map,
     update_marker_color,
@@ -8,8 +8,8 @@ from include._updates import (
     marker_style_updates,
     fract_change_updates,
 )
-from include._batch_update import batch_update
-from include._view_structure import view_structure_r, view_structure_l
+from .batch_update import batch_update
+from .view_structure import view_structure_r, view_structure_l
 
 
 class WidgetsInteractionsMixin:

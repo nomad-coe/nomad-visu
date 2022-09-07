@@ -9,10 +9,10 @@ from itertools import cycle
 import plotly.express as px
 import os
 
-from include._smart_fract import smart_fract_make
-from include._instantiate_widgets import instantiate_widgets
-from include._updates import update_hover_variables
-from include._batch_update import batch_update
+from .smart_fract import smart_fract_make
+from .instantiate_widgets import instantiate_widgets
+from .updates import update_hover_variables
+from .batch_update import batch_update
 
 import warnings
 
