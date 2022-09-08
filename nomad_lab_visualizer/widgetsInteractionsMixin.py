@@ -50,10 +50,12 @@ class WidgetsInteractionsMixin:
         if change.new == "Default color":
             self.widg_featcolor_type.disabled = True
             self.widg_featcolor_list.disabled = True
+            self.widg_color_palette.disabled = False
         else:
             self.widg_featcolor_type.disabled = False
             self.widg_featcolor_list.disabled = False
-        marker_style_updates(self)
+            self.widg_color_palette.disabled = True
+        marker_style_updates(self)        
         batch_update(self)
 
     def handle_featcolor_list_change(self, change):
