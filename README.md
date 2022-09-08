@@ -1,7 +1,8 @@
 # Nomad-lab Visualizer
 
-[![Documetation]()]()
-[![Python package]()]()
+[![Tests](https://github.com/nomad-coe/nomad-lab-visualizer/actions/workflows/python-package.yml/badge.svg)](https://github.com/nomad-coe/nomad-lab-visualizer/actions/workflows/python-package.yml)
+[![Docs](https://github.com/nomad-coe/nomad-lab-visualizer/actions/workflows/python-mkdocs.yml/badge.svg)](https://nomad-coe.github.io/nomad-lab-visualizer/)
+
 
 This is plot/visualizer widget for atomistic structures which can be used in Jupyter Notebooks.
 
