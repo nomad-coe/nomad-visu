@@ -55,7 +55,7 @@ class WidgetsInteractionsMixin:
             self.widg_featcolor_type.disabled = False
             self.widg_featcolor_list.disabled = False
             self.widg_color_palette.disabled = True
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
     def handle_featcolor_list_change(self, change):
@@ -72,11 +72,7 @@ class WidgetsInteractionsMixin:
             self.widg_featcolor_list.value = "viridis"
         if change.new == "Discrete":
             self.widg_featcolor_list.options = self.discrete_palette_colors
-<<<<<<< HEAD:nomad_lab_visualizer/widgetsInteractionsMixin.py
-            self.widg_featcolor_list.value = "Plotly"
-=======
             self.widg_featcolor_list.value = 'Plotly'
->>>>>>> f53e172ec33a665305cd2235109fa744b6af9da5:nomad_visualizer/widgetsInteractionsMixin.py
         marker_style_updates(self)
         batch_update(self)
 
@@ -93,10 +89,6 @@ class WidgetsInteractionsMixin:
         marker_style_updates(self)
         batch_update(self)
 
-<<<<<<< HEAD:nomad_lab_visualizer/widgetsInteractionsMixin.py
-=======
-
->>>>>>> f53e172ec33a665305cd2235109fa744b6af9da5:nomad_visualizer/widgetsInteractionsMixin.py
     def handle_featmarker_maxvalue_change(self, change):
         # changes the max value of the markers size
 
@@ -111,11 +103,8 @@ class WidgetsInteractionsMixin:
         self.min_value_markerfeat = change.new
         self.widg_featmarker_maxvalue.min = change.new
         marker_style_updates(self)
-<<<<<<< HEAD:nomad_lab_visualizer/widgetsInteractionsMixin.py
-=======
         batch_update(self)
 
->>>>>>> f53e172ec33a665305cd2235109fa744b6af9da5:nomad_visualizer/widgetsInteractionsMixin.py
 
     def handle_point_clicked(self, trace, points, selector):
         # visualizes structure of clicked point and changes its marker symbol to a cross
@@ -137,10 +126,6 @@ class WidgetsInteractionsMixin:
         fract_change_updates(self)
         marker_style_updates(self)
         batch_update(self)
-<<<<<<< HEAD:nomad_lab_visualizer/widgetsInteractionsMixin.py
-=======
-
->>>>>>> f53e172ec33a665305cd2235109fa744b6af9da5:nomad_visualizer/widgetsInteractionsMixin.py
 
     def handle_font_family_change(self, change):
         # changes font family
@@ -196,11 +181,8 @@ class WidgetsInteractionsMixin:
 
     def handle_trace_symbol_change(self, change):
         # change selected trace for marker symbol change
-<<<<<<< HEAD:nomad_lab_visualizer/widgetsInteractionsMixin.py
-=======
 
         self.widg_markers_symbol.value = self.trace_symbol[str(change.new)]
->>>>>>> f53e172ec33a665305cd2235109fa744b6af9da5:nomad_visualizer/widgetsInteractionsMixin.py
 
         self.widg_markers_symbol.value = self.trace_symbol[str(change.new)]
 
@@ -209,13 +191,7 @@ class WidgetsInteractionsMixin:
 
         name_trace = str(self.widg_trace_symbol.value)
         self.trace_symbol[name_trace] = change.new
-<<<<<<< HEAD:nomad_lab_visualizer/widgetsInteractionsMixin.py
-        self.symbols[name_trace] = [str(change.new)] * len(
-            self.df_trace_on_map[name_trace]
-        )
-=======
         self.symbols[name_trace] = [str(change.new)] * len(self.df_trace_on_map[name_trace])
->>>>>>> f53e172ec33a665305cd2235109fa744b6af9da5:nomad_visualizer/widgetsInteractionsMixin.py
         marker_style_updates(self)
         batch_update(self)
 
@@ -351,11 +327,7 @@ class WidgetsInteractionsMixin:
     def display_button_l_clicked(self, button):
 
         # Actions are performed only if the string inserted in the text widget corresponds to an existing compound
-<<<<<<< HEAD:nomad_lab_visualizer/widgetsInteractionsMixin.py
-        if self.widg_structure_text_r.value in self.df["Structure"]:
-=======
         if self.widg_structure_text_l.value in self.df['Structure']:
->>>>>>> f53e172ec33a665305cd2235109fa744b6af9da5:nomad_visualizer/widgetsInteractionsMixin.py
 
             compound_l = self.widg_structure_text_l.value
             structure_l = self.df["Structure"].at[compound_l]
