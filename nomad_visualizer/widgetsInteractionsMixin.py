@@ -100,6 +100,7 @@ class WidgetsInteractionsMixin:
         self.min_value_markerfeat = change.new
         self.widg_featmarker_maxvalue.min = change.new
         marker_style_updates(self)        
+        batch_update(self)
 
 
     def handle_point_clicked(self, trace, points, selector):
