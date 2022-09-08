@@ -72,7 +72,7 @@ class WidgetsInteractionsMixin:
             self.widg_featcolor_list.value = "viridis"
         if change.new == "Discrete":
             self.widg_featcolor_list.options = self.discrete_palette_colors
-            self.widg_featcolor_list.value = 'Plotly'
+            self.widg_featcolor_list.value = "Plotly"
         marker_style_updates(self)
         batch_update(self)
 
@@ -104,7 +104,6 @@ class WidgetsInteractionsMixin:
         self.widg_featmarker_maxvalue.min = change.new
         marker_style_updates(self)
         batch_update(self)
-
 
     def handle_point_clicked(self, trace, points, selector):
         # visualizes structure of clicked point and changes its marker symbol to a cross
@@ -191,7 +190,9 @@ class WidgetsInteractionsMixin:
 
         name_trace = str(self.widg_trace_symbol.value)
         self.trace_symbol[name_trace] = change.new
-        self.symbols[name_trace] = [str(change.new)] * len(self.df_trace_on_map[name_trace])
+        self.symbols[name_trace] = [str(change.new)] * len(
+            self.df_trace_on_map[name_trace]
+        )
         marker_style_updates(self)
         batch_update(self)
 
@@ -327,7 +328,7 @@ class WidgetsInteractionsMixin:
     def display_button_l_clicked(self, button):
 
         # Actions are performed only if the string inserted in the text widget corresponds to an existing compound
-        if self.widg_structure_text_l.value in self.df['Structure']:
+        if self.widg_structure_text_l.value in self.df["Structure"]:
 
             compound_l = self.widg_structure_text_l.value
             structure_l = self.df["Structure"].at[compound_l]
