@@ -1,3 +1,4 @@
+import os
 from IPython.display import display, Markdown, FileLink
 from include._updates import update_hover_variables, update_df_on_map, update_marker_color, update_marker_size, update_marker_symbol, marker_style_updates, fract_change_updates
 from include._batch_update import batch_update
@@ -14,7 +15,7 @@ class WidgetsInteractionsMixin:
             self.fract = self.fract_thres[(self.feat_x,self.feat_y)]
             self.widg_fract_slider.value = self.fract
 
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
 
@@ -26,7 +27,7 @@ class WidgetsInteractionsMixin:
             self.fract = self.fract_thres[(self.feat_x,self.feat_y)]
             self.widg_fract_slider.value = self.fract
 
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
 
@@ -35,7 +36,7 @@ class WidgetsInteractionsMixin:
 
         self.fract = change.new
         fract_change_updates(self)
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
 
@@ -57,7 +58,7 @@ class WidgetsInteractionsMixin:
     def handle_featcolor_list_change(self, change):
         # changes the color that is used for markers
 
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
 
@@ -70,7 +71,7 @@ class WidgetsInteractionsMixin:
         if change.new == 'Discrete':
             self.widg_featcolor_list.options = self.discrete_palette_colors
             self.widg_featcolor_list.value = 'Plotly'
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
     def handle_markerfeat_change(self, change):
@@ -83,16 +84,16 @@ class WidgetsInteractionsMixin:
             self.widg_featmarker_maxvalue.disabled = False
             self.widg_featmarker_minvalue.disabled = False
 
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
- 
+
     def handle_featmarker_maxvalue_change(self, change):
         # changes the max value of the markers size
 
         self.max_value_markerfeat = change.new
         self.widg_featmarker_minvalue.max = change.new
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
 
@@ -101,12 +102,12 @@ class WidgetsInteractionsMixin:
 
         self.min_value_markerfeat = change.new
         self.widg_featmarker_maxvalue.min = change.new
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
 
     def handle_point_clicked(self, trace, points, selector):
-        # visualizes structure of clicked point and changes its marker symbol to a cross  
+        # visualizes structure of clicked point and changes its marker symbol to a cross
 
         if not points.point_inds:
             return
@@ -123,8 +124,8 @@ class WidgetsInteractionsMixin:
             view_structure_r(self, formula)
 
         fract_change_updates(self)
-        marker_style_updates(self)        
-        batch_update(self)      
+        marker_style_updates(self)
+        batch_update(self)
 
 
     def handle_font_family_change(self, change):
@@ -172,7 +173,7 @@ class WidgetsInteractionsMixin:
     def handle_colorpalette_change(self, change):
         # change color palette used to distinguish different traces
 
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
 
@@ -180,7 +181,7 @@ class WidgetsInteractionsMixin:
         # change markers size
 
         self.marker_size = int(change.new)
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
 
@@ -188,13 +189,13 @@ class WidgetsInteractionsMixin:
         # change cross size
 
         self.cross_size = int(change.new)
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
 
     def handle_trace_symbol_change(self, change):
         # change selected trace for marker symbol change
-        
+
         self.widg_markers_symbol.value = self.trace_symbol[str(change.new)]
 
 
@@ -204,7 +205,7 @@ class WidgetsInteractionsMixin:
         name_trace = str(self.widg_trace_symbol.value)
         self.trace_symbol[name_trace] = change.new
         self.symbols[name_trace] = [str(change.new)] * len(self.df_trace_on_map[name_trace])
-        marker_style_updates(self)        
+        marker_style_updates(self)
         batch_update(self)
 
 
@@ -214,7 +215,7 @@ class WidgetsInteractionsMixin:
         self.widg_trace_symbol.value = 'circle'
 
         with self.fig.batch_update():
- 
+
             for name_trace in self.trace_name:
 
                 self.trace_symbol[name_trace] = 'circle'
@@ -229,13 +230,13 @@ class WidgetsInteractionsMixin:
 
         self.hull_width = change.new
         batch_update(self)
-        
+
     def handle_color_hull_change(self, change):
         # change hull color
 
         self.hull_color = change.new
         batch_update(self)
-        
+
     def handle_dash_hull_change(self, change):
         # cange hull dash
 
@@ -247,13 +248,13 @@ class WidgetsInteractionsMixin:
 
         self.line_width = change.new
         batch_update(self)
-        
+
     def handle_color_line_change(self, change):
         # change line color
 
         self.line_color = change.new
         batch_update(self)
-        
+
     def handle_dash_line_change(self, change):
         # change line dash
 
@@ -352,8 +353,8 @@ class WidgetsInteractionsMixin:
             view_structure_l(self, compound_l)
 
             fract_change_updates(self)
-            marker_style_updates(self)        
-            batch_update(self)            
+            marker_style_updates(self)
+            batch_update(self)
 
     def display_button_r_clicked(self, button):
 
@@ -367,5 +368,5 @@ class WidgetsInteractionsMixin:
 
             update_df_on_map(self)
             fract_change_updates(self)
-            marker_style_updates(self)        
-            batch_update(self)            
+            marker_style_updates(self)
+            batch_update(self)
