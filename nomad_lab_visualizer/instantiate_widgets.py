@@ -2,7 +2,10 @@ import ipywidgets as widgets
 
 
 def instantiate_widgets(self):
-    # instantiate all widgets that are used to construct the visualizer
+    """
+    instantiate all widgets that are used to construct the visualizer
+    """
+
 
     self.widg_featx = widgets.Dropdown(
         description="x-axis",

@@ -5,7 +5,9 @@ import plotly.express as px
 
 
 def update_df_on_map(self):
-    # updates the number of points based on the fraction value, then the fraction of the dataframe 'df_trace_on_map' that is visualized
+    """
+    updates the number of points based on the fraction value, then the fraction of the dataframe 'df_trace_on_map' that is visualized
+    """
 
     for name_trace in self.trace_name:
 
@@ -42,7 +44,9 @@ def update_df_on_map(self):
 
 
 def update_hover_variables(self):
-    # updates the hover data based on the points that are visualized on the map
+    """
+    updates the hover data based on the points that are visualized on the map
+    """
 
     self.hover_text = {}
     self.hover_custom = {}
@@ -81,9 +85,11 @@ def update_hover_variables(self):
 
 
 def update_marker_symbol(self):
-    # updates the list of marker symbols for each trace
-    # all markers are initally set to have the symbol specific of the trace
-    # points whose structure is visualized have a cross as marker
+    """
+    updates the list of marker symbols for each trace
+    all markers are initally set to have the symbol specific of the trace
+    points whose structure is visualized have a cross as marker
+    """
 
     for name_trace in self.trace_name:
 
@@ -125,9 +131,11 @@ def update_marker_symbol(self):
 
 
 def update_marker_size(self):
-    # updates the size of the markers
-    # in case 'Default size' is set all markers have the same size, and points marked with x/cross are set with a specific size
-    # in case 'Marker' has a feature value, marker sizes are selected according to that specific feature
+    """
+    updates the size of the markers
+    in case 'Default size' is set all markers have the same size, and points marked with x/cross are set with a specific size
+    in case 'Marker' has a feature value, marker sizes are selected according to that specific feature
+    """
 
     feature = self.widg_featmarker.value
 
@@ -185,7 +193,9 @@ def update_marker_size(self):
 
 
 def update_marker_color(self):
-    # updates the color of markers
+    """
+    updates the color of markers
+    """
 
     feature = self.widg_featcolor.value
 
@@ -226,14 +236,18 @@ def update_marker_color(self):
 
 
 def fract_change_updates(self):
-    # updates relative to a change in the fraction value that is visualized
+    """
+    updates relative to a change in the fraction value that is visualized
+    """
 
     update_df_on_map(self)
     update_hover_variables(self)
 
 
 def marker_style_updates(self):
-    # updates relative to a change in the markers properties
+    """
+    updates relative to a change in the markers properties
+    """
 
     update_marker_color(self)
     update_marker_symbol(self)

@@ -4,7 +4,10 @@ import ipywidgets as widgets
 
 
 class Visualizer(StaticVisualizer, WidgetsInteractionsMixin):
-    # in 'Visualizer' all widgets defined in 'staticVisualizer' are given a specific action
+    """
+    in 'Visualizer' all widgets defined in 'staticVisualizer' are given a specific action
+
+    """
 
     def __init__(
         self,

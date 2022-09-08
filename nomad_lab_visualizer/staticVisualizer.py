@@ -20,6 +20,20 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
 class StaticVisualizer:
+    """
+    StaticVisualizer
+
+    Attributes:
+        df: pandas dataframe containing all data to be visualized
+        embedding_features: list of features used for embedding
+        hover features: list of features shown while hovering
+        target: feature used to create traces (same target value - same trace)
+        smart_frac: fraction of points is selected to maximize visualization of data distribution
+        convex_hull: convex hull is drawn around each trace
+        regr_line_coefs: coeffs of a regression line
+        path_to_structures: path to a directory that contains all 'xyz' structures to be visualized
+
+    """
     def __init__(
         self,
         df,
@@ -32,14 +46,6 @@ class StaticVisualizer:
         path_to_structures=None,
     ):
 
-        # df - pandas dataframe containing all data to be visualized
-        # embedding_features - list of features used for embedding
-        # hover features - list of features shown while hovering
-        # target - feature used to create traces (same target value - same trace)
-        # smart_frac - fraction of points is selected to maximize visualization of data distribution
-        # convex_hull - convex hull is drawn around each trace
-        # regr_line_coefs - coeffs of a regression line
-        # path_to_structures - path to a directory that contains all 'xyz' structures to be visualized
 
         self.df = df
         self.target = target

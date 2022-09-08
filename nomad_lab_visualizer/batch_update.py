@@ -2,7 +2,9 @@ from .geometry import make_hull, make_line
 
 
 def batch_update(self):
-    # updates the layout of the map with all values stored in the staticVisualizer
+    """
+    updates the layout of the map with all values stored in the staticVisualizer
+    """
 
     x_min = []
     x_max = []
