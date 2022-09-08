@@ -54,22 +54,19 @@ visualizer = Visualizer(
 visualizer.show()
 ```
 
-## Development Installation
+## Development installation
 
-Create a dev environment:
-
+Create a python environment for development:
 ```bash
-mamba create -n nomad-lab-visualiser-dev -c conda-forge python pip jupyter jupyterlab plotly ipywidgets numpy scipy pandas scikit-learn
-mamba activate nomad-lab-visualiser-dev
-pip install jupyter_jsmol
+mamba create -n nomad-lab-visualiser-dev -c conda-forge python pip jupyter jupyterlab plotly ipywidgets numpy scipy pandas scikit-learn setuptools pip-tools black mypy pytest flake8
+mamba activate nomad-lab-visualiser-dev 
+pip install jupyter_jsmol==2021.3.0
 ```
-
-Install the python. This will also build the TS package.
-
+Install the python package in editable mode (i.e. setuptools "develop mode") from a local project path (`.`).
 ```bash
-# First install the python package. This will also build the JS packages.
 pip install -e ".[test]"
-
-# Run the python tests. This should not give you a few successful example tests
+```
+Run the python tests:
+```bash
 py.test
 ```
