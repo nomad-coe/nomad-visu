@@ -341,7 +341,7 @@ class WidgetsInteractionsMixin:
     def display_button_l_clicked(self, button):
 
         # Actions are performed only if the string inserted in the text widget corresponds to an existing compound
-        if self.widg_structure_text_r.value in self.df['Structure']:
+        if self.widg_structure_text_l.value in self.df['Structure']:
 
             compound_l = self.widg_structure_text_l.value
             structure_l = self.df['Structure'].at[compound_l]
