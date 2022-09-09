@@ -1,11 +1,6 @@
 import os
 from IPython.display import display, Markdown, FileLink
 from .updates import (
-    update_hover_variables,
-    update_df_on_map,
-    update_marker_color,
-    update_marker_size,
-    update_marker_symbol,
     marker_style_updates,
     fract_change_updates,
 )
@@ -96,9 +91,13 @@ class WidgetsInteractionsMixin:
         if change.new == "Default size":
             self.widg_featmarker_maxvalue.disabled = True
             self.widg_featmarker_minvalue.disabled = True
+            self.widg_markers_size.disabled = False
+            self.widg_cross_size.disabled = False
         else:
             self.widg_featmarker_maxvalue.disabled = False
             self.widg_featmarker_minvalue.disabled = False
+            self.widg_markers_size.disabled = True
+            self.widg_cross_size.disabled = True
 
         marker_style_updates(self)
         batch_update(self)
@@ -411,7 +410,6 @@ class WidgetsInteractionsMixin:
 
             view_structure_r(self, compound_r)
 
-            update_df_on_map(self)
             fract_change_updates(self)
             marker_style_updates(self)
             batch_update(self)
