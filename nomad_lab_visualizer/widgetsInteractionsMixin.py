@@ -238,7 +238,7 @@ class WidgetsInteractionsMixin:
         reset all marker sizes
         """
 
-        self.widg_trace_symbol.value = "circle"
+        self.widg_markers_symbol.value = "circle"
 
         with self.fig.batch_update():
 
