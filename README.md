@@ -58,6 +58,12 @@ visualizer.show()
 
 Create a python environment for development:
 ```bash
+mamba create -n nomad-lab-visualiser-dev -c conda-forge python pip jupyter jupyterlab plotly ipywidgets numpy scipy pandas scikit-learn setuptools pip-tools black mypy pytest flake8 notebook py3dmol nglview ase
+mamba activate nomad-lab-visualiser-dev
+```
+
+For the old code we need to fix some package versions:
+```bash
 mamba create -n nomad-lab-visualiser-dev -c conda-forge python pip jupyter jupyterlab plotly ipywidgets==7.5.1 numpy scipy pandas scikit-learn setuptools pip-tools black mypy pytest flake8 notebook==6.0.0
 mamba activate nomad-lab-visualiser-dev
 pip install jupyter_jsmol==2021.3.0
