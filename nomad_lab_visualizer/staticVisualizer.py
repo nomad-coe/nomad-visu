@@ -2,7 +2,7 @@ from turtle import update
 from xml.etree.ElementInclude import include
 import plotly.graph_objects as go
 import ipywidgets as widgets
-from jupyter_jsmol import JsmolView
+import py3Dmol
 import numpy as np
 from IPython.display import display
 from itertools import cycle
@@ -38,7 +38,7 @@ class StaticVisualizer:
         self,
         df,
         embedding_features,
-        hover_features,
+        hover_features, 
         target,
         smart_fract=False,
         convex_hull=False,
@@ -227,8 +227,10 @@ class StaticVisualizer:
         self.trace_symbol = {}  # symbol used for the trace
 
         self.fig = go.FigureWidget()
-        self.viewer_l = JsmolView()
-        self.viewer_r = JsmolView()
+        self.viewer_l = py3Dmol.view(width='auto',height=400)
+        self.viewer_r = py3Dmol.view(width='auto',height=400)
+
+
 
         # palette used for the initial values
         palette = cycle(getattr(px.colors.qualitative, self.discrete_palette_colors[0]))
@@ -274,6 +276,7 @@ class StaticVisualizer:
             self.fract_dict = fract_dict
             # each pair of features has a different initial fraction value accessbile in the dictionary 'fract_thres'
             self.fract_thres = fract_thres
+
             self.fract = self.fract_thres[(self.feat_x, self.feat_y)]
 
         for name_trace in self.trace_name:
@@ -346,12 +349,8 @@ class StaticVisualizer:
     def show(self):
         # displays the map and all widgets
 
-        with self.output_l:
-            display(self.viewer_l)
-        with self.output_r:
-            display(self.viewer_r)
 
-        # jsmol visualizer is displayed only if there is a path to structes
+        # jsmol visualizer is displayed only if there is a path to structures
         if self.path_to_structures:
             container = widgets.VBox(
                 [
@@ -362,6 +361,8 @@ class StaticVisualizer:
                     self.widg_box_utils,
                 ]
             )
+
+
         else:
             self.widg_box_utils.layout.top = "10px"
             container = widgets.VBox(
