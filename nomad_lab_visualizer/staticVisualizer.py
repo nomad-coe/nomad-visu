@@ -6,13 +6,12 @@ import py3Dmol
 import numpy as np
 from IPython.display import display
 from itertools import cycle
-import plotly.express as px
 import os
-
-from .smart_fract import smart_fract_make
-from .instantiate_widgets import instantiate_widgets
-from .updates import update_hover_variables
-from .batch_update import batch_update
+from .topWidgets import TopWidgets
+from .configWidgets import ConfigWidgets
+from .utilsWidgets import UtilsWidgets
+from .viewersWidgets import ViewersWidgets
+from .utilsButton import UtilsButton
 
 import warnings
 
@@ -34,6 +33,11 @@ class StaticVisualizer:
         path_to_structures: path to a directory that contains all 'xyz' structures to be visualized
 
     """
+    from .include._smart_fract import smart_fract_make
+    from .include._instantiate_widgets import instantiate_widgets
+    from .include._updates import fract_change_updates
+    from .include._batch_update import batch_update
+
     def __init__(
         self,
         df,
@@ -46,167 +50,46 @@ class StaticVisualizer:
         path_to_structures=None,
     ):
 
-
         self.df = df
         self.target = target
         self.smart_fract = smart_fract
         # each unique value of the 'target' feature gives the name of a different trace
         self.trace_name = df[target].unique().astype(str)
         self.embedding_features = embedding_features
-        # x-axis is taken as the first value in the 'embedding_features' list
-        self.feat_x = embedding_features[0]
-        # y-axis is taken as the second value in the 'embedding_features' list
-        self.feat_y = embedding_features[1]
+
         self.hover_features = hover_features
         self.path_to_structures = path_to_structures
         self.convex_hull = convex_hull
         self.regr_line_coefs = regr_line_coefs
-        self.bg_color_default = (
-            "rgba(229,236,246, 0.5)"  # default value of the background color
-        )
 
-        # fraction to be initially visualized is set to be 1
-        # this value is eventually modified later if 'smart_frac' is true
-        self.fract = 1
-
-        # all values below are initialized to a specific value that can be modified using widgets
-        self.marker_size = 7  # size of all markers
-        self.cross_size = 15  # size of the crosses
-        self.min_value_markerfeat = (
-            4  # min value of markers size if sizes represent a certain feature value
-        )
-        self.max_value_markerfeat = (
-            20  # max value of markers size if sizes represent a certain feature value
-        )
-        self.font_size = 12  # size of fonts
-        self.hull_width = 1  # width of the  the convex hull
-        self.line_width = 1  # width of the regression line
-        self.hull_dash = "solid"  # dash of the convex hull
-        self.line_dash = "dash"  # dash of the regression line
-        self.hull_color = "Grey"  # color of the convex hull
-        self.line_color = "Black"  # color of the regression line
-        self.bg_color = (
-            self.bg_color_default
-        )  # background color initially set to its default value
-        self.bg_toggle = True  # background color is shown
-        self.structures_list = []
-        if self.path_to_structures:
+        if path_to_structures:
             # each row in the dataframe is expected to be identified with a different structure
-            self.structures_list = df.index.tolist()
             # List of all files found in the directory pointed by 'Structure'
             self.df["File"] = self.df["Structure"].apply(lambda x: os.listdir(x))
             # Number of files found in the directory pointed by 'Structure'
             self.df["Replicas"] = self.df["Structure"].apply(
                 lambda x: len(os.listdir(x))
             )
-            # which file in the list is shown in the left visualizer
-            self.replica_l = 0
-            # which file in the list is shown in the right visualizer
-            self.replica_r = 0
-
-        # list of possible marker symbols
-        self.symbols_list = [
-            "circle",
-            "circle-open",
-            "circle-dot",
-            "circle-open-dot",
-            "circle-cross",
-            "circle-x",
-            "square",
-            "square-open",
-            "square-dot",
-            "square-open-dot",
-            "square-cross",
-            "square-x",
-            "diamond",
-            "diamond-open",
-            "diamond-dot",
-            "diamond-open-dot",
-            "diamond-cross",
-            "diamond-x",
-            "triangle-up",
-            "triangle-up-open",
-            "triangle-up-dot",
-            "triangle-up-open-dot",
-            "triangle-down",
-            "triangle-down-open",
-            "triangle-down-dot",
-            "triangle-down-open-dot",
-        ]
-        # list of possible colors of the hulls
-        self.color_hull = [
-            "Black",
-            "Blue",
-            "Cyan",
-            "Green",
-            "Grey",
-            "Orange",
-            "Red",
-            "Yellow",
-        ]
-        # list of possible colors of the regression line
-        self.color_line = [
-            "Black",
-            "Blue",
-            "Cyan",
-            "Green",
-            "Grey",
-            "Orange",
-            "Red",
-            "Yellow",
-        ]
-        # list of possible dash types for the regression line
-        self.line_dashs = ["dash", "solid", "dot", "longdash", "dashdot", "longdashdot"]
-        # list of possible dash types for the hulls
-        self.hull_dashs = ["dash", "solid", "dot", "longdash", "dashdot", "longdashdot"]
-        # list of possible font families
-        self.font_families = [
-            "Arial",
-            "Courier New",
-            "Helvetica",
-            "Open Sans",
-            "Times New Roman",
-            "Verdana",
-        ]
-        # list of possible font colors
-        self.font_color = [
-            "Black",
-            "Blue",
-            "Cyan",
-            "Green",
-            "Grey",
-            "Orange",
-            "Red",
-            "Yellow",
-        ]
-        # list of possible discrete palette colors
-        self.discrete_palette_colors = [
-            "Plotly",
-            "D3",
-            "G10",
-            "T10",
-            "Alphabet",
-            "Dark24",
-            "Light24",
-            "Set1",
-            "Pastel1",
-            "Dark2",
-            "Set2",
-            "Pastel2",
-            "Set3",
-            "Antique",
-            "Bold",
-            "Pastel",
-            "Prism",
-            "Safe",
-            "Vivid",
-        ]
-        # list of possible continuous gradient colors
-        self.continuous_gradient_colors = px.colors.named_colorscales()
 
         # The 'target' feature is used to divide data into different traces
         # Each item in the following dictionaries will be related to a different trace in the dataframe
         # For each different 'target' value a new trace is created
+        
+        self.fig = go.FigureWidget()
+        # All permanent layout settings are defined here
+        self.fig.update_layout(
+            hoverlabel=dict(bgcolor="white", font_size=16, font_family="Rockwell"),
+            width=800,
+            height=400,
+            margin=dict(l=50, r=50, b=70, t=20, pad=4),
+        )
+        self.fig.update_xaxes(
+            ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor="black"
+        )
+        self.fig.update_yaxes(
+            ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor="black"
+        )
+
 
         self.trace = {}
         self.df_trace = (
@@ -226,15 +109,7 @@ class StaticVisualizer:
         self.colors = {}  # colors used for markers of each trace
         self.trace_symbol = {}  # symbol used for the trace
 
-        self.fig = go.FigureWidget()
-        self.viewer_l = py3Dmol.view(width='auto',height=400)
-        self.viewer_r = py3Dmol.view(width='auto',height=400)
-
-
-
-        # palette used for the initial values
-        palette = cycle(getattr(px.colors.qualitative, self.discrete_palette_colors[0]))
-
+    
         # dictionaries initialized above are compiled for all different trace names
         for cl in range(len(self.trace_name)):
 
@@ -271,13 +146,12 @@ class StaticVisualizer:
 
         # the shuffled values for fraction visualization are given using a max covering algorithm
         if self.smart_fract:
-            fract_dict, fract_thres = smart_fract_make(self)
+            fract_dict, fract_thres = self.smart_fract_make()
             # each pair of features has a different list of shuffled values accessbile in the dictionary 'fract_dict'
             self.fract_dict = fract_dict
             # each pair of features has a different initial fraction value accessbile in the dictionary 'fract_thres'
             self.fract_thres = fract_thres
-
-            self.fract = self.fract_thres[(self.feat_x, self.feat_y)]
+            ConfigWidgets.fract = self.fract_thres[(self.embedding_features[0], self.embedding_features[1])]
 
         for name_trace in self.trace_name:
 
@@ -290,12 +164,12 @@ class StaticVisualizer:
                 ]
             else:
                 self.index_df_trace_shuffled[name_trace] = self.fract_dict[
-                    (self.feat_x, self.feat_y)
+                    (self.embedding_features[0], self.embedding_features[1])
                 ][name_trace]
 
             # number of points visualized given by a certain fraction
             self.n_points[name_trace] = int(
-                self.fract * self.df_trace[name_trace].shape[0]
+                TopWidgets.fract * self.df_trace[name_trace].shape[0]
             )
             # fraction of the dataframe that is visualized on the map
             self.df_trace_on_map[name_trace] = (
@@ -309,67 +183,73 @@ class StaticVisualizer:
             self.symbols[name_trace] = [self.trace_symbol[name_trace]] * self.n_points[
                 name_trace
             ]
-            self.sizes[name_trace] = [self.marker_size] * self.n_points[name_trace]
-            self.colors[name_trace] = [next(palette)] * self.n_points[name_trace]
+            self.sizes[name_trace] = [ConfigWidgets.marker_size] * self.n_points[name_trace]
+            self.colors[name_trace] = [next(ConfigWidgets.palette)] * self.n_points[name_trace]
 
-        # All permanent layout settings are defined here
-        self.fig.update_layout(
-            hoverlabel=dict(bgcolor="white", font_size=16, font_family="Rockwell"),
-            width=800,
-            height=400,
-            margin=dict(l=50, r=50, b=70, t=20, pad=4),
-        )
-        self.fig.update_xaxes(
-            ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor="black"
-        )
-        self.fig.update_yaxes(
-            ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor="black"
-        )
 
-        # widgets are instantiated
-        instantiate_widgets(self)
-        self.box_feat.layout.height = "140px"
-        self.box_feat.layout.top = "30px"
-        self.widg_utils_button.layout.left = "50px"
-        self.widg_box_utils.layout.border = "dashed 1px"
-        self.widg_box_utils.right = "100px"
-        self.widg_box_utils.layout.max_width = "700px"
-        self.widg_box_utils.layout.visibility = "hidden"
 
+
+        self.viewer_l = py3Dmol.view(width='auto',height=400)
+        self.viewer_r = py3Dmol.view(width='auto',height=400)
+        self.visualizerConfigWidgets = ConfigWidgets(embedding_features, hover_features)
+        self.visualizerTopWidgets = TopWidgets(self)
+        self.visualizerUtilsWidgets = UtilsWidgets(self)
+        self.visualizerViewersWiedgets = ViewersWidgets(self)
+        self.visualizerUtilsButton = UtilsButton(self, self.visualizerUtilsWidgets, self.visualizerViewersWiedgets)
+   
         if self.convex_hull == False:
-            self.widg_color_hull.disabled = True
-            self.widg_width_hull.disabled = True
-            self.widg_dash_hull.disabled = True
+            self.visualizerUtilsWidgets.widg_color_hull.disabled = True
+            self.visualizerUtilsWidgets.widg_width_hull.disabled = True
+            self.visualizerUtilsWidgets.widg_dash_hull.disabled = True
 
         if self.regr_line_coefs == None:
-            self.widg_color_line.disabled = True
-            self.widg_width_line.disabled = True
-            self.widg_dash_line.disabled = True
+            self.visualizerUtilsWidgets.widg_color_line.disabled = True
+            self.visualizerUtilsWidgets.widg_width_line.disabled = True
+            self.visualizerUtilsWidgets.widg_dash_line.disabled = True
+        
+
 
     def show(self):
         # displays the map and all widgets
 
+        top_box = self.visualizerTopWidgets.container()
+        top_box.layout.height = "140px"
+        top_box.layout.top = "30px"
+        
+        utils_box = self.visualizerUtilsWidgets.container()
+        utils_button = self.visualizerUtilsButton.container()
+        viewer_box = self.visualizerViewersWiedgets.container()
+
+        utils_button.layout.left = "50px"
+        utils_box.layout.border = "dashed 1px"
+        utils_box.right = "100px"
+        utils_box.layout.max_width = "700px"
+        utils_box.layout.visibility = "hidden"
 
         # jsmol visualizer is displayed only if there is a path to structures
         if self.path_to_structures:
             container = widgets.VBox(
                 [
-                    self.box_feat,
+                    top_box,
                     self.fig,
-                    self.widg_utils_button,
-                    self.widg_box_viewers,
-                    self.widg_box_utils,
+                    utils_button,
+                    viewer_box,
+                    utils_box,
                 ]
             )
 
-
         else:
-            self.widg_box_utils.layout.top = "10px"
+            utils_box.layout.top = "10px"
             container = widgets.VBox(
-                [self.box_feat, self.fig, self.widg_utils_button, self.widg_box_utils]
+                                [
+                    top_box,
+                    self.fig,
+                    utils_button,
+                    utils_box,
+                ]
             )
 
-        update_hover_variables(self)
-        batch_update(self)
+        self.fract_change_updates()
+        self.batch_update()
 
         display(container)

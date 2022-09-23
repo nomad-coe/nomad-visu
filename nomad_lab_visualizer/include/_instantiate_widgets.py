@@ -7,73 +7,7 @@ def instantiate_widgets(self):
     """
 
 
-    self.widg_featx = widgets.Dropdown(
-        description="x-axis",
-        options=self.embedding_features,
-        value=self.feat_x,
-        layout=widgets.Layout(width="250px"),
-    )
-    self.widg_featy = widgets.Dropdown(
-        description="y-axis",
-        options=self.embedding_features,
-        value=self.feat_y,
-        layout=widgets.Layout(width="250px"),
-    )
-    self.widg_fract_slider = widgets.BoundedFloatText(
-        min=0,
-        max=1,
-        step=0.01,
-        value=self.fract,
-        layout=widgets.Layout(left="98px", width="60px"),
-    )
-    self.widg_label_fract = widgets.Label(
-        value="Fraction: ", layout=widgets.Layout(left="95px")
-    )
-    self.widg_featcolor = widgets.Dropdown(
-        description="Color",
-        options=["Default color"] + self.hover_features,
-        value="Default color",
-        layout=widgets.Layout(width="250px"),
-    )
-    self.widg_featcolor_type = widgets.RadioButtons(
-        options=["Gradient", "Discrete"],
-        value="Gradient",
-        layout=widgets.Layout(width="140px", left="90px"),
-        disabled=True,
-    )
-    self.widg_featcolor_list = widgets.Dropdown(
-        disabled=True,
-        options=self.continuous_gradient_colors,
-        value="viridis",
-        layout=widgets.Layout(width="65px", height="35px", left="40px"),
-    )
-    self.widg_featmarker = widgets.Dropdown(
-        description="Marker",
-        options=["Default size"] + self.hover_features,
-        value="Default size",
-        layout=widgets.Layout(width="250px"),
-    )
-    self.widg_featmarker_minvalue = widgets.BoundedFloatText(
-        min=0,
-        max=self.max_value_markerfeat,
-        step=1,
-        value=self.min_value_markerfeat,
-        disabled=True,
-        layout=widgets.Layout(left="91px", width="60px", height="10px"),
-    )
-    self.widg_featmarker_minvalue_label = widgets.Label(
-        value="Min value: ", layout=widgets.Layout(left="94px", width="70px")
-    )
-    self.widg_featmarker_maxvalue = widgets.BoundedFloatText(
-        min=self.min_value_markerfeat,
-        step=1,
-        value=self.max_value_markerfeat,
-        layout=widgets.Layout(left="91px", width="60px"),
-        disabled=True,
-    )
-    self.widg_featmarker_maxvalue_label = widgets.Label(
-        value="Max value: ", layout=widgets.Layout(left="94px", width="70px")
-    )
+
     self.widg_utils_button = widgets.Button(
         description="For a high-quality print of the plot, click to access the plot appearance utils",
         layout=widgets.Layout(width="600px"),
@@ -303,53 +237,7 @@ def instantiate_widgets(self):
     self.output_l = widgets.Output()
     self.output_r = widgets.Output()
 
-    self.box_feat = widgets.VBox(
-        [
-            widgets.HBox(
-                [
-                    widgets.VBox(
-                        [
-                            self.widg_featx,
-                            self.widg_featy,
-                            widgets.HBox(
-                                [self.widg_label_fract, self.widg_fract_slider]
-                            ),
-                        ]
-                    ),
-                    widgets.VBox(
-                        [
-                            self.widg_featcolor,
-                            widgets.HBox(
-                                [self.widg_featcolor_type, self.widg_featcolor_list],
-                                layout=widgets.Layout(top="10px"),
-                            ),
-                        ]
-                    ),
-                    widgets.VBox(
-                        [
-                            self.widg_featmarker,
-                            widgets.VBox(
-                                [
-                                    widgets.HBox(
-                                        [
-                                            self.widg_featmarker_minvalue_label,
-                                            self.widg_featmarker_minvalue,
-                                        ],
-                                    ),
-                                    widgets.HBox(
-                                        [
-                                            self.widg_featmarker_maxvalue_label,
-                                            self.widg_featmarker_maxvalue,
-                                        ],
-                                    ),
-                                ]
-                            ),
-                        ]
-                    ),
-                ]
-            ),
-        ]
-    )
+
 
     self.widg_box_viewers = widgets.VBox(
         [

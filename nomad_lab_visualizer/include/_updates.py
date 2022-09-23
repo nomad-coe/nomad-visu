@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from itertools import cycle
 import plotly.express as px
-
+from ..configWidgets import ConfigWidgets 
 
 def update_df_on_map(self):
     """
@@ -11,7 +11,7 @@ def update_df_on_map(self):
 
     for name_trace in self.trace_name:
 
-        n_points_trace = int(self.fract * self.df_trace[name_trace].shape[0])
+        n_points_trace = int(ConfigWidgets.fract * self.df_trace[name_trace].shape[0])
 
         if n_points_trace < 1:
             n_points_trace = 1
@@ -26,19 +26,19 @@ def update_df_on_map(self):
 
         # if a structure is visualized, its dataframe entry is added to the visualized dataframe 'df_trace_on_map'
         # this to avoid that the entry relative to a structure visualized is not available on the map
-        if self.widg_structure_text_l.value in self.df_trace[name_trace].index:
+        if ConfigWidgets.structure_text_l in self.df_trace[name_trace].index:
             self.df_trace_on_map[name_trace] = pd.concat(
                 [
                     self.df_trace_on_map[name_trace],
-                    self.df.loc[[self.widg_structure_text_l.value]],
+                    self.df.loc[[ConfigWidgets.structure_text_l]],
                 ]
             )
 
-        if self.widg_structure_text_r.value in self.df_trace[name_trace].index:
+        if ConfigWidgets.structure_text_r in self.df_trace[name_trace].index:
             self.df_trace_on_map[name_trace] = pd.concat(
                 [
                     self.df_trace_on_map[name_trace],
-                    self.df.loc[[self.widg_structure_text_r.value]],
+                    self.df.loc[[ConfigWidgets.structure_text_r]],
                 ]
             )
 
@@ -96,8 +96,8 @@ def update_marker_symbol(self):
         self.symbols[name_trace] = [self.trace_symbol[name_trace]] * len(
             self.df_trace_on_map[name_trace]
         )
-        formula_l = self.widg_structure_text_l.value
-        formula_r = self.widg_structure_text_r.value
+        formula_l = ConfigWidgets.structure_text_l
+        formula_r = ConfigWidgets.structure_text_r
 
         for i in range(2):
             # entries whose structure is visualized appear twice on 'df_trace_on_map'
@@ -137,38 +137,38 @@ def update_marker_size(self):
     in case 'Marker' has a feature value, marker sizes are selected according to that specific feature
     """
 
-    feature = self.widg_featmarker.value
+    feature = ConfigWidgets.featmarker
 
     if feature == "Default size":
 
         for name_trace in self.trace_name:
 
-            sizes = [self.marker_size] * len(self.df_trace_on_map[name_trace])
+            sizes = [ConfigWidgets.marker_size] * len(self.df_trace_on_map[name_trace])
             symbols = self.symbols[name_trace]
 
             indices_x = [i for i, symbol in enumerate(symbols) if symbol == "x"]
             indices_cross = [i for i, symbol in enumerate(symbols) if symbol == "cross"]
 
             if indices_x:
-                sizes[indices_x[0]] = self.cross_size
+                sizes[indices_x[0]] = ConfigWidgets.cross_size
 
             if len(indices_x) == 2:
                 # entries whose structure is visualized appear twice on 'df_trace_on_map'
 
                 sizes[indices_x[0]] = 0
-                sizes[indices_x[1]] = self.cross_size
+                sizes[indices_x[1]] = ConfigWidgets.cross_size
 
             if indices_cross:
-                sizes[indices_cross[0]] = self.cross_size
+                sizes[indices_cross[0]] = ConfigWidgets.cross_size
 
             if len(indices_cross) == 2:
                 sizes[indices_cross[0]] = 0
-                sizes[indices_cross[1]] = self.cross_size
+                sizes[indices_cross[1]] = ConfigWidgets.cross_size
 
             self.sizes[name_trace] = sizes
     else:
-        min_value = self.min_value_markerfeat
-        max_value = self.max_value_markerfeat
+        min_value = ConfigWidgets.min_value_markerfeat
+        max_value = ConfigWidgets.max_value_markerfeat
         min_feat = min(
             [
                 min(self.df_trace_on_map[name_trace][feature].to_numpy())
@@ -197,13 +197,13 @@ def update_marker_color(self):
     updates the color of markers
     """
 
-    feature = self.widg_featcolor.value
+    feature = ConfigWidgets.featcolor
 
     if feature == "Default color":
         # each trace has a different color picked from a given palette
 
         self.palette = cycle(
-            getattr(px.colors.qualitative, self.widg_color_palette.value)
+            getattr(px.colors.qualitative, ConfigWidgets.color_palette)
         )
 
         for name_trace in self.trace_name:
@@ -211,25 +211,26 @@ def update_marker_color(self):
                 self.df_trace_on_map[name_trace]
             )
 
-    elif self.widg_featcolor_type.value == "Discrete":
+    elif ConfigWidgets.featcolor_type == "Discrete":
         # each color represents a different discrete feature value
 
         colors_dict = {}
-        palette = cycle(getattr(px.colors.qualitative, self.widg_featcolor_list.value))
+        palette = cycle(getattr(px.colors.qualitative, ConfigWidgets.featcolor_list))
 
-        for value in self.df[feature].unique():
+        for value in np.sort(self.df[feature].unique()):
             colors_dict[value] = next(palette)
 
         for name_trace in self.trace_name:
 
             self.colors[name_trace] = [" "] * len(self.df_trace_on_map[name_trace])
             for i, value in enumerate(self.df_trace_on_map[name_trace][feature]):
+
                 self.colors[name_trace][i] = colors_dict[value]
 
-    elif self.widg_featcolor_type.value == "Gradient":
+    elif ConfigWidgets.featcolor_type == "Gradient":
         # colors are interpolated in a gradient, according to the feature value
 
-        feature = self.widg_featcolor.value
+        feature = ConfigWidgets.featcolor
 
         for name_trace in self.trace_name:
             self.colors[name_trace] = self.df_trace_on_map[name_trace][feature]

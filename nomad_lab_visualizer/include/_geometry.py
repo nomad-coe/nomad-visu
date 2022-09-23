@@ -49,7 +49,7 @@ def make_line(self, feat_x, feat_y):
     line_x = np.linspace(self.df[feat_x].min(), self.df[feat_x].max(), 1000)
 
     # Gives the classifications line
-    if self.widg_featx.value == self.widg_featy.value:
+    if feat_x == feat_y:
         return line_x, line_x
     else:
         line_y = (
