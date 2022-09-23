@@ -6,7 +6,7 @@ from IPython.display import display, Markdown, FileLink
 import os
 
 class UtilsWidgets(ConfigWidgets):
-    def __init__(self, Visualizer):
+    def __init__(self, Figure):
 
         self.widg_description = widgets.Label(
             value="Tick the box next to the cross symbols in order to choose which windows visualizes the next "
@@ -49,15 +49,15 @@ class UtilsWidgets(ConfigWidgets):
             layout=widgets.Layout(left="30px", width="200px"),
         )
         self.widg_trace_symbol = widgets.Dropdown(
-            options=Visualizer.trace_name,
+            options=Figure.trace_name,
             description="Classes",
-            value=Visualizer.trace_name[0],
+            value=Figure.trace_name[0],
             layout=widgets.Layout(left="30px", width="200px"),
         )
         self.widg_markers_symbol = widgets.Dropdown(
             options=ConfigWidgets.symbols_list,
             description="--- symbol",
-            value=Visualizer.trace_symbol[Visualizer.trace_name[0]],
+            value=Figure.trace_symbol[Figure.trace_name[0]],
             layout=widgets.Layout(left="30px", width="200px"),
         )
         self.widg_reset_button = widgets.Button(
@@ -180,21 +180,24 @@ class UtilsWidgets(ConfigWidgets):
             changes font family
             """
             ConfigWidgets.font_family = change.new
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def handle_font_size_change( change):
             """
             changes font size
             """
             ConfigWidgets.font_size = change.new
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def handle_font_color_change( change):
             """
             changes font color
             """
             ConfigWidgets.font_color = change.new
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def handle_colorpalette_change(change):
             """
@@ -202,8 +205,9 @@ class UtilsWidgets(ConfigWidgets):
             """
 
             ConfigWidgets.color_palette = change.new
-            marker_style_updates(Visualizer)
-            batch_update(Visualizer)
+            marker_style_updates(Figure)
+            batch_update(Figure, ConfigWidgets)
+
 
         def handle_markers_size_change(change):
             """
@@ -211,8 +215,8 @@ class UtilsWidgets(ConfigWidgets):
             """
 
             ConfigWidgets.marker_size = int(change.new)
-            marker_style_updates(Visualizer)
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def handle_cross_size_change(change):
             """
@@ -220,14 +224,14 @@ class UtilsWidgets(ConfigWidgets):
             """
 
             ConfigWidgets.cross_size = int(change.new)
-            marker_style_updates(Visualizer)
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def handle_trace_symbol_change(change):
             """
             change selected trace for marker symbol change
             """
-            self.widg_markers_symbol.value = Visualizer.trace_symbol[str(change.new)]
+            self.widg_markers_symbol.value = Figure.trace_symbol[str(change.new)]
 
 
         def handle_markers_symbol_change( change ) :
@@ -235,12 +239,11 @@ class UtilsWidgets(ConfigWidgets):
             change marker symbol for trace
             """
             name_trace = str(self.widg_trace_symbol.value)
-            Visualizer.trace_symbol[name_trace] = change.new
-            Visualizer.symbols[name_trace] = [str(change.new)] * len(
-                Visualizer.df_trace_on_map[name_trace]
+            Figure.trace_symbol[name_trace] = change.new
+            Figure.symbols[name_trace] = [str(change.new)] * len(
+                Figure.df_trace_on_map[name_trace]
             )
-            marker_style_updates( Visualizer )
-            batch_update( Visualizer )
+            batch_update(Figure, ConfigWidgets)
 
         def reset_button_clicked( button ):
             """
@@ -248,54 +251,61 @@ class UtilsWidgets(ConfigWidgets):
             """
 
             self.widg_markers_symbol.value = "circle"
-            for name_trace in Visualizer.trace_name:
-                Visualizer.trace_symbol[name_trace] = "circle"
-                Visualizer.symbols[name_trace] = ["circle"] * Visualizer.n_points[name_trace]
-                Visualizer.sizes[name_trace] = [ConfigWidgets.marker_size] * Visualizer.n_points[name_trace]
+            for name_trace in Figure.trace_name:
+                Figure.trace_symbol[name_trace] = "circle"
+                Figure.symbols[name_trace] = ["circle"] * Figure.n_points[name_trace]
+                Figure.sizes[name_trace] = [ConfigWidgets.marker_size] * Figure.n_points[name_trace]
 
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def handle_width_hull_change( change ):
             """
             change width hull
             """
             ConfigWidgets.hull_width = change.new
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def handle_color_hull_change( change ):
             """
             change hull color
             """
             ConfigWidgets.hull_color = change.new
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def handle_dash_hull_change( change ):
             """
             cange hull dash
             """
             ConfigWidgets.hull_dash = change.new
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def handle_width_line_change( change ):
             """
             change line width
             """
             ConfigWidgets.line_width = change.new
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def handle_color_line_change( change ):
             """
             change line color
             """
             ConfigWidgets.line_color = change.new
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def handle_dash_line_change( change):
             """
             change line dash
             """
             ConfigWidgets.line_dash = change.new
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def bgtoggle_button_clicked( button):
             """
@@ -305,19 +315,19 @@ class UtilsWidgets(ConfigWidgets):
                 ConfigWidgets.bg_toggle = False
             else:
                 ConfigWidgets.bg_toggle = True
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def bgcolor_update_button_clicked(button):
             """
             update color of the background
             """
-
             if self.widg_bgcolor.value == "Default" or self.widg_bgcolor.value == "default":
                 ConfigWidgets.bg_color = ConfigWidgets.bg_color_default
                 ConfigWidgets.bg_toggle = True
             else:
                 try:
-                    Visualizer.fig.update_layout(
+                    Figure.FigureWidget.update_layout(
                         plot_bgcolor=self.widg_bgcolor.value,
                         xaxis=dict(gridcolor="white"),
                         yaxis=dict(gridcolor="white"),
@@ -326,7 +336,8 @@ class UtilsWidgets(ConfigWidgets):
                     ConfigWidgets.bg_toggle = True
                 except:
                     pass
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
+
 
         def print_button_clicked( button):
             """
@@ -343,7 +354,7 @@ class UtilsWidgets(ConfigWidgets):
             except:
                 pass
             file_name = self.widg_plot_name.value + "." + self.widg_plot_format.value
-            Visualizer.fig.write_image(path + file_name, scale=self.widg_resolution.value)
+            Figure.FigureWidget.write_image(path + file_name, scale=self.widg_resolution.value)
             self.widg_print_out.clear_output()
             with self.widg_print_out:
                 local_file = FileLink(

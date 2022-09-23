@@ -7,9 +7,9 @@ import nomad_lab_visualizer
 import py3Dmol
 
 class ViewersWidgets( ConfigWidgets ):
-    def __init__( self, Visualizer ):
+    def __init__( self, Figure ):
         
-        ConfigWidgets.structures_list = Visualizer.df.index.tolist()
+        ConfigWidgets.structures_list = Figure.df.index.tolist()
 
         file1 = open(
             os.path.join(nomad_lab_visualizer.__path__[0], "assets/cross1.png"), "rb"
@@ -133,8 +133,8 @@ class ViewersWidgets( ConfigWidgets ):
                 return
 
             trace = points.trace_index
-            formula = Visualizer.fig.data[trace].text[points.point_inds[0]]
-            structure = Visualizer.df.iloc[points.point_inds[0]]["Structure"]
+            formula = Figure.FigureWidget.data[trace].text[points.point_inds[0]]
+            structure = Figure.df.iloc[points.point_inds[0]]["Structure"]
 
             if self.widg_checkbox_l.value:
                 self.widg_structure_text_l.value = formula
@@ -143,49 +143,41 @@ class ViewersWidgets( ConfigWidgets ):
                 self.widg_structure_text_r.value = formula
                 view_structure_r(self, formula)
 
-            fract_change_updates(Visualizer)
-            marker_style_updates(Visualizer)
-            batch_update(Visualizer)
+            batch_update(Figure, ConfigWidgets)
 
         def display_button_l_clicked( button ):
 
             # Actions are performed only if the string inserted in the text widget corresponds to an existing compound
-            if self.widg_structure_text_l.value in Visualizer.df["Structure"]:
+            if self.widg_structure_text_l.value in Figure.df["Structure"]:
 
                 compound_l = self.widg_structure_text_l.value
-                # structure_l = Visualizer.df["Structure"].at[compound_l]
+                # structure_l = Figure.df["Structure"].at[compound_l]
 
                 view_structure_l(self, compound_l)
-
-                fract_change_updates(Visualizer)
-                marker_style_updates(Visualizer)
-                batch_update(Visualizer)
+                batch_update(Figure, ConfigWidgets)
 
         def display_button_r_clicked( button ):
 
             # Actions are performed only if the string inserted in the text widget corresponds to an existing compound
-            if self.widg_structure_text_r.value in Visualizer.df["Structure"]:
+            if self.widg_structure_text_r.value in Figure.df["Structure"]:
 
                 compound_r = self.widg_structure_text_r.value
-                # structure_r = Visualizer.df["Structure"].at[compound_r]
+                # structure_r = Figure.df["Structure"].at[compound_r]
 
                 view_structure_r(self, compound_r)
-
-                fract_change_updates(Visualizer)
-                marker_style_updates(Visualizer)
-                batch_update(Visualizer)
+                batch_update(Figure, ConfigWidgets)
 
         def view_structure_l(self, formula):
 
             ConfigWidgets.structure_text_l = formula
 
-            if ConfigWidgets.replica_l >= Visualizer.df["Replicas"].at[formula]:
+            if ConfigWidgets.replica_l >= Figure.df["Replicas"].at[formula]:
                 ConfigWidgets.replica_l = 0
 
             filename = (
-                Visualizer.df["Structure"].at[formula]
+                Figure.df["Structure"].at[formula]
                 + "/"
-                + Visualizer.df["File"].at[formula][ConfigWidgets.replica_l]
+                + Figure.df["File"].at[formula][ConfigWidgets.replica_l]
             )
             ConfigWidgets.replica_l = ConfigWidgets.replica_l + 1
             
@@ -207,13 +199,13 @@ class ViewersWidgets( ConfigWidgets ):
             
             ConfigWidgets.structure_text_r = formula
 
-            if ConfigWidgets.replica_r >= Visualizer.df["Replicas"].at[formula]:
+            if ConfigWidgets.replica_r >= Figure.df["Replicas"].at[formula]:
                 ConfigWidgets.replica_r = 0
 
             filename = (
-                Visualizer.df["Structure"].at[formula]
+                Figure.df["Structure"].at[formula]
                 + "/"
-                + Visualizer.df["File"].at[formula][ConfigWidgets.replica_r]
+                + Figure.df["File"].at[formula][ConfigWidgets.replica_r]
             )
             ConfigWidgets.replica_r += 1
 
@@ -232,9 +224,9 @@ class ViewersWidgets( ConfigWidgets ):
                 self.viewer_r.show()
 
 
-        # if Visualizer.path_to_structures:
-        for name_trace in Visualizer.trace_name:
-            Visualizer.trace[name_trace].on_click(
+        # if Figure.path_to_structures:
+        for name_trace in Figure.trace_name:
+            Figure.trace[name_trace].on_click(
                 handle_point_clicked
             )  # actions performed after clicking points on the map
 

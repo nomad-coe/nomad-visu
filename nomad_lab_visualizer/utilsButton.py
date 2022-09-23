@@ -3,13 +3,12 @@ from .include._batch_update import batch_update
 from .include._updates import marker_style_updates, fract_change_updates
 import ipywidgets as widgets
 import os
-import nomad_lab_visualizer
 import py3Dmol
 from .utilsWidgets import UtilsWidgets
 from .viewersWidgets import ViewersWidgets
 
 class UtilsButton( ConfigWidgets ):
-    def __init__( self, Visualizer, UtilsWidgets, ViewersWidgets ):
+    def __init__( self, Figure, UtilsWidgets, ViewersWidgets ):
 
         self.widg_utils_button = widgets.Button(
             description="For a high-quality print of the plot, click to access the plot appearance utils",
@@ -20,7 +19,7 @@ class UtilsButton( ConfigWidgets ):
             shows the plot utils box
             """
 
-            if Visualizer.path_to_structures:
+            if Figure.path_to_structures:
                 if UtilsWidgets.widg_box_utils.layout.visibility == "visible":
                     UtilsWidgets.widg_box_utils.layout.visibility = "hidden"
                     for i in range(340, -1, -1):
