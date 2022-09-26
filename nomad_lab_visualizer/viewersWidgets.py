@@ -143,7 +143,7 @@ class ViewersWidgets( ConfigWidgets ):
                 self.widg_structure_text_r.value = formula
                 view_structure_r(self, formula)
 
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
         def display_button_l_clicked( button ):
 
@@ -154,7 +154,7 @@ class ViewersWidgets( ConfigWidgets ):
                 # structure_l = Figure.df["Structure"].at[compound_l]
 
                 view_structure_l(self, compound_l)
-                batch_update(Figure, ConfigWidgets)
+                batch_update(Figure, self)
 
         def display_button_r_clicked( button ):
 
@@ -165,7 +165,7 @@ class ViewersWidgets( ConfigWidgets ):
                 # structure_r = Figure.df["Structure"].at[compound_r]
 
                 view_structure_r(self, compound_r)
-                batch_update(Figure, ConfigWidgets)
+                batch_update(Figure, self)
 
         def view_structure_l(self, formula):
 

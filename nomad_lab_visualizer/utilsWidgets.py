@@ -25,7 +25,7 @@ class UtilsWidgets(ConfigWidgets):
             layout=widgets.Layout(left="30px", width="200px"),
         )
         self.widg_color_palette = widgets.Dropdown(
-            options=self.discrete_palette_colors,
+            options=ConfigWidgets.discrete_palette_colors,
             description="Color palette",
             value=ConfigWidgets.discrete_palette_colors[0],
             layout=widgets.Layout(left="30px", width="200px"),
@@ -88,7 +88,7 @@ class UtilsWidgets(ConfigWidgets):
         )
         self.widg_width_line = widgets.BoundedIntText(
             description="Line width",
-            value=self.line_width,
+            value=ConfigWidgets.line_width,
             layout=widgets.Layout(left="30px", width="200px"),
         )
         self.widg_dash_line = widgets.Dropdown(
@@ -180,7 +180,7 @@ class UtilsWidgets(ConfigWidgets):
             changes font family
             """
             ConfigWidgets.font_family = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def handle_font_size_change( change):
@@ -188,7 +188,7 @@ class UtilsWidgets(ConfigWidgets):
             changes font size
             """
             ConfigWidgets.font_size = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def handle_font_color_change( change):
@@ -196,7 +196,7 @@ class UtilsWidgets(ConfigWidgets):
             changes font color
             """
             ConfigWidgets.font_color = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def handle_colorpalette_change(change):
@@ -206,7 +206,7 @@ class UtilsWidgets(ConfigWidgets):
 
             ConfigWidgets.color_palette = change.new
             marker_style_updates(Figure)
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def handle_markers_size_change(change):
@@ -215,7 +215,7 @@ class UtilsWidgets(ConfigWidgets):
             """
 
             ConfigWidgets.marker_size = int(change.new)
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def handle_cross_size_change(change):
@@ -224,7 +224,7 @@ class UtilsWidgets(ConfigWidgets):
             """
 
             ConfigWidgets.cross_size = int(change.new)
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def handle_trace_symbol_change(change):
@@ -243,7 +243,7 @@ class UtilsWidgets(ConfigWidgets):
             Figure.symbols[name_trace] = [str(change.new)] * len(
                 Figure.df_trace_on_map[name_trace]
             )
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
         def reset_button_clicked( button ):
             """
@@ -256,7 +256,7 @@ class UtilsWidgets(ConfigWidgets):
                 Figure.symbols[name_trace] = ["circle"] * Figure.n_points[name_trace]
                 Figure.sizes[name_trace] = [ConfigWidgets.marker_size] * Figure.n_points[name_trace]
 
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def handle_width_hull_change( change ):
@@ -264,7 +264,7 @@ class UtilsWidgets(ConfigWidgets):
             change width hull
             """
             ConfigWidgets.hull_width = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def handle_color_hull_change( change ):
@@ -272,7 +272,7 @@ class UtilsWidgets(ConfigWidgets):
             change hull color
             """
             ConfigWidgets.hull_color = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def handle_dash_hull_change( change ):
@@ -280,7 +280,7 @@ class UtilsWidgets(ConfigWidgets):
             cange hull dash
             """
             ConfigWidgets.hull_dash = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def handle_width_line_change( change ):
@@ -288,7 +288,7 @@ class UtilsWidgets(ConfigWidgets):
             change line width
             """
             ConfigWidgets.line_width = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def handle_color_line_change( change ):
@@ -296,7 +296,7 @@ class UtilsWidgets(ConfigWidgets):
             change line color
             """
             ConfigWidgets.line_color = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def handle_dash_line_change( change):
@@ -304,7 +304,7 @@ class UtilsWidgets(ConfigWidgets):
             change line dash
             """
             ConfigWidgets.line_dash = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def bgtoggle_button_clicked( button):
@@ -315,7 +315,7 @@ class UtilsWidgets(ConfigWidgets):
                 ConfigWidgets.bg_toggle = False
             else:
                 ConfigWidgets.bg_toggle = True
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def bgcolor_update_button_clicked(button):
@@ -336,7 +336,7 @@ class UtilsWidgets(ConfigWidgets):
                     ConfigWidgets.bg_toggle = True
                 except:
                     pass
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def print_button_clicked( button):

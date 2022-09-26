@@ -87,7 +87,7 @@ class TopWidgets(ConfigWidgets):
                 ConfigWidgets.fract = Figure.fract_thres[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)]
                 self.widg_fract_slider.value = self.fract
 
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
         def handle_yfeat_change(change):
             """
@@ -99,7 +99,7 @@ class TopWidgets(ConfigWidgets):
                 ConfigWidgets.fract = Figure.fract_thres[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)]
                 self.widg_fract_slider.value = ConfigWidgets.fract
 
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
         def handle_fract_change(change):
             """
@@ -107,7 +107,7 @@ class TopWidgets(ConfigWidgets):
             """
 
             ConfigWidgets.fract = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
         def handle_colorfeat_change(change):
             """
@@ -124,7 +124,7 @@ class TopWidgets(ConfigWidgets):
                 self.widg_featcolor_type.disabled = False
                 self.widg_featcolor_list.disabled = False
                 # self.widg_color_palette.disabled = True
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
         def handle_featcolor_list_change(change):
             """
@@ -169,7 +169,7 @@ class TopWidgets(ConfigWidgets):
                 # self.widg_cross_size.disabled = True
 
             ConfigWidgets.featmarker = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
         def handle_featmarker_maxvalue_change(change):
             """
@@ -178,7 +178,7 @@ class TopWidgets(ConfigWidgets):
 
             ConfigWidgets.max_value_markerfeat = change.new
             self.widg_featmarker_minvalue.max = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
         def handle_featmarker_minvalue_change(change):
             """
@@ -187,7 +187,7 @@ class TopWidgets(ConfigWidgets):
 
             ConfigWidgets.min_value_markerfeat = change.new
             self.widg_featmarker_maxvalue.min = change.new
-            batch_update(Figure, ConfigWidgets)
+            batch_update(Figure, self)
 
 
         def observe_widgets(self): 

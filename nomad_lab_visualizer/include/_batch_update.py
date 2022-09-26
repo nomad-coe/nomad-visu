@@ -107,7 +107,7 @@ def batch_update(self, ConfigWidgets):
                     marker=dict(showscale=False, color=self.colors[name_trace]),
                 )
 
-        if self.convex_hull == True:
+        if ConfigWidgets.convex_hull == True:
 
             if ConfigWidgets.feat_x == ConfigWidgets.feat_y:
 
@@ -130,6 +130,12 @@ def batch_update(self, ConfigWidgets):
                     self.FigureWidget.update_traces(
                         selector={"name": "Hull " + name_trace}, showlegend=False
                     )
+        else:
+            for name_trace in self.trace_name:
+                self.trace["Hull " + name_trace].line = dict(width=0)
+                self.FigureWidget.update_traces(
+                    selector={"name": "Hull " + name_trace},
+                )
         if self.regr_line_coefs:
 
             line_x, line_y = make_line(self, ConfigWidgets.feat_x, ConfigWidgets.feat_y)

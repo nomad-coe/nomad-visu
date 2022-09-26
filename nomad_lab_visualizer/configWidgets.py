@@ -3,13 +3,14 @@ import plotly.express as px
 from itertools import cycle
 
 class ConfigWidgets(object):
-    def __init__ (self, embedding_features, hover_features):
-        ConfigWidgets.hover_features = hover_features
-        ConfigWidgets.embedding_features = embedding_features
-        # x-axis is taken as the first value in the 'embedding_features' list
-        ConfigWidgets.feat_x = ConfigWidgets.embedding_features[0]
-        # y-axis is taken as the second value in the 'embedding_features' list
-        ConfigWidgets.feat_y = ConfigWidgets.embedding_features[1]
+    # def __init__ (self, embedding_features, hover_features):
+        # ConfigWidgets.hover_features = hover_features
+        # ConfigWidgets.embedding_features = embedding_features
+        # # x-axis is taken as the first value in the 'embedding_features' list
+        # ConfigWidgets.feat_x = ConfigWidgets.embedding_features[0]
+        # # y-axis is taken as the second value in the 'embedding_features' list
+        # ConfigWidgets.feat_y = ConfigWidgets.embedding_features[1]
+
 
     bg_color_default = (
         "rgba(229,236,246, 0.5)"  # default value of the background color
@@ -159,3 +160,5 @@ class ConfigWidgets(object):
     color_palette = discrete_palette_colors[0]
     font_family = font_families[0]
     font_color = font_colors[0]
+
+    convex_hull = False

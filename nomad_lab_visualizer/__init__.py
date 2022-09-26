@@ -41,7 +41,6 @@ class Visualizer:
         hover_features, 
         target,
         smart_fract=False,
-        convex_hull=False,
         regr_line_coefs=None,
         path_to_structures=None,
     ):
@@ -54,7 +53,6 @@ class Visualizer:
 
         self.hover_features = hover_features
         self.path_to_structures = path_to_structures
-        self.convex_hull = convex_hull
         self.regr_line_coefs = regr_line_coefs
 
         if path_to_structures:
@@ -66,31 +64,32 @@ class Visualizer:
                 lambda x: len(os.listdir(x))
             )
 
+        ConfigWidgets.hover_features = hover_features
+        ConfigWidgets.embedding_features = embedding_features
+        ConfigWidgets.feat_x = ConfigWidgets.embedding_features[0]
+        ConfigWidgets.feat_y = ConfigWidgets.embedding_features[1]
 
+        self.visualizerConfigWidgets = ConfigWidgets()
+        self.visualizerFigure = Figure(df, embedding_features, hover_features, target, smart_fract, regr_line_coefs, path_to_structures )
+        self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
+       
         self.viewer_l = py3Dmol.view(width='auto',height=400)
         self.viewer_r = py3Dmol.view(width='auto',height=400)
-        self.visualizerFigure = Figure(df, embedding_features, hover_features, target, smart_fract, convex_hull, regr_line_coefs, path_to_structures )
-        self.visualizerConfigWidgets = ConfigWidgets(embedding_features, hover_features)
- 
-        self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
-
 
         self.visualizerTopWidgets = TopWidgets(self.visualizerFigure)
         self.visualizerUtilsWidgets = UtilsWidgets(self.visualizerFigure)
         self.visualizerViewersWiedgets = ViewersWidgets(self.visualizerFigure)
         self.visualizerUtilsButton = UtilsButton(self.visualizerFigure, self.visualizerUtilsWidgets, self.visualizerViewersWiedgets)
-   
-        if self.convex_hull == False:
-            self.visualizerUtilsWidgets.widg_color_hull.disabled = True
-            self.visualizerUtilsWidgets.widg_width_hull.disabled = True
-            self.visualizerUtilsWidgets.widg_dash_hull.disabled = True
+
+        self.visualizerUtilsWidgets.widg_color_hull.disabled = True
+        self.visualizerUtilsWidgets.widg_width_hull.disabled = True
+        self.visualizerUtilsWidgets.widg_dash_hull.disabled = True
 
         if self.regr_line_coefs == None:
             self.visualizerUtilsWidgets.widg_color_line.disabled = True
             self.visualizerUtilsWidgets.widg_width_line.disabled = True
             self.visualizerUtilsWidgets.widg_dash_line.disabled = True
         
-
 
     def show(self):
         # displays the map and all widgets
@@ -134,3 +133,23 @@ class Visualizer:
             )
 
         display(container)
+
+    def add_convex_hull (self):
+        
+        ConfigWidgets.convex_hull = True
+
+        self.visualizerUtilsWidgets.widg_color_hull.disabled = False
+        self.visualizerUtilsWidgets.widg_width_hull.disabled = False
+        self.visualizerUtilsWidgets.widg_dash_hull.disabled = False
+
+        self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
+
+    def remove_convex_hull (self):
+        
+        ConfigWidgets.convex_hull = False
+
+        self.visualizerUtilsWidgets.widg_color_hull.disabled = True
+        self.visualizerUtilsWidgets.widg_width_hull.disabled = True
+        self.visualizerUtilsWidgets.widg_dash_hull.disabled = True
+
+        self.visualizerFigure.batch_update(self.visualizerConfigWidgets)

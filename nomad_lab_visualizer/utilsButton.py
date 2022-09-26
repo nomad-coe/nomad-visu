@@ -3,7 +3,6 @@ from .include._batch_update import batch_update
 from .include._updates import marker_style_updates, fract_change_updates
 import ipywidgets as widgets
 import os
-import py3Dmol
 from .utilsWidgets import UtilsWidgets
 from .viewersWidgets import ViewersWidgets
 

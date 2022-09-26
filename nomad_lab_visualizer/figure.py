@@ -5,13 +5,12 @@ import plotly.graph_objects as go
 import numpy as np
 from .include._geometry import make_hull, make_line
 from .include._smart_fract import smart_fract_make
-from .configWidgets import ConfigWidgets 
 
 class Figure( ):
     
     from .include._batch_update import batch_update
 
-    def __init__( self, df, embedding_features, hover_features, target, smart_fract, convex_hull, regr_line_coefs, path_to_structures ):
+    def __init__( self, df, embedding_features, hover_features, target, smart_fract, regr_line_coefs, path_to_structures ):
 
         # The 'target' feature is used to divide data into different traces
         # Each item in the following dictionaries will be related to a different trace in the dataframe
@@ -36,7 +35,6 @@ class Figure( ):
         self.embedding_features = embedding_features
         self.hover_features = hover_features
         self.smart_fract = smart_fract
-        self.convex_hull = convex_hull
         self.regr_line_coefs = regr_line_coefs
         self.path_to_structures = path_to_structures
 
@@ -78,15 +76,16 @@ class Figure( ):
             )
             self.trace[name_trace] = self.FigureWidget["data"][-1]
 
+            name_trace = self.trace_name[cl]
+
             # add a convex hull for each different 'target' value
-            if convex_hull:
-                name_trace = "Hull " + name_trace
-                self.FigureWidget.add_trace(
-                    go.Scatter(
-                        name=name_trace,
-                    )
+            name_trace = "Hull " + name_trace
+            self.FigureWidget.add_trace(
+                go.Scatter(
+                    name=name_trace,
                 )
-                self.trace[name_trace] = self.FigureWidget["data"][-1]
+            )
+            self.trace[name_trace] = self.FigureWidget["data"][-1]
 
         # add a trace that contains the regression line
         if regr_line_coefs:
@@ -135,4 +134,4 @@ class Figure( ):
             
 
 
-    
+        
