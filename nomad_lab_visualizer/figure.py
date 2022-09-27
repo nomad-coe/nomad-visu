@@ -10,7 +10,7 @@ class Figure( ):
     
     from .include._batch_update import batch_update
 
-    def __init__( self, df, embedding_features, hover_features, target, smart_fract, regr_line_coefs, path_to_structures ):
+    def __init__( self, df, embedding_features, hover_features, target, smart_fract,  path_to_structures ):
 
         # The 'target' feature is used to divide data into different traces
         # Each item in the following dictionaries will be related to a different trace in the dataframe
@@ -35,7 +35,6 @@ class Figure( ):
         self.embedding_features = embedding_features
         self.hover_features = hover_features
         self.smart_fract = smart_fract
-        self.regr_line_coefs = regr_line_coefs
         self.path_to_structures = path_to_structures
 
         self.trace_name = df[target].unique().astype(str)
@@ -56,7 +55,6 @@ class Figure( ):
         self.sizes = {}  # sizes used for markers of each trace
         self.colors = {}  # colors used for markers of each trace
         self.trace_symbol = {}  # symbol used for the trace
-
     
         # dictionaries initialized above are compiled for all different trace names
         for cl in range(len(self.trace_name)):
@@ -87,11 +85,6 @@ class Figure( ):
             )
             self.trace[name_trace] = self.FigureWidget["data"][-1]
 
-        # add a trace that contains the regression line
-        if regr_line_coefs:
-            name_trace = "Line"
-            self.FigureWidget.add_trace(go.Scatter(name=name_trace))
-            self.trace[name_trace] = self.FigureWidget["data"][-1]
 
         # the shuffled values for fraction visualization are given using a max covering algorithm
         if smart_fract:
@@ -131,7 +124,43 @@ class Figure( ):
             # symbol used for the trace
             self.trace_symbol[name_trace] = "circle"
             
+    def add_regr_line (self, coefs, feat_x, feat_y):
+
+
+        if not (feat_x,feat_y) in ConfigWidgets.regr_line_trace:
             
+            ConfigWidgets.regr_line_trace[(feat_x,feat_y)]=True
 
+            # add a trace that contains the regression line
+            line_x, line_y = make_line(self, feat_x, feat_y, coefs)
 
+            name_trace = "Regr line" + feat_x + ' ' + feat_y 
+            self.FigureWidget.add_trace(go.Scatter(
+                name=name_trace,
+                x=line_x,
+                y=line_y,
+                )
+                )
+            self.trace[name_trace] = self.FigureWidget["data"][-1]
+            self.FigureWidget.update_traces(selector={"name": name_trace}, showlegend=False)
+
+        else: 
+
+            ConfigWidgets.regr_line_trace[(feat_x,feat_y)]=True           
+            line_x, line_y = make_line(self, feat_x, feat_y, coefs)
+
+            name_trace = "Regr line" + feat_x + ' ' + feat_y 
+            self.trace[name_trace].x=line_x
+            self.trace[name_trace].y=line_y
+
+            self.FigureWidget.update_traces(selector={"name": name_trace}, showlegend=False)
+
+        batch_update(self, ConfigWidgets)
         
+    def remove_regr_line (self, feat_x, feat_y):
+
+        ConfigWidgets.regr_line_trace[(feat_x,feat_y)]=False
+
+        batch_update(self, ConfigWidgets)
+
+

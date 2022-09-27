@@ -81,6 +81,10 @@ class TopWidgets(ConfigWidgets):
             """
             changes the feature plotted on the x-axis
             """
+            
+            if (ConfigWidgets.feat_x,ConfigWidgets.feat_y) in  ConfigWidgets.regr_line_trace:
+                name_trace = "Regr line" + ConfigWidgets.feat_x + ' ' + ConfigWidgets.feat_y 
+                Figure.trace[name_trace].line = dict(width=0)
 
             ConfigWidgets.feat_x = change.new
             if ConfigWidgets.feat_x != ConfigWidgets.feat_y and Figure.smart_fract:
@@ -93,6 +97,10 @@ class TopWidgets(ConfigWidgets):
             """
             changes the feature plotted on the y-axis
             """
+
+            if (ConfigWidgets.feat_x,ConfigWidgets.feat_y) in  ConfigWidgets.regr_line_trace:
+                name_trace = "Regr line" + ConfigWidgets.feat_x + ' ' + ConfigWidgets.feat_y 
+                Figure.trace[name_trace].line = dict(width=0)
 
             ConfigWidgets.feat_y = change.new
             if ConfigWidgets.feat_x != ConfigWidgets.feat_y and Figure.smart_fract:

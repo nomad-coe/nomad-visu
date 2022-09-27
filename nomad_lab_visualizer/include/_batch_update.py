@@ -106,6 +106,19 @@ def batch_update(self, ConfigWidgets):
                     selector={"name": name_trace},
                     marker=dict(showscale=False, color=self.colors[name_trace]),
                 )
+        if (ConfigWidgets.feat_x,ConfigWidgets.feat_y) in ConfigWidgets.regr_line_trace:
+            name_trace = "Regr line" + ConfigWidgets.feat_x + ' ' + ConfigWidgets.feat_y 
+            if ConfigWidgets.regr_line_trace[(ConfigWidgets.feat_x,ConfigWidgets.feat_y)]:
+                self.trace[name_trace].line = dict(
+                        color=ConfigWidgets.line_color, 
+                        width=ConfigWidgets.line_width, 
+                        dash=ConfigWidgets.line_dash
+                    )
+            else:
+                self.trace[name_trace].line = dict(width=0)
+
+
+
 
         if ConfigWidgets.convex_hull == True:
 
@@ -136,12 +149,4 @@ def batch_update(self, ConfigWidgets):
                 self.FigureWidget.update_traces(
                     selector={"name": "Hull " + name_trace},
                 )
-        if self.regr_line_coefs:
-
-            line_x, line_y = make_line(self, ConfigWidgets.feat_x, ConfigWidgets.feat_y)
-            self.trace["Line"].line = dict(
-                color=ConfigWidgets.line_color, width=ConfigWidgets.line_width, dash=ConfigWidgets.line_dash
-            )
-            self.trace["Line"]["x"] = line_x
-            self.trace["Line"]["y"] = line_y
-            self.FigureWidget.update_traces(selector={"name": "Line"}, showlegend=False)
+  

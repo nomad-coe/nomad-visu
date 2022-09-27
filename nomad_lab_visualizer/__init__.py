@@ -41,7 +41,6 @@ class Visualizer:
         hover_features, 
         target,
         smart_fract=False,
-        regr_line_coefs=None,
         path_to_structures=None,
     ):
 
@@ -53,7 +52,6 @@ class Visualizer:
 
         self.hover_features = hover_features
         self.path_to_structures = path_to_structures
-        self.regr_line_coefs = regr_line_coefs
 
         if path_to_structures:
             # each row in the dataframe is expected to be identified with a different structure
@@ -70,7 +68,7 @@ class Visualizer:
         ConfigWidgets.feat_y = ConfigWidgets.embedding_features[1]
 
         self.visualizerConfigWidgets = ConfigWidgets()
-        self.visualizerFigure = Figure(df, embedding_features, hover_features, target, smart_fract, regr_line_coefs, path_to_structures )
+        self.visualizerFigure = Figure(df, embedding_features, hover_features, target, smart_fract, path_to_structures )
         self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
        
         self.viewer_l = py3Dmol.view(width='auto',height=400)
@@ -85,10 +83,9 @@ class Visualizer:
         self.visualizerUtilsWidgets.widg_width_hull.disabled = True
         self.visualizerUtilsWidgets.widg_dash_hull.disabled = True
 
-        if self.regr_line_coefs == None:
-            self.visualizerUtilsWidgets.widg_color_line.disabled = True
-            self.visualizerUtilsWidgets.widg_width_line.disabled = True
-            self.visualizerUtilsWidgets.widg_dash_line.disabled = True
+        # self.visualizerUtilsWidgets.widg_color_line.disabled = True
+        # self.visualizerUtilsWidgets.widg_width_line.disabled = True
+        # self.visualizerUtilsWidgets.widg_dash_line.disabled = True
         
 
     def show(self):
@@ -153,3 +150,11 @@ class Visualizer:
         self.visualizerUtilsWidgets.widg_dash_hull.disabled = True
 
         self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
+
+    def add_regr_line (self, coefs, feat_x, feat_y):
+
+        self.visualizerFigure.add_regr_line(coefs, feat_x, feat_y)
+
+    def remove_regr_line (self, feat_x, feat_y):
+
+        self.visualizerFigure.remove_regr_line( feat_x, feat_y)

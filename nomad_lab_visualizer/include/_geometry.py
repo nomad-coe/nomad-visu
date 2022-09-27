@@ -42,7 +42,7 @@ def make_hull(self, feat_x, feat_y):
     return xhull_classes, yhull_classes
 
 
-def make_line(self, feat_x, feat_y):
+def make_line(self, feat_x, feat_y, regr_line_coefs):
 
     idx_x = self.embedding_features.index(feat_x)
     idx_y = self.embedding_features.index(feat_y)
@@ -53,7 +53,7 @@ def make_line(self, feat_x, feat_y):
         return line_x, line_x
     else:
         line_y = (
-            -line_x * self.regr_line_coefs[0][idx_x] / self.regr_line_coefs[0][idx_y]
-            - self.regr_line_coefs[1] / self.regr_line_coefs[0][idx_y]
+            -line_x * regr_line_coefs[0][idx_x] / regr_line_coefs[0][idx_y]
+            - regr_line_coefs[1] / regr_line_coefs[0][idx_y]
         )
         return line_x, line_y

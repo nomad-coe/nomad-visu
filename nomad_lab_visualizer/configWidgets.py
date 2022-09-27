@@ -162,3 +162,5 @@ class ConfigWidgets(object):
     font_color = font_colors[0]
 
     convex_hull = False
+
+    regr_line_trace = {}
