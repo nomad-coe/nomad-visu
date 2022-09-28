@@ -9,17 +9,23 @@ def make_optimized_frac (self, feat_x, feat_y):
     fraction_thres = 1
     optimized_sequence = {}
 
-    for name_trace in self.trace_name:
+    for name_trace in self.name_traces:
 
-        feat_x_norm = MinMaxScaler().fit_transform(self.df_trace[name_trace][feat_x].values.reshape(-1,1))
-        feat_y_norm = MinMaxScaler().fit_transform(self.df_trace[name_trace][feat_y].values.reshape(-1,1))            
+        feat_x_norm = MinMaxScaler().fit_transform(self.df.loc[
+                self.df[self.target] == name_trace
+            ][feat_x].values.reshape(-1,1))
+        feat_y_norm = MinMaxScaler().fit_transform(self.df.loc[
+                self.df[self.target] == name_trace
+            ][feat_y].values.reshape(-1,1))            
 
         X = np.concatenate((feat_x_norm, feat_y_norm), axis=1)
 
         nbrs = NearestNeighbors(n_neighbors=n_neighbors, algorithm='ball_tree').fit(X)
         nbrs_distances, nbrs_indices = nbrs.kneighbors(X)
 
-        n_values = len(self.df_trace[name_trace])
+        n_values = len(self.df.loc[
+                self.df[self.target] == name_trace
+            ])
 
         remaining_indices= np.arange(n_values)
 

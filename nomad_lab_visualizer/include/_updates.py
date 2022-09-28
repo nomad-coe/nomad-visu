@@ -9,9 +9,9 @@ def update_df_on_map(self):
     updates the number of points based on the fraction value, then the fraction of the dataframe 'df_trace_on_map' that is visualized
     """
 
-    for name_trace in self.trace_name:
+    for name_trace in self.name_traces:
 
-        n_points_trace = int(ConfigWidgets.fract * self.df_trace[name_trace].shape[0])
+        n_points_trace = int(ConfigWidgets.fract * self.df.loc[self.df[self.target] == name_trace].shape[0])
 
         if n_points_trace < 1:
             n_points_trace = 1
@@ -22,22 +22,20 @@ def update_df_on_map(self):
             optimized_sequence, _ = ConfigWidgets.optimized_frac[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)] 
 
             self.df_trace_on_map[name_trace] = (
-                self.df_trace[name_trace]
-                .loc[self.df_trace[
-                name_trace
-            ].index.to_numpy()[optimized_sequence[name_trace]]]
+                self.df.loc[self.df[self.target] == name_trace]
+                .loc[self.df.loc[self.df[self.target] == name_trace].index.to_numpy()[optimized_sequence[name_trace]]]
                 .head(self.n_points[name_trace])
             )
         else:
             self.df_trace_on_map[name_trace] = (
-                self.df_trace[name_trace]
+                self.df.loc[self.df[self.target] == name_trace]
                 .loc[self.index_df_trace_shuffled[name_trace]]
                 .head(self.n_points[name_trace])
             )
 
         # if a structure is visualized, its dataframe entry is added to the visualized dataframe 'df_trace_on_map'
         # this to avoid that the entry relative to a structure visualized is not available on the map
-        if ConfigWidgets.structure_text_l in self.df_trace[name_trace].index:
+        if ConfigWidgets.structure_text_l in self.df.loc[self.df[self.target] == name_trace].index:
             self.df_trace_on_map[name_trace] = pd.concat(
                 [
                     self.df_trace_on_map[name_trace],
@@ -45,7 +43,7 @@ def update_df_on_map(self):
                 ]
             )
 
-        if ConfigWidgets.structure_text_r in self.df_trace[name_trace].index:
+        if ConfigWidgets.structure_text_r in self.df.loc[self.df[self.target] == name_trace].index:
             self.df_trace_on_map[name_trace] = pd.concat(
                 [
                     self.df_trace_on_map[name_trace],
@@ -63,7 +61,7 @@ def update_hover_variables(self):
     self.hover_custom = {}
     self.hover_template = {}
 
-    for name_trace in self.trace_name:
+    for name_trace in self.name_traces:
 
         self.hover_text[name_trace] = self.df_trace_on_map[name_trace].index
         hover_template = r"<b>%{text}</b><br><br>"
@@ -102,7 +100,7 @@ def update_marker_symbol(self):
     points whose structure is visualized have a cross as marker
     """
 
-    for name_trace in self.trace_name:
+    for name_trace in self.name_traces:
 
         self.symbols[name_trace] = [self.trace_symbol[name_trace]] * len(
             self.df_trace_on_map[name_trace]
@@ -152,7 +150,7 @@ def update_marker_size(self):
 
     if feature == "Default size":
 
-        for name_trace in self.trace_name:
+        for name_trace in self.name_traces:
 
             sizes = [ConfigWidgets.marker_size] * len(self.df_trace_on_map[name_trace])
             symbols = self.symbols[name_trace]
@@ -195,7 +193,7 @@ def update_marker_size(self):
 
         coeff = (max_value - min_value) / (max_feat - min_feat)
 
-        for name_trace in self.trace_name:
+        for name_trace in self.name_traces:
 
             sizes = min_value + coeff * (
                 self.df_trace_on_map[name_trace][feature].to_numpy() - min_feat
@@ -217,7 +215,7 @@ def update_marker_color(self):
             getattr(px.colors.qualitative, ConfigWidgets.color_palette)
         )
 
-        for name_trace in self.trace_name:
+        for name_trace in self.name_traces:
             self.colors[name_trace] = [next(self.palette)] * len(
                 self.df_trace_on_map[name_trace]
             )
@@ -231,7 +229,7 @@ def update_marker_color(self):
         for value in np.sort(self.df[feature].unique()):
             colors_dict[value] = next(palette)
 
-        for name_trace in self.trace_name:
+        for name_trace in self.name_traces:
 
             self.colors[name_trace] = [" "] * len(self.df_trace_on_map[name_trace])
             for i, value in enumerate(self.df_trace_on_map[name_trace][feature]):
@@ -243,7 +241,7 @@ def update_marker_color(self):
 
         feature = ConfigWidgets.featcolor
 
-        for name_trace in self.trace_name:
+        for name_trace in self.name_traces:
             self.colors[name_trace] = self.df_trace_on_map[name_trace][feature]
 
 

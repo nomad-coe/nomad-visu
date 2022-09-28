@@ -49,15 +49,15 @@ class UtilsWidgets(ConfigWidgets):
             layout=widgets.Layout(left="30px", width="200px"),
         )
         self.widg_trace_symbol = widgets.Dropdown(
-            options=Figure.trace_name,
+            options=Figure.name_traces,
             description="Classes",
-            value=Figure.trace_name[0],
+            value=Figure.name_traces[0],
             layout=widgets.Layout(left="30px", width="200px"),
         )
         self.widg_markers_symbol = widgets.Dropdown(
             options=ConfigWidgets.symbols_list,
             description="--- symbol",
-            value=Figure.trace_symbol[Figure.trace_name[0]],
+            value=Figure.trace_symbol[Figure.name_traces[0]],
             layout=widgets.Layout(left="30px", width="200px"),
         )
         self.widg_reset_button = widgets.Button(
@@ -251,7 +251,7 @@ class UtilsWidgets(ConfigWidgets):
             """
 
             self.widg_markers_symbol.value = "circle"
-            for name_trace in Figure.trace_name:
+            for name_trace in Figure.name_traces:
                 Figure.trace_symbol[name_trace] = "circle"
                 Figure.symbols[name_trace] = ["circle"] * Figure.n_points[name_trace]
                 Figure.sizes[name_trace] = [ConfigWidgets.marker_size] * Figure.n_points[name_trace]

@@ -35,12 +35,10 @@ class Figure( ):
         self.embedding_features = embedding_features
         self.hover_features = hover_features
         self.path_to_structures = path_to_structures
+        self.target = target
 
-        self.trace_name = df[target].unique().astype(str)
+        self.name_traces = df[target].unique().astype(str)
         self.trace = {}
-        self.df_trace = (
-            {}
-        )  # section of the pandas dataframe containing elements of a specific trace
         self.index_df_trace_shuffled = (
             {}
         )  # index of the dataframe trace shuffled for fraction visualization
@@ -56,13 +54,9 @@ class Figure( ):
         self.trace_symbol = {}  # symbol used for the trace
     
         # dictionaries initialized above are compiled for all different trace names
-        for cl in range(len(self.trace_name)):
+        for cl in range(len(self.name_traces)):
 
-            name_trace = self.trace_name[cl]
-
-            self.df_trace[name_trace] = self.df.loc[
-                self.df[target] == self.df[target].unique()[cl]
-            ]
+            name_trace = self.name_traces[cl]
 
             # a trace with a specific name taken from the 'target' values is constructed and assigned to the 'trace' dictionary
             self.FigureWidget.add_trace(
@@ -72,8 +66,6 @@ class Figure( ):
                 )
             )
             self.trace[name_trace] = self.FigureWidget["data"][-1]
-
-            name_trace = self.trace_name[cl]
 
             # add a convex hull for each different 'target' value
             name_trace = "Hull " + name_trace
@@ -87,19 +79,25 @@ class Figure( ):
         
         total_points = self.df.shape[0]
 
-        for name_trace in self.trace_name:
+        for name_trace in self.name_traces:
 
         
-            self.index_df_trace_shuffled[name_trace] = self.df_trace[
-                name_trace
+            self.index_df_trace_shuffled[name_trace] = self.df.loc[
+                self.df[target] == name_trace
             ].index.to_numpy()[
-                np.random.permutation(self.df_trace[name_trace].shape[0])
+                np.random.permutation(self.df.loc[
+                self.df[target] == name_trace
+            ].shape[0])
             ]
 
-            self.n_points[name_trace] = self.df_trace[name_trace].shape[0]
+            self.n_points[name_trace] = self.df.loc[
+                self.df[target] == name_trace
+            ].shape[0]
             # fraction of the dataframe that is visualized on the map
             self.df_trace_on_map[name_trace] = (
-                self.df_trace[name_trace]
+                self.df.loc[
+                self.df[target] == name_trace
+            ]
                 .loc[self.index_df_trace_shuffled[name_trace]]
                 .head(self.n_points[name_trace])
             )

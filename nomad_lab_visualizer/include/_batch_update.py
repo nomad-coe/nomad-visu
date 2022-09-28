@@ -15,7 +15,7 @@ def batch_update(self, ConfigWidgets):
     y_min = []
     y_max = []
 
-    for name_trace in self.trace_name:
+    for name_trace in self.name_traces:
 
         x_min.append(min(self.df_trace_on_map[name_trace][ConfigWidgets.feat_x]))
         x_max.append(max(self.df_trace_on_map[name_trace][ConfigWidgets.feat_x]))
@@ -59,7 +59,7 @@ def batch_update(self, ConfigWidgets):
         )
         
 
-        for name_trace in self.trace_name:
+        for name_trace in self.name_traces:
             # all elements on the map and their properties are reinitialized at each change
 
             self.FigureWidget.update_traces(
@@ -122,14 +122,14 @@ def batch_update(self, ConfigWidgets):
 
             if ConfigWidgets.feat_x == ConfigWidgets.feat_y:
 
-                for name_trace in self.trace_name:
+                for name_trace in self.name_traces:
                     self.trace["Hull " + name_trace].line = dict(width=0)
                     self.FigureWidget.update_traces(
                         selector={"name": "Hull " + name_trace},
                     )
             else:
                 hullx, hully = make_hull(self, ConfigWidgets.feat_x, ConfigWidgets.feat_y)
-                for name_trace in self.trace_name:
+                for name_trace in self.name_traces:
 
                     self.trace["Hull " + name_trace]["x"] = hullx[name_trace]
                     self.trace["Hull " + name_trace]["y"] = hully[name_trace]
@@ -142,7 +142,7 @@ def batch_update(self, ConfigWidgets):
                         selector={"name": "Hull " + name_trace}, showlegend=False
                     )
         else:
-            for name_trace in self.trace_name:
+            for name_trace in self.name_traces:
                 self.trace["Hull " + name_trace].line = dict(width=0)
                 self.FigureWidget.update_traces(
                     selector={"name": "Hull " + name_trace},
