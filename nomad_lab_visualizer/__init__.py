@@ -40,13 +40,12 @@ class Visualizer:
         embedding_features,
         hover_features, 
         target,
-        smart_fract=False,
         path_to_structures=None,
     ):
 
         self.df = df
         self.target = target
-        self.smart_fract = smart_fract
+
         # each unique value of the 'target' feature gives the name of a different trace
         self.embedding_features = embedding_features
 
@@ -68,7 +67,7 @@ class Visualizer:
         ConfigWidgets.feat_y = ConfigWidgets.embedding_features[1]
 
         self.visualizerConfigWidgets = ConfigWidgets()
-        self.visualizerFigure = Figure(df, embedding_features, hover_features, target, smart_fract, path_to_structures )
+        self.visualizerFigure = Figure(df, embedding_features, hover_features, target, path_to_structures )
         self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
        
         self.viewer_l = py3Dmol.view(width='auto',height=400)
@@ -158,3 +157,7 @@ class Visualizer:
     def remove_regr_line (self, feat_x, feat_y):
 
         self.visualizerFigure.remove_regr_line( feat_x, feat_y)
+
+    def optimize_fract (self):
+
+        self.visualizerFigure.optimize_fract(self.visualizerTopWidgets)

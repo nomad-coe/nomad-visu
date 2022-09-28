@@ -18,11 +18,22 @@ def update_df_on_map(self):
 
         self.n_points[name_trace] = n_points_trace
 
-        self.df_trace_on_map[name_trace] = (
-            self.df_trace[name_trace]
-            .loc[self.index_df_trace_shuffled[name_trace]]
-            .head(self.n_points[name_trace])
-        )
+        if (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in ConfigWidgets.optimized_frac:
+            optimized_sequence, _ = ConfigWidgets.optimized_frac[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)] 
+
+            self.df_trace_on_map[name_trace] = (
+                self.df_trace[name_trace]
+                .loc[self.df_trace[
+                name_trace
+            ].index.to_numpy()[optimized_sequence[name_trace]]]
+                .head(self.n_points[name_trace])
+            )
+        else:
+            self.df_trace_on_map[name_trace] = (
+                self.df_trace[name_trace]
+                .loc[self.index_df_trace_shuffled[name_trace]]
+                .head(self.n_points[name_trace])
+            )
 
         # if a structure is visualized, its dataframe entry is added to the visualized dataframe 'df_trace_on_map'
         # this to avoid that the entry relative to a structure visualized is not available on the map

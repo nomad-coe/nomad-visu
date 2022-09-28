@@ -118,8 +118,6 @@ def batch_update(self, ConfigWidgets):
                 self.trace[name_trace].line = dict(width=0)
 
 
-
-
         if ConfigWidgets.convex_hull == True:
 
             if ConfigWidgets.feat_x == ConfigWidgets.feat_y:

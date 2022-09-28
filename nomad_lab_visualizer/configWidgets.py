@@ -164,3 +164,5 @@ class ConfigWidgets(object):
     convex_hull = False
 
     regr_line_trace = {}
+
+    optimized_frac = {}

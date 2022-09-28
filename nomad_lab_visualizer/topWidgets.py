@@ -87,9 +87,10 @@ class TopWidgets(ConfigWidgets):
                 Figure.trace[name_trace].line = dict(width=0)
 
             ConfigWidgets.feat_x = change.new
-            if ConfigWidgets.feat_x != ConfigWidgets.feat_y and Figure.smart_fract:
-                ConfigWidgets.fract = Figure.fract_thres[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)]
-                self.widg_fract_slider.value = self.fract
+            if ConfigWidgets.feat_x != ConfigWidgets.feat_y and (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in ConfigWidgets.optimized_frac:
+                _, fract_thres = ConfigWidgets.optimized_frac[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)] 
+                ConfigWidgets.fract = fract_thres
+                self.widg_fract_slider.value = fract_thres
 
             batch_update(Figure, self)
 
@@ -103,9 +104,10 @@ class TopWidgets(ConfigWidgets):
                 Figure.trace[name_trace].line = dict(width=0)
 
             ConfigWidgets.feat_y = change.new
-            if ConfigWidgets.feat_x != ConfigWidgets.feat_y and Figure.smart_fract:
-                ConfigWidgets.fract = Figure.fract_thres[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)]
-                self.widg_fract_slider.value = ConfigWidgets.fract
+            if ConfigWidgets.feat_x != ConfigWidgets.feat_y and (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in ConfigWidgets.optimized_frac:
+                _, fract_thres = ConfigWidgets.optimized_frac[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)] 
+                ConfigWidgets.fract = fract_thres
+                self.widg_fract_slider.value = fract_thres
 
             batch_update(Figure, self)
 

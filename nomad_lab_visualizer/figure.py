@@ -4,13 +4,13 @@ from .include._updates import marker_style_updates, fract_change_updates
 import plotly.graph_objects as go
 import numpy as np
 from .include._geometry import make_hull, make_line
-from .include._smart_fract import smart_fract_make
+from .include._smart_fract import make_optimized_frac
 
 class Figure( ):
     
     from .include._batch_update import batch_update
 
-    def __init__( self, df, embedding_features, hover_features, target, smart_fract,  path_to_structures ):
+    def __init__( self, df, embedding_features, hover_features, target, path_to_structures ):
 
         # The 'target' feature is used to divide data into different traces
         # Each item in the following dictionaries will be related to a different trace in the dataframe
@@ -34,7 +34,6 @@ class Figure( ):
 
         self.embedding_features = embedding_features
         self.hover_features = hover_features
-        self.smart_fract = smart_fract
         self.path_to_structures = path_to_structures
 
         self.trace_name = df[target].unique().astype(str)
@@ -85,42 +84,26 @@ class Figure( ):
             )
             self.trace[name_trace] = self.FigureWidget["data"][-1]
 
-
-        # the shuffled values for fraction visualization are given using a max covering algorithm
-        if smart_fract:
-            fract_dict, fract_thres = smart_fract_make(self)
-            # each pair of features has a different list of shuffled values accessbile in the dictionary 'fract_dict'
-            self.fract_dict = fract_dict
-            # each pair of features has a different initial fraction value accessbile in the dictionary 'fract_thres'
-            self.fract_thres = fract_thres
-            fract = self.fract_thres[(embedding_features[0], embedding_features[1])]
-            ConfigWidgets.fract = self.fract_thres[(embedding_features[0], embedding_features[1])]
+        
+        total_points = self.df.shape[0]
 
         for name_trace in self.trace_name:
 
-            # shuffled values are taken randomly if not 'smart_fract'
-            if smart_fract == False:
-                self.index_df_trace_shuffled[name_trace] = self.df_trace[
-                    name_trace
-                ].index.to_numpy()[
-                    np.random.permutation(self.df_trace[name_trace].shape[0])
-                ]
-            else:
-                self.index_df_trace_shuffled[name_trace] = self.fract_dict[
-                    (embedding_features[0], embedding_features[1])
-                ][name_trace]
+        
+            self.index_df_trace_shuffled[name_trace] = self.df_trace[
+                name_trace
+            ].index.to_numpy()[
+                np.random.permutation(self.df_trace[name_trace].shape[0])
+            ]
 
-            # number of points visualized given by a certain fraction
-            self.n_points[name_trace] = int(
-                fract * self.df_trace[name_trace].shape[0]
-            )
+            self.n_points[name_trace] = self.df_trace[name_trace].shape[0]
             # fraction of the dataframe that is visualized on the map
             self.df_trace_on_map[name_trace] = (
                 self.df_trace[name_trace]
                 .loc[self.index_df_trace_shuffled[name_trace]]
                 .head(self.n_points[name_trace])
             )
-                        
+                    
             # symbol used for the trace
             self.trace_symbol[name_trace] = "circle"
             
@@ -162,5 +145,19 @@ class Figure( ):
         ConfigWidgets.regr_line_trace[(feat_x,feat_y)]=False
 
         batch_update(self, ConfigWidgets)
+
+
+    def optimize_fract(self, visualizerTopWidgets):
+
+        if not (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in ConfigWidgets.optimized_frac:      
+            optimized_sequence, fract_thres = make_optimized_frac(self, ConfigWidgets.feat_x, ConfigWidgets.feat_y)
+
+            ConfigWidgets.optimized_frac[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)] = optimized_sequence, fract_thres
+            ConfigWidgets.optimized_frac[(ConfigWidgets.feat_y, ConfigWidgets.feat_x)] = optimized_sequence, fract_thres
+            ConfigWidgets.fract = fract_thres
+            visualizerTopWidgets.widg_fract_slider.value = fract_thres
+            batch_update(self, ConfigWidgets)
+
+  
 
 
