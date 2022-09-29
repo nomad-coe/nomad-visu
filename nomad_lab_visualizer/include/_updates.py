@@ -11,26 +11,27 @@ def update_df_on_map(self):
 
     for name_trace in self.name_traces:
 
-        n_points_trace = int(ConfigWidgets.fract * self.df.loc[self.df[self.target] == name_trace].shape[0])
+
+        n_points_trace = int(
+            ConfigWidgets.fract * \
+            self.df.loc[self.df[self.target] == name_trace].shape[0]
+            )
 
         if n_points_trace < 1:
             n_points_trace = 1
 
         self.n_points[name_trace] = n_points_trace
 
-        if (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in ConfigWidgets.optimized_frac:
-            optimized_sequence, _ = ConfigWidgets.optimized_frac[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)] 
-
-            self.df_trace_on_map[name_trace] = (
-                self.df.loc[self.df[self.target] == name_trace]
-                .loc[self.df.loc[self.df[self.target] == name_trace].index.to_numpy()[optimized_sequence[name_trace]]]
-                .head(self.n_points[name_trace])
-            )
+        if (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in self.optimized_sequence_indexes:
+            sequence_indexes = self.optimized_sequence_indexes[
+                (ConfigWidgets.feat_x, ConfigWidgets.feat_y)][name_trace] 
         else:
-            self.df_trace_on_map[name_trace] = (
-                self.df.loc[self.df[self.target] == name_trace]
-                .loc[self.index_df_trace_shuffled[name_trace]]
-                .head(self.n_points[name_trace])
+            sequence_indexes = self.random_permutation_indexes[name_trace]
+
+        self.df_trace_on_map[name_trace] = (
+            self.df.loc[self.df[self.target] == name_trace]
+            .loc[sequence_indexes]
+            .head(self.n_points[name_trace])
             )
 
         # if a structure is visualized, its dataframe entry is added to the visualized dataframe 'df_trace_on_map'
@@ -211,12 +212,14 @@ def update_marker_color(self):
     if feature == "Default color":
         # each trace has a different color picked from a given palette
 
-        self.palette = cycle(
+        palette = cycle(
             getattr(px.colors.qualitative, ConfigWidgets.color_palette)
         )
 
         for name_trace in self.name_traces:
-            self.colors[name_trace] = [next(self.palette)] * len(
+
+
+            self.colors[name_trace] = [next(palette)] * len(
                 self.df_trace_on_map[name_trace]
             )
 

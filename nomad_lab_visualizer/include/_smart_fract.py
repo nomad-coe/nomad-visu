@@ -7,10 +7,11 @@ def make_optimized_frac (self, feat_x, feat_y):
 
     n_neighbors = 10
     fraction_thres = 1
-    optimized_sequence = {}
+    optimized_sequence_indexes = {}
 
     for name_trace in self.name_traces:
-
+        
+        name_trace = str(name_trace)
         feat_x_norm = MinMaxScaler().fit_transform(self.df.loc[
                 self.df[self.target] == name_trace
             ][feat_x].values.reshape(-1,1))
@@ -83,8 +84,8 @@ def make_optimized_frac (self, feat_x, feat_y):
                 selected_indices = np.concatenate((selected_indices, new_index))
                 mask = mask+np.where(nbrs_indices==new_index, 1, 0)
         
-        optimized_sequence[name_trace] =  selected_indices
+        optimized_sequence_indexes[name_trace] = self.df[self.df[self.target] == name_trace].index.to_numpy()[selected_indices]
 
-    return optimized_sequence, fraction_thres
+    return optimized_sequence_indexes, fraction_thres
 
  

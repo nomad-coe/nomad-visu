@@ -82,32 +82,47 @@ class TopWidgets(ConfigWidgets):
             changes the feature plotted on the x-axis
             """
             
+            ConfigWidgets.feat_x = change.new
+
             if (ConfigWidgets.feat_x,ConfigWidgets.feat_y) in  ConfigWidgets.regr_line_trace:
-                name_trace = "Regr line" + ConfigWidgets.feat_x + ' ' + ConfigWidgets.feat_y 
+                name_trace = "Regr line" + str(ConfigWidgets.feat_x) + ' ' + str(ConfigWidgets.feat_y) 
                 Figure.trace[name_trace].line = dict(width=0)
 
-            ConfigWidgets.feat_x = change.new
-            if ConfigWidgets.feat_x != ConfigWidgets.feat_y and (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in ConfigWidgets.optimized_frac:
-                _, fract_thres = ConfigWidgets.optimized_frac[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)] 
-                ConfigWidgets.fract = fract_thres
-                self.widg_fract_slider.value = fract_thres
-
+            if ConfigWidgets.feat_x != ConfigWidgets.feat_y:
+                if (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in Figure.optimized_init_fract:
+                
+                    init_fract = Figure.optimized_init_fract[
+                        (ConfigWidgets.feat_x, ConfigWidgets.feat_y)] 
+                    ConfigWidgets.fract = init_fract
+                    self.widg_fract_slider.value = init_fract
+                else:
+                    init_fract = Figure.init_fract
+                    ConfigWidgets.fract = init_fract
+                    self.widg_fract_slider.value = init_fract
+            
             batch_update(Figure, self)
 
         def handle_yfeat_change(change):
             """
             changes the feature plotted on the y-axis
             """
+            ConfigWidgets.feat_y = change.new
 
             if (ConfigWidgets.feat_x,ConfigWidgets.feat_y) in  ConfigWidgets.regr_line_trace:
-                name_trace = "Regr line" + ConfigWidgets.feat_x + ' ' + ConfigWidgets.feat_y 
+                name_trace = "Regr line" + str(ConfigWidgets.feat_x) + ' ' + str(ConfigWidgets.feat_y) 
                 Figure.trace[name_trace].line = dict(width=0)
 
-            ConfigWidgets.feat_y = change.new
-            if ConfigWidgets.feat_x != ConfigWidgets.feat_y and (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in ConfigWidgets.optimized_frac:
-                _, fract_thres = ConfigWidgets.optimized_frac[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)] 
-                ConfigWidgets.fract = fract_thres
-                self.widg_fract_slider.value = fract_thres
+            if ConfigWidgets.feat_x != ConfigWidgets.feat_y:
+                if (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in Figure.optimized_init_fract:
+            
+                    init_fract = Figure.optimized_init_fract[
+                        (ConfigWidgets.feat_x, ConfigWidgets.feat_y)] 
+                    ConfigWidgets.fract = init_fract
+                    self.widg_fract_slider.value = init_fract
+                else:
+                    init_fract = Figure.init_fract
+                    ConfigWidgets.fract = init_fract
+                    self.widg_fract_slider.value = init_fract
 
             batch_update(Figure, self)
 

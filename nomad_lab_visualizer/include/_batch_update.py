@@ -15,7 +15,9 @@ def batch_update(self, ConfigWidgets):
     y_min = []
     y_max = []
 
+
     for name_trace in self.name_traces:
+
 
         x_min.append(min(self.df_trace_on_map[name_trace][ConfigWidgets.feat_x]))
         x_max.append(max(self.df_trace_on_map[name_trace][ConfigWidgets.feat_x]))
@@ -62,8 +64,9 @@ def batch_update(self, ConfigWidgets):
         for name_trace in self.name_traces:
             # all elements on the map and their properties are reinitialized at each change
 
+
             self.FigureWidget.update_traces(
-                selector={"name": name_trace},
+                selector={"name": str(name_trace)},
                 text=self.hover_text[name_trace],
                 customdata=self.hover_custom[name_trace],
                 hovertemplate=self.hover_template[name_trace],
@@ -84,7 +87,7 @@ def batch_update(self, ConfigWidgets):
                 max_value = self.df[feature].max()
 
                 self.FigureWidget.update_traces(
-                    selector={"name": name_trace},
+                    selector={"name": str(name_trace)},
                     marker=dict(
                         colorscale=gradient,
                         showscale=True,
@@ -103,11 +106,11 @@ def batch_update(self, ConfigWidgets):
             else:
 
                 self.FigureWidget.update_traces(
-                    selector={"name": name_trace},
+                    selector={"name": str(name_trace)},
                     marker=dict(showscale=False, color=self.colors[name_trace]),
                 )
         if (ConfigWidgets.feat_x,ConfigWidgets.feat_y) in ConfigWidgets.regr_line_trace:
-            name_trace = "Regr line" + ConfigWidgets.feat_x + ' ' + ConfigWidgets.feat_y 
+            name_trace = "Regr line" + str(ConfigWidgets.feat_x) + ' ' + (ConfigWidgets.feat_y) 
             if ConfigWidgets.regr_line_trace[(ConfigWidgets.feat_x,ConfigWidgets.feat_y)]:
                 self.trace[name_trace].line = dict(
                         color=ConfigWidgets.line_color, 
@@ -115,7 +118,7 @@ def batch_update(self, ConfigWidgets):
                         dash=ConfigWidgets.line_dash
                     )
             else:
-                self.trace[name_trace].line = dict(width=0)
+                self.trace[str(name_trace)].line = dict(width=0)
 
 
         if ConfigWidgets.convex_hull == True:
@@ -123,17 +126,18 @@ def batch_update(self, ConfigWidgets):
             if ConfigWidgets.feat_x == ConfigWidgets.feat_y:
 
                 for name_trace in self.name_traces:
-                    self.trace["Hull " + name_trace].line = dict(width=0)
+
+                    self.trace["Hull " + str(name_trace)].line = dict(width=0)
                     self.FigureWidget.update_traces(
                         selector={"name": "Hull " + name_trace},
                     )
             else:
                 hullx, hully = make_hull(self, ConfigWidgets.feat_x, ConfigWidgets.feat_y)
                 for name_trace in self.name_traces:
-
-                    self.trace["Hull " + name_trace]["x"] = hullx[name_trace]
-                    self.trace["Hull " + name_trace]["y"] = hully[name_trace]
-                    self.trace["Hull " + name_trace].line = dict(
+    
+                    self.trace["Hull " + str(name_trace)]["x"] = hullx[name_trace]
+                    self.trace["Hull " + str(name_trace)]["y"] = hully[name_trace]
+                    self.trace["Hull " + str(name_trace)].line = dict(
                         color=ConfigWidgets.hull_color,
                         width=ConfigWidgets.hull_width,
                         dash=ConfigWidgets.hull_dash,
@@ -143,8 +147,9 @@ def batch_update(self, ConfigWidgets):
                     )
         else:
             for name_trace in self.name_traces:
-                self.trace["Hull " + name_trace].line = dict(width=0)
+
+                self.trace["Hull " + str(name_trace)].line = dict(width=0)
                 self.FigureWidget.update_traces(
-                    selector={"name": "Hull " + name_trace},
+                    selector={"name": "Hull " + str(name_trace)},
                 )
   

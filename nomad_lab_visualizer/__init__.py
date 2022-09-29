@@ -122,7 +122,7 @@ class Visualizer:
             container = widgets.VBox(
                                 [
                     top_box,
-                    self.fig,
+                    figure_widget,
                     utils_button,
                     utils_box,
                 ]

@@ -226,7 +226,7 @@ class ViewersWidgets( ConfigWidgets ):
 
         # if Figure.path_to_structures:
         for name_trace in Figure.name_traces:
-            Figure.trace[name_trace].on_click(
+            Figure.trace[str(name_trace)].on_click(
                 handle_point_clicked
             )  # actions performed after clicking points on the map
 

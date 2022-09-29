@@ -165,4 +165,3 @@ class ConfigWidgets(object):
 
     regr_line_trace = {}
 
-    optimized_frac = {}

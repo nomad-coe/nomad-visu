@@ -9,6 +9,7 @@ def make_hull(self, feat_x, feat_y):
 
     for name_trace in self.name_traces:
 
+        name_trace = str(name_trace)
         points = self.df.loc[
                 self.df[self.target] == name_trace
             ][[feat_x, feat_y]].to_numpy()

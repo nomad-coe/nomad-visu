@@ -252,6 +252,7 @@ class UtilsWidgets(ConfigWidgets):
 
             self.widg_markers_symbol.value = "circle"
             for name_trace in Figure.name_traces:
+                name_trace = str(name_trace)
                 Figure.trace_symbol[name_trace] = "circle"
                 Figure.symbols[name_trace] = ["circle"] * Figure.n_points[name_trace]
                 Figure.sizes[name_trace] = [ConfigWidgets.marker_size] * Figure.n_points[name_trace]
