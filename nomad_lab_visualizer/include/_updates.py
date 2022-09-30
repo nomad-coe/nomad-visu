@@ -12,15 +12,14 @@ def update_df_on_map(self):
     for name_trace in self.name_traces:
 
 
-        n_points_trace = int(
+        n_points = int(
             ConfigWidgets.fract * \
             self.df.loc[self.df[self.target] == name_trace].shape[0]
             )
 
-        if n_points_trace < 1:
-            n_points_trace = 1
+        if n_points < 1:
+            n_points = 1
 
-        self.n_points[name_trace] = n_points_trace
 
         if (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in self.optimized_sequence_indexes:
             sequence_indexes = self.optimized_sequence_indexes[
@@ -31,7 +30,7 @@ def update_df_on_map(self):
         self.df_trace_on_map[name_trace] = (
             self.df.loc[self.df[self.target] == name_trace]
             .loc[sequence_indexes]
-            .head(self.n_points[name_trace])
+            .head(n_points)
             )
 
         # if a structure is visualized, its dataframe entry is added to the visualized dataframe 'df_trace_on_map'

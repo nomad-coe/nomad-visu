@@ -39,12 +39,11 @@ class Figure( ):
 
         self.name_traces = df[target].unique()
         self.trace = {}
-        self.n_points = (
-            {}
-        )  # total points of the class which are visualized - can be less than the total number of data depending on the fraction visualized
+
         self.df_trace_on_map = (
             {}
         )  # dataframe which contains only the elements that are visualized on the map
+        
         self.symbols = {}  # symbols used for markers of each trace
         self.sizes = {}  # sizes used for markers of each trace
         self.colors = {}  # colors used for markers of each trace
@@ -93,7 +92,7 @@ class Figure( ):
                 self.df[target] == name_trace
             ].index.to_numpy()[np.random.permutation(self.df.loc[self.df[self.target] == name_trace].shape[0])]
 
-            self.n_points[name_trace] = self.df.loc[
+            n_points = self.df.loc[
                 self.df[target] == name_trace
             ].shape[0]
 
@@ -101,7 +100,7 @@ class Figure( ):
             self.df_trace_on_map[name_trace] = (
                 self.df.loc[self.df[target] == name_trace]
                 .loc[self.random_permutation_indexes[name_trace]]
-                .head(self.n_points[name_trace])
+                .head(n_points)
             )
                     
             # symbol used for the trace
