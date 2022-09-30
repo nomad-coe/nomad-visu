@@ -3,10 +3,10 @@ import numpy as np
 
 class Figure(object):
 
-    from .include._updates import marker_style_updates, fract_change_updates
-    from .include._batch_update import batch_update
-    from .include._geometry import make_hull, make_line
-    from .include._optimize_sequence import optimize_sequence
+    from .include.figure._updates import marker_style_updates, fract_change_updates
+    from .include.figure._batch_update import batch_update
+    from .include.figure._geometry import make_hull, make_line
+    from .include.figure._optimize_sequence import optimize_sequence
 
     def __init__( self, df, embedding_features, hover_features, target, path_to_structures ):
 
