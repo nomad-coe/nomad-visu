@@ -1,7 +1,6 @@
 from scipy.spatial import ConvexHull
 import numpy as np
 
-
 def make_hull(self, feat_x, feat_y):
 
     xhull_classes = {}

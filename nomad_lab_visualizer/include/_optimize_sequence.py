@@ -1,9 +1,8 @@
-import re
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.neighbors import NearestNeighbors
 
-def make_optimized_frac (self, feat_x, feat_y):
+def optimize_sequence (self, feat_x, feat_y):
 
     n_neighbors = 10
     fraction_thres = 1

@@ -1,6 +1,4 @@
 from .configWidgets import ConfigWidgets
-from .include._batch_update import batch_update
-from .include._updates import marker_style_updates, fract_change_updates
 import ipywidgets as widgets
 
 class TopWidgets(ConfigWidgets):
@@ -8,21 +6,21 @@ class TopWidgets(ConfigWidgets):
 
         self.widg_featx = widgets.Dropdown(
             description="x-axis",
-            options=ConfigWidgets.embedding_features,
-            value=ConfigWidgets.feat_x,
+            options=self.embedding_features,
+            value=self.feat_x,
             layout=widgets.Layout(width="250px"),
         )
         self.widg_featy = widgets.Dropdown(
             description="y-axis",
-            options=ConfigWidgets.embedding_features,
-            value=ConfigWidgets.feat_y,
+            options=self.embedding_features,
+            value=self.feat_y,
             layout=widgets.Layout(width="250px"),
         )
         self.widg_fract_slider = widgets.BoundedFloatText(
             min=0,
             max=1,
             step=0.01,
-            value=ConfigWidgets.fract,
+            value=self.fract,
             layout=widgets.Layout(left="98px", width="60px"),
         )
         self.widg_label_fract = widgets.Label(
@@ -31,7 +29,7 @@ class TopWidgets(ConfigWidgets):
         )
         self.widg_featcolor = widgets.Dropdown(
             description="Color",
-            options=["Default color"] + ConfigWidgets.hover_features,
+            options=["Default color"] + self.hover_features,
             value="Default color",
             layout=widgets.Layout(width="250px"),
         )
@@ -43,21 +41,21 @@ class TopWidgets(ConfigWidgets):
         )
         self.widg_featcolor_list = widgets.Dropdown(
             disabled=True,
-            options=ConfigWidgets.continuous_gradient_colors,
+            options=self.continuous_gradient_colors,
             value="viridis",
             layout=widgets.Layout(width="65px", height="35px", left="40px"),
         )
         self.widg_featmarker = widgets.Dropdown(
             description="Marker",
-            options=["Default size"] + ConfigWidgets.hover_features,
+            options=["Default size"] + self.hover_features,
             value="Default size",
             layout=widgets.Layout(width="250px"),
         )
         self.widg_featmarker_minvalue = widgets.BoundedFloatText(
             min=0,
-            max=ConfigWidgets.max_value_markerfeat,
+            max=self.max_value_markerfeat,
             step=1,
-            value=ConfigWidgets.min_value_markerfeat,
+            value=self.min_value_markerfeat,
             disabled=True,
             layout=widgets.Layout(left="91px", width="60px", height="10px"),
         )
@@ -66,9 +64,9 @@ class TopWidgets(ConfigWidgets):
             layout=widgets.Layout(left="94px", width="70px")
         )
         self.widg_featmarker_maxvalue = widgets.BoundedFloatText(
-            min=ConfigWidgets.min_value_markerfeat,
+            min=self.min_value_markerfeat,
             step=1,
-            value=ConfigWidgets.max_value_markerfeat,
+            value=self.max_value_markerfeat,
             layout=widgets.Layout(left="91px", width="60px"),
             disabled=True,
         )
@@ -84,15 +82,15 @@ class TopWidgets(ConfigWidgets):
             
             ConfigWidgets.feat_x = change.new
 
-            if (ConfigWidgets.feat_x,ConfigWidgets.feat_y) in  ConfigWidgets.regr_line_trace:
-                name_trace = "Regr line" + str(ConfigWidgets.feat_x) + ' ' + str(ConfigWidgets.feat_y) 
+            if (self.feat_x,self.feat_y) in  Figure.regr_line_trace:
+                name_trace = "Regr line" + str(self.feat_x) + ' ' + str(self.feat_y) 
                 Figure.trace[name_trace].line = dict(width=0)
 
-            if ConfigWidgets.feat_x != ConfigWidgets.feat_y:
-                if (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in Figure.optimized_init_fract:
+            if self.feat_x != self.feat_y:
+                if (self.feat_x, self.feat_y) in Figure.optimized_init_fract:
                 
                     init_fract = Figure.optimized_init_fract[
-                        (ConfigWidgets.feat_x, ConfigWidgets.feat_y)] 
+                        (self.feat_x, self.feat_y)] 
                     ConfigWidgets.fract = init_fract
                     self.widg_fract_slider.value = init_fract
                 else:
@@ -100,7 +98,7 @@ class TopWidgets(ConfigWidgets):
                     ConfigWidgets.fract = init_fract
                     self.widg_fract_slider.value = init_fract
             
-            batch_update(Figure, self)
+            Figure.batch_update(self)
 
         def handle_yfeat_change(change):
             """
@@ -108,15 +106,15 @@ class TopWidgets(ConfigWidgets):
             """
             ConfigWidgets.feat_y = change.new
 
-            if (ConfigWidgets.feat_x,ConfigWidgets.feat_y) in  ConfigWidgets.regr_line_trace:
-                name_trace = "Regr line" + str(ConfigWidgets.feat_x) + ' ' + str(ConfigWidgets.feat_y) 
+            if (self.feat_x,self.feat_y) in  Figure.regr_line_trace:
+                name_trace = "Regr line" + str(self.feat_x) + ' ' + str(self.feat_y) 
                 Figure.trace[name_trace].line = dict(width=0)
 
-            if ConfigWidgets.feat_x != ConfigWidgets.feat_y:
-                if (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in Figure.optimized_init_fract:
+            if self.feat_x != self.feat_y:
+                if (self.feat_x, self.feat_y) in Figure.optimized_init_fract:
             
                     init_fract = Figure.optimized_init_fract[
-                        (ConfigWidgets.feat_x, ConfigWidgets.feat_y)] 
+                        (self.feat_x, self.feat_y)] 
                     ConfigWidgets.fract = init_fract
                     self.widg_fract_slider.value = init_fract
                 else:
@@ -124,7 +122,7 @@ class TopWidgets(ConfigWidgets):
                     ConfigWidgets.fract = init_fract
                     self.widg_fract_slider.value = init_fract
 
-            batch_update(Figure, self)
+            Figure.batch_update(self)
 
         def handle_fract_change(change):
             """
@@ -132,7 +130,7 @@ class TopWidgets(ConfigWidgets):
             """
 
             ConfigWidgets.fract = change.new
-            batch_update(Figure, self)
+            Figure.batch_update(self)
 
         def handle_colorfeat_change(change):
             """
@@ -149,7 +147,7 @@ class TopWidgets(ConfigWidgets):
                 self.widg_featcolor_type.disabled = False
                 self.widg_featcolor_list.disabled = False
                 # self.widg_color_palette.disabled = True
-            batch_update(Figure, self)
+            Figure.batch_update(self)
 
         def handle_featcolor_list_change(change):
             """
@@ -157,7 +155,7 @@ class TopWidgets(ConfigWidgets):
             """
             
             ConfigWidgets.featcolor_list = change.new
-            batch_update(Figure, ConfigWidgets)
+            Figure.batch_update(self)
 
         def handle_featcolor_type_change(change):
             """
@@ -167,15 +165,15 @@ class TopWidgets(ConfigWidgets):
             ConfigWidgets.featcolor_type = change.new
 
             if change.new == "Gradient":
-                self.widg_featcolor_list.options = ConfigWidgets.continuous_gradient_colors
+                self.widg_featcolor_list.options = self.continuous_gradient_colors
                 ConfigWidgets.featcolor_list = "viridis"
                 self.widg_featcolor_list.value = "viridis"
             if change.new == "Discrete":
-                self.widg_featcolor_list.options = ConfigWidgets.discrete_palette_colors
+                self.widg_featcolor_list.options = self.discrete_palette_colors
                 ConfigWidgets.featcolor_list = "Plotly"
                 self.widg_featcolor_list.value = "Plotly"
 
-            batch_update(Figure, ConfigWidgets)
+            Figure.batch_update(self)
 
         def handle_markerfeat_change(change):
             """
@@ -194,7 +192,7 @@ class TopWidgets(ConfigWidgets):
                 # self.widg_cross_size.disabled = True
 
             ConfigWidgets.featmarker = change.new
-            batch_update(Figure, self)
+            Figure.batch_update(self)
 
         def handle_featmarker_maxvalue_change(change):
             """
@@ -203,7 +201,7 @@ class TopWidgets(ConfigWidgets):
 
             ConfigWidgets.max_value_markerfeat = change.new
             self.widg_featmarker_minvalue.max = change.new
-            batch_update(Figure, self)
+            Figure.batch_update(self)
 
         def handle_featmarker_minvalue_change(change):
             """
@@ -212,7 +210,7 @@ class TopWidgets(ConfigWidgets):
 
             ConfigWidgets.min_value_markerfeat = change.new
             self.widg_featmarker_maxvalue.min = change.new
-            batch_update(Figure, self)
+            Figure.batch_update(self)
 
 
         def observe_widgets(self): 

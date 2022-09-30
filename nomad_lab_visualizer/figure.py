@@ -1,14 +1,12 @@
-from .configWidgets import ConfigWidgets
-from .include._batch_update import batch_update
-from .include._updates import marker_style_updates, fract_change_updates
 import plotly.graph_objects as go
 import numpy as np
-from .include._geometry import make_hull, make_line
-from .include._smart_fract import make_optimized_frac
 
-class Figure( ):
-    
+class Figure(object):
+
+    from .include._updates import marker_style_updates, fract_change_updates
     from .include._batch_update import batch_update
+    from .include._geometry import make_hull, make_line
+    from .include._optimize_sequence import optimize_sequence
 
     def __init__( self, df, embedding_features, hover_features, target, path_to_structures ):
 
@@ -39,7 +37,6 @@ class Figure( ):
 
         self.name_traces = df[target].unique()
         self.trace = {}
-
         self.df_trace_on_map = (
             {}
         )  # dataframe which contains only the elements that are visualized on the map
@@ -48,13 +45,17 @@ class Figure( ):
         self.sizes = {}  # sizes used for markers of each trace
         self.colors = {}  # colors used for markers of each trace
         self.trace_symbol = {}  # symbol used for the trace
-        
+
+        self.regr_line_trace = {}
+
         self.optimized_sequence_indexes = {}
         self.optimized_init_fract = {}
 
         self.random_permutation_indexes = {}
         self.init_fract = 1
-        
+
+        self.convex_hull = False
+
         # dictionaries initialized above are compiled for all different trace names
         for cl in range(len(self.name_traces)):
 
@@ -78,13 +79,6 @@ class Figure( ):
             )
             self.trace[name_trace] = self.FigureWidget["data"][-1]
 
-        
-        total_points = self.df.shape[0]
-
-        if (total_points>1000):
-            self.init_fract = 1000/total_points
-            ConfigWidgets.fract = self.init_fract
-
 
         for name_trace in self.name_traces:
             
@@ -106,15 +100,15 @@ class Figure( ):
             # symbol used for the trace
             self.trace_symbol[name_trace] = "circle"
             
-    def add_regr_line (self, coefs, feat_x, feat_y):
+    def add_regr_line (self, coefs, feat_x, feat_y, ConfigWidgets):
 
 
-        if not (feat_x,feat_y) in ConfigWidgets.regr_line_trace:
+        if not (feat_x,feat_y) in self.regr_line_trace:
             
-            ConfigWidgets.regr_line_trace[(feat_x,feat_y)]=True
+            self.regr_line_trace[(feat_x,feat_y)]=True
 
             # add a trace that contains the regression line
-            line_x, line_y = make_line(self, feat_x, feat_y, coefs)
+            line_x, line_y = self.make_line( feat_x, feat_y, coefs)
 
             name_trace = "Regr line" + str(feat_x) + ' ' + str(feat_y) 
             self.FigureWidget.add_trace(go.Scatter(
@@ -128,8 +122,8 @@ class Figure( ):
 
         else: 
 
-            ConfigWidgets.regr_line_trace[(feat_x,feat_y)]=True           
-            line_x, line_y = make_line(self, feat_x, feat_y, coefs)
+            self.regr_line_trace[(feat_x,feat_y)]=True           
+            line_x, line_y = self.make_line(feat_x, feat_y, coefs)
 
             name_trace = "Regr line" + str(feat_x) + ' ' + str(feat_y) 
             self.trace[name_trace].x=line_x
@@ -137,19 +131,18 @@ class Figure( ):
 
             self.FigureWidget.update_traces(selector={"name": name_trace}, showlegend=False)
 
-        batch_update(self, ConfigWidgets)
+        self.batch_update(ConfigWidgets)
         
-    def remove_regr_line (self, feat_x, feat_y):
+    def remove_regr_line (self, feat_x, feat_y,ConfigWidgets):
 
-        ConfigWidgets.regr_line_trace[(feat_x,feat_y)]=False
+        self.regr_line_trace[(feat_x,feat_y)]=False
 
-        batch_update(self, ConfigWidgets)
+        self.batch_update(ConfigWidgets)
 
-
-    def optimize_fract(self, visualizerTopWidgets):
+    def optimize_fract(self, visualizerTopWidgets, ConfigWidgets):
 
         if not (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in self.optimized_sequence_indexes :      
-            sequence_indexes, init_fract = make_optimized_frac(self, ConfigWidgets.feat_x, ConfigWidgets.feat_y)
+            sequence_indexes, init_fract = self.optimize_sequence(ConfigWidgets.feat_x, ConfigWidgets.feat_y)
 
             self.optimized_sequence_indexes[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)] = sequence_indexes
             self.optimized_sequence_indexes[(ConfigWidgets.feat_y, ConfigWidgets.feat_x)] = sequence_indexes
@@ -158,8 +151,4 @@ class Figure( ):
             
             ConfigWidgets.fract = init_fract
             visualizerTopWidgets.widg_fract_slider.value = init_fract
-            batch_update(self, ConfigWidgets)
-
-  
-
-
+            self.batch_update(ConfigWidgets)

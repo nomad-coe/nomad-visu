@@ -1,6 +1,4 @@
 from .configWidgets import ConfigWidgets
-from .include._batch_update import batch_update
-from .include._updates import marker_style_updates, fract_change_updates
 import ipywidgets as widgets
 import os
 import nomad_lab_visualizer
@@ -143,7 +141,7 @@ class ViewersWidgets( ConfigWidgets ):
                 self.widg_structure_text_r.value = formula
                 view_structure_r(self, formula)
 
-            batch_update(Figure, self)
+            Figure.batch_update(self)
 
         def display_button_l_clicked( button ):
 
@@ -154,7 +152,7 @@ class ViewersWidgets( ConfigWidgets ):
                 # structure_l = Figure.df["Structure"].at[compound_l]
 
                 view_structure_l(self, compound_l)
-                batch_update(Figure, self)
+                Figure.batch_update(self)
 
         def display_button_r_clicked( button ):
 
@@ -165,7 +163,7 @@ class ViewersWidgets( ConfigWidgets ):
                 # structure_r = Figure.df["Structure"].at[compound_r]
 
                 view_structure_r(self, compound_r)
-                batch_update(Figure, self)
+                Figure.batch_update(self)
 
         def view_structure_l(self, formula):
 

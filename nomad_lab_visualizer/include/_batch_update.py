@@ -1,20 +1,15 @@
-from ._updates import marker_style_updates, fract_change_updates
-from ._geometry import make_hull, make_line
-
-
 def batch_update(self, ConfigWidgets):
     """
     updates the layout of the map with all values stored in the staticVisualizer
     """
 
-    marker_style_updates(self)
-    fract_change_updates(self)
+    self.marker_style_updates(ConfigWidgets)
+    self.fract_change_updates(ConfigWidgets)
 
     x_min = []
     x_max = []
     y_min = []
     y_max = []
-
 
     for name_trace in self.name_traces:
 
@@ -109,19 +104,19 @@ def batch_update(self, ConfigWidgets):
                     selector={"name": str(name_trace)},
                     marker=dict(showscale=False, color=self.colors[name_trace]),
                 )
-        if (ConfigWidgets.feat_x,ConfigWidgets.feat_y) in ConfigWidgets.regr_line_trace:
+        if (ConfigWidgets.feat_x,ConfigWidgets.feat_y) in self.regr_line_trace:
             name_trace = "Regr line" + str(ConfigWidgets.feat_x) + ' ' + (ConfigWidgets.feat_y) 
-            if ConfigWidgets.regr_line_trace[(ConfigWidgets.feat_x,ConfigWidgets.feat_y)]:
+            if self.regr_line_trace[(ConfigWidgets.feat_x,ConfigWidgets.feat_y)]:
                 self.trace[name_trace].line = dict(
                         color=ConfigWidgets.line_color, 
                         width=ConfigWidgets.line_width, 
                         dash=ConfigWidgets.line_dash
                     )
             else:
-                self.trace[str(name_trace)].line = dict(width=0)
+                self.trace[name_trace].line = dict(width=0)
 
 
-        if ConfigWidgets.convex_hull == True:
+        if self.convex_hull == True:
 
             if ConfigWidgets.feat_x == ConfigWidgets.feat_y:
 
@@ -132,7 +127,7 @@ def batch_update(self, ConfigWidgets):
                         selector={"name": "Hull " + name_trace},
                     )
             else:
-                hullx, hully = make_hull(self, ConfigWidgets.feat_x, ConfigWidgets.feat_y)
+                hullx, hully = self.make_hull(ConfigWidgets.feat_x, ConfigWidgets.feat_y)
                 for name_trace in self.name_traces:
     
                     self.trace["Hull " + str(name_trace)]["x"] = hullx[name_trace]

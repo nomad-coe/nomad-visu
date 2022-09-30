@@ -2,9 +2,8 @@ import numpy as np
 import pandas as pd
 from itertools import cycle
 import plotly.express as px
-from ..configWidgets import ConfigWidgets 
 
-def update_df_on_map(self):
+def update_df_on_map(self, ConfigWidgets):
     """
     updates the number of points based on the fraction value, then the fraction of the dataframe 'df_trace_on_map' that is visualized
     """
@@ -52,7 +51,7 @@ def update_df_on_map(self):
             )
 
 
-def update_hover_variables(self):
+def update_hover_variables(self, ConfigWidgets):
     """
     updates the hover data based on the points that are visualized on the map
     """
@@ -93,7 +92,7 @@ def update_hover_variables(self):
         #     self.hover_template.append([''])
 
 
-def update_marker_symbol(self):
+def update_marker_symbol(self, ConfigWidgets):
     """
     updates the list of marker symbols for each trace
     all markers are initally set to have the symbol specific of the trace
@@ -139,7 +138,7 @@ def update_marker_symbol(self):
                 pass
 
 
-def update_marker_size(self):
+def update_marker_size(self, ConfigWidgets):
     """
     updates the size of the markers
     in case 'Default size' is set all markers have the same size, and points marked with x/cross are set with a specific size
@@ -201,7 +200,7 @@ def update_marker_size(self):
             self.sizes[name_trace] = sizes
 
 
-def update_marker_color(self):
+def update_marker_color(self, ConfigWidgets):
     """
     updates the color of markers
     """
@@ -247,20 +246,20 @@ def update_marker_color(self):
             self.colors[name_trace] = self.df_trace_on_map[name_trace][feature]
 
 
-def fract_change_updates(self):
+def fract_change_updates(self, ConfigWidgets):
     """
     updates relative to a change in the fraction value that is visualized
     """
 
-    update_df_on_map(self)
-    update_hover_variables(self)
+    update_df_on_map(self, ConfigWidgets)
+    update_hover_variables(self, ConfigWidgets)
 
 
-def marker_style_updates(self):
+def marker_style_updates(self, ConfigWidgets):
     """
     updates relative to a change in the markers properties
     """
 
-    update_marker_color(self)
-    update_marker_symbol(self)
-    update_marker_size(self)
+    update_marker_color(self, ConfigWidgets)
+    update_marker_symbol(self, ConfigWidgets)
+    update_marker_size(self, ConfigWidgets)

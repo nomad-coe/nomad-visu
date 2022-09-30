@@ -1,21 +1,15 @@
-from importlib.resources import path
-from turtle import update
-from xml.etree.ElementInclude import include
 import ipywidgets as widgets
-import py3Dmol
-import numpy as np
 from IPython.display import display
-from itertools import cycle
 import os
+import warnings
+warnings.simplefilter(action="ignore", category=FutureWarning)
+
 from .topWidgets import TopWidgets
 from .configWidgets import ConfigWidgets
 from .utilsWidgets import UtilsWidgets
 from .viewersWidgets import ViewersWidgets
 from .utilsButton import UtilsButton
 from .figure import Figure
-import warnings
-
-warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
 class Visualizer:
@@ -68,10 +62,14 @@ class Visualizer:
 
         self.visualizerConfigWidgets = ConfigWidgets()
         self.visualizerFigure = Figure(df, embedding_features, hover_features, target, path_to_structures )
-        self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
        
-        self.viewer_l = py3Dmol.view(width='auto',height=400)
-        self.viewer_r = py3Dmol.view(width='auto',height=400)
+        total_points = self.df.shape[0]
+        if (total_points>1000):
+            init_fract = 1000/total_points
+            self.visualizerFigure.init_fract = init_fract
+            ConfigWidgets.fract = init_fract
+        
+        self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
 
         self.visualizerTopWidgets = TopWidgets(self.visualizerFigure)
         self.visualizerUtilsWidgets = UtilsWidgets(self.visualizerFigure)
@@ -132,7 +130,7 @@ class Visualizer:
 
     def add_convex_hull (self):
         
-        ConfigWidgets.convex_hull = True
+        self.visualizerFigure.convex_hull = True
 
         self.visualizerUtilsWidgets.widg_color_hull.disabled = False
         self.visualizerUtilsWidgets.widg_width_hull.disabled = False
@@ -142,7 +140,7 @@ class Visualizer:
 
     def remove_convex_hull (self):
         
-        ConfigWidgets.convex_hull = False
+        self.visualizerFigure.convex_hull = False
 
         self.visualizerUtilsWidgets.widg_color_hull.disabled = True
         self.visualizerUtilsWidgets.widg_width_hull.disabled = True
@@ -152,12 +150,12 @@ class Visualizer:
 
     def add_regr_line (self, coefs, feat_x, feat_y):
 
-        self.visualizerFigure.add_regr_line(coefs, feat_x, feat_y)
+        self.visualizerFigure.add_regr_line(coefs, feat_x, feat_y, self.visualizerConfigWidgets)
 
     def remove_regr_line (self, feat_x, feat_y):
 
-        self.visualizerFigure.remove_regr_line( feat_x, feat_y)
+        self.visualizerFigure.remove_regr_line( feat_x, feat_y, self.visualizerConfigWidgets)
 
     def optimize_fract (self):
 
-        self.visualizerFigure.optimize_fract(self.visualizerTopWidgets)
+        self.visualizerFigure.optimize_fract(self.visualizerTopWidgets, self.visualizerConfigWidgets)
