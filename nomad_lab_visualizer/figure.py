@@ -37,16 +37,14 @@ class Figure(object):
 
         self.name_traces = df[target].unique()
         self.trace = {}
+        self.regr_line_trace = {}
         self.df_trace_on_map = (
             {}
-        )  # dataframe which contains only the elements that are visualized on the map
-        
+        )  # dataframe which contains only the elements that are visualized on the map        
         self.symbols = {}  # symbols used for markers of each trace
         self.sizes = {}  # sizes used for markers of each trace
         self.colors = {}  # colors used for markers of each trace
         self.trace_symbol = {}  # symbol used for the trace
-
-        self.regr_line_trace = {}
 
         self.optimized_sequence_indexes = {}
         self.optimized_init_fract = {}
@@ -99,14 +97,12 @@ class Figure(object):
                     
             # symbol used for the trace
             self.trace_symbol[name_trace] = "circle"
-            
+    
     def add_regr_line (self, coefs, feat_x, feat_y, ConfigWidgets):
-
 
         if not (feat_x,feat_y) in self.regr_line_trace:
             
             self.regr_line_trace[(feat_x,feat_y)]=True
-
             # add a trace that contains the regression line
             line_x, line_y = self.make_line( feat_x, feat_y, coefs)
 
@@ -150,5 +146,5 @@ class Figure(object):
             self.optimized_init_fract[(ConfigWidgets.feat_y, ConfigWidgets.feat_x)] = init_fract
             
             ConfigWidgets.fract = init_fract
-            visualizerTopWidgets.widg_fract_slider.value = init_fract
+            visualizerTopWidgets.FractSlider.widget.value = init_fract
             self.batch_update(ConfigWidgets)
