@@ -76,9 +76,9 @@ class Visualizer:
         self.visualizerViewersWiedgets = ViewersWidgets(self.visualizerFigure)
         self.visualizerUtilsButton = UtilsButton(self.visualizerFigure, self.visualizerUtilsWidgets, self.visualizerViewersWiedgets)
 
-        self.visualizerUtilsWidgets.widg_color_hull.disabled = True
-        self.visualizerUtilsWidgets.widg_width_hull.disabled = True
-        self.visualizerUtilsWidgets.widg_dash_hull.disabled = True
+        self.visualizerUtilsWidgets.ColorHull.widget.disabled = True
+        self.visualizerUtilsWidgets.WidthHull.widget.disabled = True
+        self.visualizerUtilsWidgets.DashHull.widget.disabled = True
 
         # self.visualizerUtilsWidgets.widg_color_line.disabled = True
         # self.visualizerUtilsWidgets.widg_width_line.disabled = True
@@ -132,19 +132,20 @@ class Visualizer:
         
         self.visualizerFigure.convex_hull = True
 
-        self.visualizerUtilsWidgets.widg_color_hull.disabled = False
-        self.visualizerUtilsWidgets.widg_width_hull.disabled = False
-        self.visualizerUtilsWidgets.widg_dash_hull.disabled = False
+        self.visualizerUtilsWidgets.ColorHull.widget.disabled = False
+        self.visualizerUtilsWidgets.WidthHull.widget.disabled = False
+        self.visualizerUtilsWidgets.DashHull.widget.disabled = False
 
         self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
 
     def remove_convex_hull (self):
         
         self.visualizerFigure.convex_hull = False
+        self.visualizerUtilsWidgets.ColorHull.widget.disabled = True
+        self.visualizerUtilsWidgets.WidthHull.widget.disabled = True
+        self.visualizerUtilsWidgets.DashHull.widget.disabled = True
 
-        self.visualizerUtilsWidgets.widg_color_hull.disabled = True
-        self.visualizerUtilsWidgets.widg_width_hull.disabled = True
-        self.visualizerUtilsWidgets.widg_dash_hull.disabled = True
+        
 
         self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
 
