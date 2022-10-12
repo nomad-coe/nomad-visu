@@ -23,7 +23,7 @@ class UtilsButton( ConfigWidgets ):
                 else:
                     for i in range(341):
                         visualizerViewersWidgets.widg_box.layout.top = str(i) + "px"
-                    visualizerUtilsWidgets.widg_box.layout.bottom = "400px"
+                    visualizerUtilsWidgets.widg_box.layout.bottom = "460px"
                     visualizerUtilsWidgets.widg_box.layout.visibility = "visible"
             else:
                 if visualizerUtilsWidgets.widg_box.layout.visibility == "visible":

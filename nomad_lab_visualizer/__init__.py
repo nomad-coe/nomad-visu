@@ -99,7 +99,6 @@ class Visualizer:
         top_box.layout.top = "30px"
         utils_button.layout.left = "50px"
         utils_box.layout.border = "dashed 1px"
-        utils_box.right = "100px"
         utils_box.layout.max_width = "700px"
         utils_box.layout.visibility = "hidden"
 
@@ -125,8 +124,12 @@ class Visualizer:
                     utils_box,
                 ]
             )
-
         display(container)
+
+        with self.visualizerViewersWiedgets.windowsOutputL.widget:
+            self.visualizerViewersWiedgets.viewerL.viewer.show()
+        with self.visualizerViewersWiedgets.windowsOutputR.widget:
+            self.visualizerViewersWiedgets.viewerR.viewer.show()
 
     def add_convex_hull (self):
         
@@ -144,8 +147,6 @@ class Visualizer:
         self.visualizerUtilsWidgets.ColorHull.widget.disabled = True
         self.visualizerUtilsWidgets.WidthHull.widget.disabled = True
         self.visualizerUtilsWidgets.DashHull.widget.disabled = True
-
-        
 
         self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
 
