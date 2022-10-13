@@ -1,6 +1,6 @@
 def batch_update(self, ConfigWidgets):
     """
-    updates the layout of the map with all values stored in the staticVisualizer
+    Updates the layout of the map according to values stored in "ConfigWidgets".
     """
 
     self.marker_style_updates(ConfigWidgets)
@@ -55,10 +55,8 @@ def batch_update(self, ConfigWidgets):
             yaxis_range=yaxis_range,
         )
         
-
         for name_trace in self.name_traces:
             # all elements on the map and their properties are reinitialized at each change
-
 
             self.FigureWidget.update_traces(
                 selector={"name": str(name_trace)},
@@ -75,7 +73,6 @@ def batch_update(self, ConfigWidgets):
                 ConfigWidgets.featcolor != "Default color"
                 and ConfigWidgets.featcolor_type == "Gradient"
             ):
-
                 feature = ConfigWidgets.featcolor
                 gradient = ConfigWidgets.featcolor_list
                 min_value = self.df[feature].min()
@@ -99,7 +96,6 @@ def batch_update(self, ConfigWidgets):
                     ),
                 )
             else:
-
                 self.FigureWidget.update_traces(
                     selector={"name": str(name_trace)},
                     marker=dict(showscale=False, color=self.colors[name_trace]),

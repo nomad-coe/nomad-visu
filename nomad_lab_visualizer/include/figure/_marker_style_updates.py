@@ -3,100 +3,21 @@ import pandas as pd
 from itertools import cycle
 import plotly.express as px
 
-def update_df_on_map(self, ConfigWidgets):
+def marker_style_updates(self, ConfigWidgets):
     """
-    updates the number of points based on the fraction value, then the fraction of the dataframe 'df_trace_on_map' that is visualized
-    """
-
-    for name_trace in self.name_traces:
-
-
-        n_points = int(
-            ConfigWidgets.fract * \
-            self.df.loc[self.df[self.target] == name_trace].shape[0]
-            )
-
-        if n_points < 1:
-            n_points = 1
-
-
-        if (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in self.optimized_sequence_indexes:
-            sequence_indexes = self.optimized_sequence_indexes[
-                (ConfigWidgets.feat_x, ConfigWidgets.feat_y)][name_trace] 
-        else:
-            sequence_indexes = self.random_permutation_indexes[name_trace]
-
-        self.df_trace_on_map[name_trace] = (
-            self.df.loc[self.df[self.target] == name_trace]
-            .loc[sequence_indexes]
-            .head(n_points)
-            )
-
-        # if a structure is visualized, its dataframe entry is added to the visualized dataframe 'df_trace_on_map'
-        # this to avoid that the entry relative to a structure visualized is not available on the map
-        if ConfigWidgets.structure_text_l in self.df.loc[self.df[self.target] == name_trace].index:
-            self.df_trace_on_map[name_trace] = pd.concat(
-                [
-                    self.df_trace_on_map[name_trace],
-                    self.df.loc[[ConfigWidgets.structure_text_l]],
-                ]
-            )
-
-        if ConfigWidgets.structure_text_r in self.df.loc[self.df[self.target] == name_trace].index:
-            self.df_trace_on_map[name_trace] = pd.concat(
-                [
-                    self.df_trace_on_map[name_trace],
-                    self.df.loc[[ConfigWidgets.structure_text_r]],
-                ]
-            )
-
-
-def update_hover_variables(self, ConfigWidgets):
-    """
-    updates the hover data based on the points that are visualized on the map
+    All updates caused by a change in the markers properties.
     """
 
-    self.hover_text = {}
-    self.hover_custom = {}
-    self.hover_template = {}
-
-    for name_trace in self.name_traces:
-
-        self.hover_text[name_trace] = self.df_trace_on_map[name_trace].index
-        hover_template = r"<b>%{text}</b><br><br>"
-        if self.hover_features:
-            hover_custom = np.dstack(
-                [
-                    self.df_trace_on_map[name_trace][
-                        str(self.hover_features[0])
-                    ].to_numpy()
-                ]
-            )
-            hover_template += str(self.hover_features[0]) + ": %{customdata[0]}<br>"
-            for i in range(1, len(self.hover_features), 1):
-                hover_custom = np.dstack(
-                    [
-                        hover_custom,
-                        self.df_trace_on_map[name_trace][
-                            str(self.hover_features[i])
-                        ].to_numpy(),
-                    ]
-                )
-                hover_template += (
-                    str(self.hover_features[i]) + ": %{customdata[" + str(i) + "]}<br>"
-                )
-            self.hover_custom[name_trace] = hover_custom[0]
-            self.hover_template[name_trace] = hover_template
-        # else:
-        #     self.hover_custom.append([''])
-        #     self.hover_template.append([''])
+    self.update_marker_color( ConfigWidgets)
+    self.update_marker_symbol( ConfigWidgets)
+    self.update_marker_size( ConfigWidgets)
 
 
 def update_marker_symbol(self, ConfigWidgets):
     """
-    updates the list of marker symbols for each trace
-    all markers are initally set to have the symbol specific of the trace
-    points whose structure is visualized have a cross as marker
+    Updates the list of marker symbols for each trace.
+    All markers are initally set to have the symbol specific of the trace "trace_symbol".
+    Points whose structure is visualized have a cross as marker.
     """
 
     for name_trace in self.name_traces:
@@ -140,9 +61,9 @@ def update_marker_symbol(self, ConfigWidgets):
 
 def update_marker_size(self, ConfigWidgets):
     """
-    updates the size of the markers
-    in case 'Default size' is set all markers have the same size, and points marked with x/cross are set with a specific size
-    in case 'Marker' has a feature value, marker sizes are selected according to that specific feature
+    Updates the size of the markers:
+    in case of 'Default size' all markers have the same size, and points marked with x/cross are set with a specific cross size;
+    in case 'Marker' has a feature value, marker sizes are selected according to that specific feature.
     """
 
     feature = ConfigWidgets.featmarker
@@ -175,6 +96,7 @@ def update_marker_size(self, ConfigWidgets):
 
             self.sizes[name_trace] = sizes
     else:
+
         min_value = ConfigWidgets.min_value_markerfeat
         max_value = ConfigWidgets.max_value_markerfeat
         min_feat = min(
@@ -202,21 +124,19 @@ def update_marker_size(self, ConfigWidgets):
 
 def update_marker_color(self, ConfigWidgets):
     """
-    updates the color of markers
+    Updates the color of markers:
+    in case of "Default color" each trace has a different color;
+    in case of a feature, each different feature value has a different color.
     """
 
     feature = ConfigWidgets.featcolor
 
     if feature == "Default color":
-        # each trace has a different color picked from a given palette
 
         palette = cycle(
             getattr(px.colors.qualitative, ConfigWidgets.color_palette)
         )
-
         for name_trace in self.name_traces:
-
-
             self.colors[name_trace] = [next(palette)] * len(
                 self.df_trace_on_map[name_trace]
             )
@@ -226,7 +146,6 @@ def update_marker_color(self, ConfigWidgets):
 
         colors_dict = {}
         palette = cycle(getattr(px.colors.qualitative, ConfigWidgets.featcolor_list))
-
         for value in np.sort(self.df[feature].unique()):
             colors_dict[value] = next(palette)
 
@@ -245,21 +164,3 @@ def update_marker_color(self, ConfigWidgets):
         for name_trace in self.name_traces:
             self.colors[name_trace] = self.df_trace_on_map[name_trace][feature]
 
-
-def fract_change_updates(self, ConfigWidgets):
-    """
-    updates relative to a change in the fraction value that is visualized
-    """
-
-    update_df_on_map(self, ConfigWidgets)
-    update_hover_variables(self, ConfigWidgets)
-
-
-def marker_style_updates(self, ConfigWidgets):
-    """
-    updates relative to a change in the markers properties
-    """
-
-    update_marker_color(self, ConfigWidgets)
-    update_marker_symbol(self, ConfigWidgets)
-    update_marker_size(self, ConfigWidgets)

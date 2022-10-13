@@ -79,34 +79,54 @@ class UtilsWidgets(ConfigWidgets):
         self.widg_box = widgets.VBox(
             [
                 widgets.HBox(
-                    [self.MarkersSize.widget, self.CrossSize.widget, self.ColorPalette.widget]
+                        [
+                        self.MarkersSize.widget, 
+                        self.CrossSize.widget, 
+                        self.ColorPalette.widget
+                        ]
                 ),
                 widgets.HBox(
-                    [self.FontSize.widget, self.FontFamily.widget, self.FontColor.widget]
+                        [
+                        self.FontSize.widget, 
+                        self.FontFamily.widget, 
+                        self.FontColor.widget
+                        ]
                 ),
                 widgets.HBox(
-                    [
+                        [
                         self.TraceSymbol.widget,
                         self.MarkersSymbol.widget,
                         self.ResetButton.widget,
-                    ]
+                        ]
                 ),
                 widgets.HBox(
-                    [self.ColorHull.widget, self.WidthHull.widget, self.DashHull.widget]
+                        [
+                        self.ColorHull.widget, 
+                        self.WidthHull.widget, 
+                        self.DashHull.widget
+                        ]
                 ),
                 widgets.HBox(
-                    [self.ColorLine.widget, self.WidthLine.widget, self.DashLine.widget]
+                        [
+                        self.ColorLine.widget, 
+                        self.WidthLine.widget, 
+                        self.DashLine.widget
+                        ]
                 ),
                 widgets.HBox(
-                    [
+                        [
                         self.BgToggle.widget,
                         self.BgColor.widget,
                         self.BgColorUpdate.widget,
-                    ]
+                        ]
                 ),
                 self.PrintLabel.widget,
                 widgets.HBox(
-                    [self.PlotName.widget, self.PlotFormat.widget, self.PlotResolution.widget]
+                        [
+                        self.PlotName.widget, 
+                        self.PlotFormat.widget, 
+                        self.PlotResolution.widget,
+                        ]
                 ),
                 self.Print.widget,
                 self.PrintOutput.widget,

@@ -3,11 +3,11 @@ from itertools import cycle
 
 class ConfigWidgets(object):
 
+    # Default value of the background color
     bg_color_default = (
-        "rgba(229,236,246, 0.5)"  # default value of the background color
+        "rgba(229,236,246, 0.5)"
     )
-
-    # list of possible marker symbols
+    # List of possible marker symbols
     symbols_list = [
         "circle",
         "circle-open",
@@ -36,7 +36,7 @@ class ConfigWidgets(object):
         "triangle-down-dot",
         "triangle-down-open-dot",
     ]
-    # list of possible colors of the hulls
+    # List of possible colors of the hulls
     color_hull = [
         "Black",
         "Blue",
@@ -47,7 +47,7 @@ class ConfigWidgets(object):
         "Red",
         "Yellow",
     ]
-    # list of possible colors of the regression line
+    # List of possible colors of the regression line
     color_line = [
         "Black",
         "Blue",
@@ -58,11 +58,11 @@ class ConfigWidgets(object):
         "Red",
         "Yellow",
     ]
-    # list of possible dash types for the regression line
+    # List of possible dash types for the regression line
     line_dashs = ["dash", "solid", "dot", "longdash", "dashdot", "longdashdot"]
-    # list of possible dash types for the hulls
+    # List of possible dash types for the hulls
     hull_dashs = ["dash", "solid", "dot", "longdash", "dashdot", "longdashdot"]
-    # list of possible font families
+    # List of possible font families
     font_families = [
         "Arial",
         "Courier New",
@@ -71,7 +71,7 @@ class ConfigWidgets(object):
         "Times New Roman",
         "Verdana",
     ]
-    # list of possible font colors
+    # List of possible font colors
     font_colors = [
         "Black",
         "Blue",
@@ -82,7 +82,7 @@ class ConfigWidgets(object):
         "Red",
         "Yellow",
     ]
-    # list of possible discrete palette colors
+    # List of possible discrete palette colors
     discrete_palette_colors = [
         "Plotly",
         "D3",
@@ -104,10 +104,12 @@ class ConfigWidgets(object):
         "Safe",
         "Vivid",
     ]
-    # list of possible continuous gradient colors
+    # List of possible continuous gradient colors
     continuous_gradient_colors = px.colors.named_colorscales()
 
-    # all values below are initialized to a specific value that can be modified using widgets
+
+    # Values below are initialized to a specific value that can be modified using widgets
+
     marker_size = 7  # size of all markers
     cross_size = 15  # size of the crosses
     min_value_markerfeat = (
@@ -124,30 +126,26 @@ class ConfigWidgets(object):
     hull_color = "Grey"  # color of the convex hull
     line_color = "Black"  # color of the regression line
     bg_color = (
-        "rgba(229,236,246, 0.5)"  # background color initially set to its default value
+        "rgba(229,236,246, 0.5)"  # background color 
     )  
     bg_toggle = True  # background color is shown
     structures_list = []
-    # which file in the list is shown in the left visualizer
-    replica_l = 0
-    # which file in the list is shown in the right visualizer
-    replica_r = 0
-
-    fract = 1
-
-    # palette used for the initial values
-    palette = cycle(getattr(px.colors.qualitative, discrete_palette_colors[0]))
+    replica_l = 0    # which file in the list is shown in the left visualizer
+    replica_r = 0    # which file in the list is shown in the right visualizer
+    fract = 1 # fraction of points visualized on the map
+    palette = cycle(getattr(px.colors.qualitative, discrete_palette_colors[0])) #  color palette used for the initial values
+    color_palette = discrete_palette_colors[0] 
+    font_family = font_families[0]
+    font_color = font_colors[0]
 
     structure_text_l = '...'
     structure_text_r = '...'
 
-    featmarker = 'Default size'
-    featcolor =  'Default color'
-    featcolor_type = 'Gradient'
-    featcolor_list = 'viridis'
-    color_palette = discrete_palette_colors[0]
-    font_family = font_families[0]
-    font_color = font_colors[0]
+    featmarker = 'Default size' # feature used for markers size
+    featcolor =  'Default color' # feature used for markers color
+    featcolor_type = 'Gradient' # if a feature is used for color this can be 'Gradient' for continuous feature values or 'Discrete'
+    featcolor_list = 'viridis' # color palette used for features
+
 
 
 

@@ -50,7 +50,9 @@ class TopWidgets(ConfigWidgets):
                                 self.Featx.widget,
                                 self.Featy.widget,
                                 widgets.HBox(
-                                    [self.LabelFract.widget, self.FractSlider.widget]
+                                    [
+                                        self.LabelFract.widget, 
+                                        self.FractSlider.widget]
                                 ),
                             ]
                         ),
@@ -58,8 +60,10 @@ class TopWidgets(ConfigWidgets):
                             [
                                 self.FeatColor.widget,
                                 widgets.HBox(
-                                    [self.FeatColorType.widget, self.FeatColorList.widget],
-                                    layout=widgets.Layout(top="10px"),
+                                    [
+                                        self.FeatColorType.widget, 
+                                        self.FeatColorList.widget],
+                                        layout=widgets.Layout(top="10px"),
                                 ),
                             ]
                         ),
