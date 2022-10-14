@@ -16,7 +16,7 @@ from .include.topWidgets.featMarkerMinLabel import FeatMarkerMinLabel
 
 class TopWidgets(ConfigWidgets):
 
-    def __init__(self, Figure):
+    def __init__(self):
 
         self.Featx = Featx()
         self.Featy = Featy()
@@ -30,16 +30,6 @@ class TopWidgets(ConfigWidgets):
         self.FeatMarkerMinLabel = FeatMarkerMinLabel()
         self.FeatMarkerMax = FeatMarkerMax()
         self.FeatMarkerMaxLabel = FeatMarkerMaxLabel()
-
-        self.Featx.observe_change(Figure, self.FractSlider.widget)        
-        self.Featy.observe_change(Figure, self.FractSlider.widget)
-        self.FractSlider.observe_change(Figure)
-        self.FeatColor.observe_change(Figure, self.FeatColorType.widget, self.FeatColorList.widget)
-        self.FeatColorType.observe_change(Figure, self.FeatColorList.widget)
-        self.FeatColorList.observe_change(Figure)
-        self.FeatMarker.observe_change(Figure, self.FeatMarkerMin.widget, self.FeatMarkerMax.widget)
-        self.FeatMarkerMin.observe_change(Figure, self.FeatMarkerMax.widget)
-        self.FeatMarkerMax.observe_change(Figure, self.FeatMarkerMin.widget) 
         
         self.widg_box = widgets.VBox(
             [
@@ -92,7 +82,15 @@ class TopWidgets(ConfigWidgets):
                 ),
             ]
         )
-    
-    def container(self):
 
-        return self.widg_box
+    def observe_changes (self, Figure):
+
+        self.Featx.observe_change(Figure, self.FractSlider.widget)        
+        self.Featy.observe_change(Figure, self.FractSlider.widget)
+        self.FractSlider.observe_change(Figure)
+        self.FeatColor.observe_change(Figure, self.FeatColorType.widget, self.FeatColorList.widget)
+        self.FeatColorType.observe_change(Figure, self.FeatColorList.widget)
+        self.FeatColorList.observe_change(Figure)
+        self.FeatMarker.observe_change(Figure, self.FeatMarkerMin.widget, self.FeatMarkerMax.widget)
+        self.FeatMarkerMin.observe_change(Figure, self.FeatMarkerMax.widget)
+        self.FeatMarkerMax.observe_change(Figure, self.FeatMarkerMin.widget) 

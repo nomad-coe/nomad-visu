@@ -29,7 +29,7 @@ from .include.utilsWidgets.windowLabel import WindowLabel
 
 class UtilsWidgets(ConfigWidgets):
 
-    def __init__(self, Figure):
+    def __init__(self):
         
         self.BgColor = BgColor()
         self.BgColorUpdate = BgColorUpdate()
@@ -57,24 +57,6 @@ class UtilsWidgets(ConfigWidgets):
         self.WidthLine = WidthHull()
         self.WindowLabel = WindowLabel()
         
-        self.BgColorUpdate.observe_change(Figure, self.BgColor)
-        self.BgToggle.observe_change(Figure)
-        self.ColorHull.observe_change(Figure)
-        self.ColorLine.observe_change(Figure)
-        self.ColorPalette.observe_change(Figure)
-        self.CrossSize.observe_change(Figure)
-        self.DashHull.observe_change(Figure)
-        self.DashLine.observe_change(Figure)
-        self.FontColor.observe_change(Figure)
-        self.FontFamily.observe_change(Figure)
-        self.FontSize.observe_change(Figure)
-        self.MarkersSize.observe_change(Figure)
-        self.MarkersSymbol.observe_change(Figure, self.TraceSymbol)
-        self.Print.observe_change(Figure, self.PrintOutput, self.PlotName, self.PlotFormat, self.PlotResolution)
-        self.ResetButton.observe_change(Figure)
-        self.TraceSymbol.observe_change(Figure)
-        self.WidthHull.observe_change(Figure)
-        self.WidthLine.observe_change(Figure)
         
         self.widg_box = widgets.VBox(
             [
@@ -132,8 +114,28 @@ class UtilsWidgets(ConfigWidgets):
                 self.PrintOutput.widget,
             ]
         )
-   
-    def container(self):
 
-        return self.widg_box
+
+        
+
+    def observe_changes(self, Figure):
+ 
+        self.BgColorUpdate.observe_change(Figure, self.BgColor)
+        self.BgToggle.observe_change(Figure)
+        self.ColorHull.observe_change(Figure)
+        self.ColorLine.observe_change(Figure)
+        self.ColorPalette.observe_change(Figure)
+        self.CrossSize.observe_change(Figure)
+        self.DashHull.observe_change(Figure)
+        self.DashLine.observe_change(Figure)
+        self.FontColor.observe_change(Figure)
+        self.FontFamily.observe_change(Figure)
+        self.FontSize.observe_change(Figure)
+        self.MarkersSize.observe_change(Figure)
+        self.MarkersSymbol.observe_change(Figure, self.TraceSymbol)
+        self.Print.observe_change(Figure, self.PrintOutput, self.PlotName, self.PlotFormat, self.PlotResolution)
+        self.ResetButton.observe_change(Figure)
+        self.TraceSymbol.observe_change(Figure)
+        self.WidthHull.observe_change(Figure)
+        self.WidthLine.observe_change(Figure)
 

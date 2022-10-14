@@ -3,13 +3,16 @@ import ipywidgets as widgets
 
 class UtilsButton( ConfigWidgets ):
 
-    def __init__( self, Figure, visualizerUtilsWidgets, visualizerViewersWidgets ):
+    def __init__( self ):
 
-        self.widg_utils_button = widgets.Button(
+        self.widget = widgets.Button(
             description="For a high-quality print of the plot, click to access the plot appearance utils",
             layout=widgets.Layout(width="600px"),
         )
-        def utils_button_clicked( button):
+
+    def observe_changes (self, Figure, visualizerUtilsWidgets, visualizerViewersWidgets ):
+
+        def button_clicked( button):
             """
             shows the plot utils box
             """
@@ -31,8 +34,4 @@ class UtilsButton( ConfigWidgets ):
                 else:
                     visualizerUtilsWidgets.widg_box.layout.visibility = "visible"
 
-        self.widg_utils_button.on_click(utils_button_clicked)
-
-    def container (self):
-
-        return self.widg_utils_button
+        self.widget.on_click(button_clicked)

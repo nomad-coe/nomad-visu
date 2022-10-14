@@ -43,30 +43,33 @@ class Visualizer:
         ConfigWidgets.feat_y = ConfigWidgets.embedding_features[1]
         ConfigWidgets.fract = self.visualizerFigure.init_fract
         
-        self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
+        self.visualizerTopWidgets = TopWidgets()
+        self.visualizerUtilsWidgets = UtilsWidgets()
+        self.visualizerViewersWidgets = ViewersWidgets()
+        self.visualizerUtilsButton = UtilsButton()
 
-        self.visualizerTopWidgets = TopWidgets(self.visualizerFigure)
-        self.visualizerUtilsWidgets = UtilsWidgets(self.visualizerFigure)
-        self.visualizerViewersWidgets = ViewersWidgets(self.visualizerFigure)
-        self.visualizerUtilsButton = UtilsButton(self.visualizerFigure, self.visualizerUtilsWidgets, self.visualizerViewersWidgets)
+        self.visualizerTopWidgets.observe_changes(self.visualizerFigure)
+        self.visualizerUtilsWidgets.observe_changes(self.visualizerFigure)
+        self.visualizerViewersWidgets.observe_changes(self.visualizerFigure)
+        self.visualizerUtilsButton.observe_changes(self.visualizerFigure, self.visualizerUtilsWidgets, self.visualizerViewersWidgets)
 
         self.visualizerUtilsWidgets.ColorHull.widget.disabled = True
         self.visualizerUtilsWidgets.WidthHull.widget.disabled = True
         self.visualizerUtilsWidgets.DashHull.widget.disabled = True
 
-        # self.visualizerUtilsWidgets.widg_color_line.disabled = True
-        # self.visualizerUtilsWidgets.widg_width_line.disabled = True
-        # self.visualizerUtilsWidgets.widg_dash_line.disabled = True
+        # self.visualizerUtilsWidgets.ColorLine.widget.disabled = True
+        # self.visualizerUtilsWidgets.WidthLine.widget.disabled = True
+        # self.visualizerUtilsWidgets.DashLine.widget.disabled = True
         
 
     def show(self):
         # Displays the map and all widgets.
 
-        top_box = self.visualizerTopWidgets.container()
+        top_box = self.visualizerTopWidgets.widg_box
         figure_widget = self.visualizerFigure.FigureWidget        
-        utils_box = self.visualizerUtilsWidgets.container()
-        utils_button = self.visualizerUtilsButton.container()
-        viewer_box = self.visualizerViewersWidgets.container()
+        utils_box = self.visualizerUtilsWidgets.widg_box
+        utils_button = self.visualizerUtilsButton.widget
+        viewer_box = self.visualizerViewersWidgets.widg_box
         
         top_box.layout.height = "140px"
         top_box.layout.top = "30px"
@@ -97,7 +100,9 @@ class Visualizer:
                     utils_box,
                 ]
             )
-            
+
+        self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
+
         display(container)
 
         if self.path_to_structures:
@@ -105,6 +110,8 @@ class Visualizer:
                 self.visualizerViewersWidgets.viewerL.viewer.show()
             with self.visualizerViewersWidgets.windowsOutputR.widget:
                 self.visualizerViewersWidgets.viewerR.viewer.show()
+
+
 
     def add_convex_hull (self):
         

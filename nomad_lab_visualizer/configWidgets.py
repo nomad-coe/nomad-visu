@@ -108,8 +108,13 @@ class ConfigWidgets(object):
     continuous_gradient_colors = px.colors.named_colorscales()
 
 
+
     # Values below are initialized to a specific value that can be modified using widgets
 
+    hover_features = []    
+    embedding_features = []
+    feat_x = ' '
+    feat_y = ' '
     marker_size = 7  # size of all markers
     cross_size = 15  # size of the crosses
     min_value_markerfeat = (
