@@ -54,10 +54,17 @@ class UtilsWidgets(ConfigWidgets):
         self.ResetButton = ResetButton()
         self.TraceSymbol = TraceSymbol()
         self.WidthHull = WidthHull()
-        self.WidthLine = WidthHull()
+        self.WidthLine = WidthLine()
         self.WindowLabel = WindowLabel()
         
-        
+        self.ColorHull.widget.disabled = True
+        self.WidthHull.widget.disabled = True
+        self.DashHull.widget.disabled = True
+
+        self.ColorLine.widget.disabled = True
+        self.WidthLine.widget.disabled = True
+        self.DashLine.widget.disabled = True
+
         self.widg_box = widgets.VBox(
             [
                 widgets.HBox(

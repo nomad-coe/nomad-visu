@@ -13,7 +13,6 @@ def batch_update(self, ConfigWidgets):
 
     for name_trace in self.name_traces:
 
-
         x_min.append(min(self.df_trace_on_map[name_trace][ConfigWidgets.feat_x]))
         x_max.append(max(self.df_trace_on_map[name_trace][ConfigWidgets.feat_x]))
         y_min.append(min(self.df_trace_on_map[name_trace][ConfigWidgets.feat_y]))
@@ -102,6 +101,7 @@ def batch_update(self, ConfigWidgets):
                 )
         if (ConfigWidgets.feat_x,ConfigWidgets.feat_y) in self.regr_line_trace:
             name_trace = "Regr line" + str(ConfigWidgets.feat_x) + ' ' + (ConfigWidgets.feat_y) 
+
             if self.regr_line_trace[(ConfigWidgets.feat_x,ConfigWidgets.feat_y)]:
                 self.trace[name_trace].line = dict(
                         color=ConfigWidgets.line_color, 

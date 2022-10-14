@@ -48,18 +48,10 @@ class Visualizer:
         self.visualizerViewersWidgets = ViewersWidgets()
         self.visualizerUtilsButton = UtilsButton()
 
-        self.visualizerTopWidgets.observe_changes(self.visualizerFigure)
+        self.visualizerTopWidgets.observe_changes(self.visualizerFigure, self.visualizerUtilsWidgets)
         self.visualizerUtilsWidgets.observe_changes(self.visualizerFigure)
         self.visualizerViewersWidgets.observe_changes(self.visualizerFigure)
         self.visualizerUtilsButton.observe_changes(self.visualizerFigure, self.visualizerUtilsWidgets, self.visualizerViewersWidgets)
-
-        self.visualizerUtilsWidgets.ColorHull.widget.disabled = True
-        self.visualizerUtilsWidgets.WidthHull.widget.disabled = True
-        self.visualizerUtilsWidgets.DashHull.widget.disabled = True
-
-        # self.visualizerUtilsWidgets.ColorLine.widget.disabled = True
-        # self.visualizerUtilsWidgets.WidthLine.widget.disabled = True
-        # self.visualizerUtilsWidgets.DashLine.widget.disabled = True
         
 
     def show(self):
@@ -116,7 +108,6 @@ class Visualizer:
     def add_convex_hull (self):
         
         self.visualizerFigure.convex_hull = True
-
         self.visualizerUtilsWidgets.ColorHull.widget.disabled = False
         self.visualizerUtilsWidgets.WidthHull.widget.disabled = False
         self.visualizerUtilsWidgets.DashHull.widget.disabled = False
@@ -134,11 +125,26 @@ class Visualizer:
 
     def add_regr_line (self, coefs, feat_x, feat_y):
 
-        self.visualizerFigure.add_regr_line(coefs, feat_x, feat_y, self.visualizerConfigWidgets)
+        self.visualizerFigure.add_regr_line(
+            coefs, 
+            feat_x, 
+            feat_y, 
+            self.visualizerConfigWidgets,
+            self.visualizerUtilsWidgets.ColorLine.widget,
+            self.visualizerUtilsWidgets.WidthLine.widget,
+            self.visualizerUtilsWidgets.DashLine.widget
+            )
 
     def remove_regr_line (self, feat_x, feat_y):
 
-        self.visualizerFigure.remove_regr_line( feat_x, feat_y, self.visualizerConfigWidgets)
+        self.visualizerFigure.remove_regr_line( 
+            feat_x, 
+            feat_y, 
+            self.visualizerConfigWidgets,
+            self.visualizerUtilsWidgets.ColorLine.widget,
+            self.visualizerUtilsWidgets.WidthLine.widget,
+            self.visualizerUtilsWidgets.DashLine.widget
+            )
 
     def optimize_fract (self):
 

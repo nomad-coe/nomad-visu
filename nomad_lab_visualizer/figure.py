@@ -2,7 +2,7 @@ import plotly.graph_objects as go
 import numpy as np
 import os
 
-class Figure(object):
+class Figure (object):
 
     from .include.figure._fract_change_updates import fract_change_updates, update_df_on_map,update_hover_variables
     from .include.figure._marker_style_updates import marker_style_updates, update_marker_size, update_marker_color, update_marker_symbol
@@ -10,8 +10,8 @@ class Figure(object):
     from .include.figure._geometry import make_hull, make_line
     from .include.figure._optimize_sequence import optimize_sequence
 
-    def __init__( self, df, embedding_features, hover_features, target, path_to_structures ):
 
+    def __init__ (self, df, embedding_features, hover_features, target, path_to_structures):
         
         self.df = df.copy()
         self.embedding_features = embedding_features
@@ -37,11 +37,9 @@ class Figure(object):
         # The 'target' feature is used to divide data into different traces.
         # Each item in the following dictionaries will be related to a different trace in the dataframe.
         self.name_traces = self.df[target].unique()
-        self.trace = {}
-        self.regr_line_trace = {}
-        self.df_trace_on_map = (
-            {}
-        )  # dataframe containing only the elements that are visualized on the map        
+        self.trace = {} # a pair of features (feat_0, feat_1) returns 'True' if a regression line was added for those features
+        self.regr_line_trace = {} # a pair of features (feat_0, feat_1) returns the values of the regression line for those features
+        self.df_trace_on_map = {} # dataframe containing only the elements that are visualized on the map        
         self.symbols = {}  # list of symbols used for every marker in each trace
         self.sizes = {}  # list of sizes used for every marker in each trace
         self.colors = {}  # list of colors used for every marker in each trace
@@ -91,7 +89,6 @@ class Figure(object):
             )
             self.trace[name_trace] = self.FigureWidget["data"][-1]
 
-
         for name_trace in self.name_traces:
             
             self.random_permutation_indexes[name_trace] = self.df.loc[
@@ -108,10 +105,10 @@ class Figure(object):
                 .head(n_points)
             )
                     
-            # Circle is the init symbol used for each trace
-            self.trace_symbol[name_trace] = "circle"
+            self.trace_symbol[name_trace] = "circle" # Circle is the init symbol used for each trace
     
-    def add_regr_line (self, coefs, feat_x, feat_y, ConfigWidgets):
+
+    def add_regr_line (self, coefs, feat_x, feat_y, ConfigWidgets, ColorLineWidget, WidthLineWidget, DashLineWidget):
 
         if not (feat_x,feat_y) in self.regr_line_trace:
             
@@ -123,8 +120,7 @@ class Figure(object):
                 name=name_trace,
                 x=line_x,
                 y=line_y,
-                )
-                )
+                ))
             self.trace[name_trace] = self.FigureWidget["data"][-1]
             self.FigureWidget.update_traces(selector={"name": name_trace}, showlegend=False)
 
@@ -136,16 +132,27 @@ class Figure(object):
             name_trace = "Regr line" + str(feat_x) + ' ' + str(feat_y) 
             self.trace[name_trace].x=line_x
             self.trace[name_trace].y=line_y
-
             self.FigureWidget.update_traces(selector={"name": name_trace}, showlegend=False)
+
+        if feat_x == ConfigWidgets.feat_x and feat_y == ConfigWidgets.feat_y:
+            ColorLineWidget.disabled = False
+            WidthLineWidget.disabled = False
+            DashLineWidget.disabled = False
 
         self.batch_update(ConfigWidgets)
         
-    def remove_regr_line (self, feat_x, feat_y,ConfigWidgets):
+
+    def remove_regr_line (self, feat_x, feat_y, ConfigWidgets, ColorLineWidget, WidthLineWidget, DashLineWidget):
 
         self.regr_line_trace[(feat_x,feat_y)]=False
 
+        if feat_x == ConfigWidgets.feat_x and feat_y == ConfigWidgets.feat_y:
+            ColorLineWidget.disabled = True
+            WidthLineWidget.disabled = True
+            DashLineWidget.disabled = True
+
         self.batch_update(ConfigWidgets)
+
 
     def optimize_fract(self, visualizerTopWidgets, ConfigWidgets):
 

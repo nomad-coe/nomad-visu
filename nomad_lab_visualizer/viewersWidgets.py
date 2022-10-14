@@ -33,8 +33,8 @@ class ViewersWidgets( ConfigWidgets ):
         self.windowsCheckboxL = WindowsCheckboxL()
         self.windowsCheckboxR = WindowsCheckboxR()
         self.windowsLabel = WindowsLabel()
-        self.windowsOutputL = WindowsOutputL(self.viewerL)
-        self.windowsOutputR = WindowsOutputR(self.viewerR)        
+        self.windowsOutputL = WindowsOutputL()
+        self.windowsOutputR = WindowsOutputR()        
 
         self.widg_box = widgets.VBox(
             [

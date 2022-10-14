@@ -17,6 +17,7 @@ class WidthHull (ConfigWidgets):
             """
             change width hull
             """
+
             ConfigWidgets.hull_width = change.new
             visualizerFigure.batch_update(self)
 

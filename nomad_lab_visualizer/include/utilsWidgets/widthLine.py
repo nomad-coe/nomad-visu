@@ -21,4 +21,4 @@ class WidthLine (ConfigWidgets):
             ConfigWidgets.line_width = change.new
             visualizerFigure.batch_update(self)
 
-        self.widget.observe(handle_change)
+        self.widget.observe(handle_change, names='value')

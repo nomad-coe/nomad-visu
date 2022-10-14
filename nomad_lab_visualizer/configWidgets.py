@@ -117,12 +117,8 @@ class ConfigWidgets(object):
     feat_y = ' '
     marker_size = 7  # size of all markers
     cross_size = 15  # size of the crosses
-    min_value_markerfeat = (
-        4  # min value of markers size if sizes represent a certain feature value
-    )
-    max_value_markerfeat = (
-        20  # max value of markers size if sizes represent a certain feature value
-    )
+    min_value_markerfeat = 4  # min value of markers size if sizes represent a certain feature value
+    max_value_markerfeat = 20  # max value of markers size if sizes represent a certain feature value
     font_size = 12  # size of fonts
     hull_width = 1  # width of the  the convex hull
     line_width = 1  # width of the regression line
@@ -130,9 +126,7 @@ class ConfigWidgets(object):
     line_dash = "dash"  # dash of the regression line
     hull_color = "Grey"  # color of the convex hull
     line_color = "Black"  # color of the regression line
-    bg_color = (
-        "rgba(229,236,246, 0.5)"  # background color 
-    )  
+    bg_color = "rgba(229,236,246, 0.5)"  # background color 
     bg_toggle = True  # background color is shown
     structures_list = []
     replica_l = 0    # which file in the list is shown in the left visualizer

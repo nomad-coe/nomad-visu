@@ -83,10 +83,22 @@ class TopWidgets(ConfigWidgets):
             ]
         )
 
-    def observe_changes (self, Figure):
+    def observe_changes (self, Figure, visualizerUtilsWidgets):
 
-        self.Featx.observe_change(Figure, self.FractSlider.widget)        
-        self.Featy.observe_change(Figure, self.FractSlider.widget)
+        self.Featx.observe_change(
+            Figure, 
+            self.FractSlider.widget, 
+            visualizerUtilsWidgets.ColorLine.widget, 
+            visualizerUtilsWidgets.WidthLine.widget, 
+            visualizerUtilsWidgets.DashLine.widget
+            )
+        self.Featy.observe_change(
+            Figure, 
+            self.FractSlider.widget,
+            visualizerUtilsWidgets.ColorLine.widget, 
+            visualizerUtilsWidgets.WidthLine.widget, 
+            visualizerUtilsWidgets.DashLine.widget
+            )        
         self.FractSlider.observe_change(Figure)
         self.FeatColor.observe_change(Figure, self.FeatColorType.widget, self.FeatColorList.widget)
         self.FeatColorType.observe_change(Figure, self.FeatColorList.widget)
