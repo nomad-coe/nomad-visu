@@ -27,7 +27,7 @@ class Visualizer:
         self,
         df,
         embedding_features,
-        hover_features, 
+        hover_features,
         target,
         path_to_structures=None,
     ):
@@ -42,7 +42,7 @@ class Visualizer:
         ConfigWidgets.feat_x = ConfigWidgets.embedding_features[0]
         ConfigWidgets.feat_y = ConfigWidgets.embedding_features[1]
         ConfigWidgets.fract = self.visualizerFigure.init_fract
-        
+
         self.visualizerTopWidgets = TopWidgets()
         self.visualizerUtilsWidgets = UtilsWidgets()
         self.visualizerViewersWidgets = ViewersWidgets()
@@ -52,17 +52,17 @@ class Visualizer:
         self.visualizerUtilsWidgets.observe_changes(self.visualizerFigure)
         self.visualizerViewersWidgets.observe_changes(self.visualizerFigure)
         self.visualizerUtilsButton.observe_changes(self.visualizerFigure, self.visualizerUtilsWidgets, self.visualizerViewersWidgets)
-        
+
 
     def show(self):
         # Displays the map and all widgets.
 
         top_box = self.visualizerTopWidgets.widg_box
-        figure_widget = self.visualizerFigure.FigureWidget        
+        figure_widget = self.visualizerFigure.FigureWidget
         utils_box = self.visualizerUtilsWidgets.widg_box
         utils_button = self.visualizerUtilsButton.widget
         viewer_box = self.visualizerViewersWidgets.widg_box
-        
+
         top_box.layout.height = "140px"
         top_box.layout.top = "30px"
         utils_button.layout.left = "50px"
@@ -106,7 +106,7 @@ class Visualizer:
 
 
     def add_convex_hull (self):
-        
+
         self.visualizerFigure.convex_hull = True
         self.visualizerUtilsWidgets.ColorHull.widget.disabled = False
         self.visualizerUtilsWidgets.WidthHull.widget.disabled = False
@@ -115,7 +115,7 @@ class Visualizer:
         self.visualizerFigure.batch_update(self.visualizerConfigWidgets)
 
     def remove_convex_hull (self):
-        
+
         self.visualizerFigure.convex_hull = False
         self.visualizerUtilsWidgets.ColorHull.widget.disabled = True
         self.visualizerUtilsWidgets.WidthHull.widget.disabled = True
@@ -126,9 +126,9 @@ class Visualizer:
     def add_regr_line (self, coefs, feat_x, feat_y):
 
         self.visualizerFigure.add_regr_line(
-            coefs, 
-            feat_x, 
-            feat_y, 
+            coefs,
+            feat_x,
+            feat_y,
             self.visualizerConfigWidgets,
             self.visualizerUtilsWidgets.ColorLine.widget,
             self.visualizerUtilsWidgets.WidthLine.widget,
@@ -137,9 +137,9 @@ class Visualizer:
 
     def remove_regr_line (self, feat_x, feat_y):
 
-        self.visualizerFigure.remove_regr_line( 
-            feat_x, 
-            feat_y, 
+        self.visualizerFigure.remove_regr_line(
+            feat_x,
+            feat_y,
             self.visualizerConfigWidgets,
             self.visualizerUtilsWidgets.ColorLine.widget,
             self.visualizerUtilsWidgets.WidthLine.widget,
