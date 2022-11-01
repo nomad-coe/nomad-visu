@@ -1,6 +1,6 @@
 import py3Dmol
 
-from nomad_lab_visualizer.config_widgets import ConfigWidgets
+from ..config_widgets import ConfigWidgets
 
 
 class ViewerL(ConfigWidgets):

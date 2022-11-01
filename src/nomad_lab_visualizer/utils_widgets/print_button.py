@@ -1,6 +1,7 @@
-import ipywidgets as widgets
-from IPython.display import display, Markdown, FileLink
 import os
+import ipywidgets as widgets
+
+from IPython.display import display, Markdown, FileLink
 
 from ..config_widgets import ConfigWidgets
 

@@ -1,6 +1,5 @@
 import warnings
 
-import numpy as np
 import pandas as pd
 import ipywidgets as widgets
 
@@ -58,9 +57,9 @@ class Visualizer2:
         self.config = Config()
 
         # self.visualizer_figure = Figure(df, embedding_features, hover_features, target, path_to_structures )
-        self.settings = SettingsWidget()
-        self.figure = FigureWidget()
-        self.viewer = AtomisticViewer()
+        # self.settings = SettingsWidget()
+        # self.figure = FigureWidget()
+        # self.viewer = AtomisticViewer()
 
 
 
@@ -73,103 +72,6 @@ class Visualizer2:
         # self.visualizer_utils_widgets.observe_changes(self.visualizer_figure)
         # self.visualizer_viewers_widgets.observe_changes(self.visualizer_figure)
         # self.visualizer_utils_button.observe_changes(self.visualizer_figure, self.visualizer_utils_widgets, self.visualizer_viewers_widgets)
-
-
-    def show(self):
-        # Displays the map and all widgets.
-
-        top_box = self.visualizer_top_widgets.widg_box
-        figure_widget = self.visualizer_figure.FigureWidget
-        utils_box = self.visualizer_utils_widgets.widg_box
-        utils_button = self.visualizer_utils_button.widget
-        viewer_box = self.visualizer_viewers_widgets.widg_box
-
-        top_box.layout.height = "140px"
-        top_box.layout.top = "30px"
-        utils_button.layout.left = "50px"
-        utils_box.layout.border = "dashed 1px"
-        utils_box.layout.max_width = "700px"
-        utils_box.layout.visibility = "hidden"
-
-        # Structure visualizer is displayed only if there is a path to structures
-        if self.path_to_structures:
-            container = widgets.VBox(
-                [
-                    top_box,
-                    figure_widget,
-                    utils_button,
-                    viewer_box,
-                    utils_box,
-                ]
-            )
-
-        else:
-            utils_box.layout.top = "10px"
-            container = widgets.VBox(
-                                [
-                    top_box,
-                    figure_widget,
-                    utils_button,
-                    utils_box,
-                ]
-            )
-
-        self.visualizer_figure.batch_update(self.visualizer_config_widgets)
-
-        display(container)
-
-        if self.path_to_structures:
-            with self.visualizer_viewers_widgets.windows_output_l.widget:
-                self.visualizer_viewers_widgets.viewer_l.viewer.show()
-            with self.visualizer_viewers_widgets.windows_output_r.widget:
-                self.visualizer_viewers_widgets.viewer_r.viewer.show()
-
-
-
-    def add_convex_hull (self):
-
-        self.visualizer_figure.convex_hull = True
-        self.visualizer_utils_widgets.color_hull.widget.disabled = False
-        self.visualizer_utils_widgets.width_hull.widget.disabled = False
-        self.visualizer_utils_widgets.dash_hull.widget.disabled = False
-
-        self.visualizer_figure.batch_update(self.visualizer_config_widgets)
-
-    def remove_convex_hull (self):
-
-        self.visualizer_figure.convex_hull = False
-        self.visualizer_utils_widgets.color_hull.widget.disabled = True
-        self.visualizer_utils_widgets.width_hull.widget.disabled = True
-        self.visualizer_utils_widgets.dash_hull.widget.disabled = True
-
-        self.visualizer_figure.batch_update(self.visualizer_config_widgets)
-
-    def add_regr_line (self, coefs, feat_x, feat_y):
-
-        self.visualizer_figure.add_regr_line(
-            coefs,
-            feat_x,
-            feat_y,
-            self.visualizer_config_widgets,
-            self.visualizer_utils_widgets.color_line.widget,
-            self.visualizer_utils_widgets.width_line.widget,
-            self.visualizer_utils_widgets.dash_line.widget
-            )
-
-    def remove_regr_line (self, feat_x, feat_y):
-
-        self.visualizer_figure.remove_regr_line(
-            feat_x,
-            feat_y,
-            self.visualizer_config_widgets,
-            self.visualizer_utils_widgets.color_line.widget,
-            self.visualizer_utils_widgets.width_line.widget,
-            self.visualizer_utils_widgets.dash_line.widget
-            )
-
-    def optimize_fract (self):
-
-        self.visualizer_figure.optimize_fract(self.visualizer_top_widgets, self.visualizer_config_widgets)
 
 
 class Visualizer:

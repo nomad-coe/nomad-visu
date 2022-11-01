@@ -1,6 +1,7 @@
 import ipywidgets as widgets
 
 from ..config_widgets import ConfigWidgets
+
 from .feat_x import Featx
 from .feat_y import Featy
 from .fract_slider import FractSlider

@@ -20,7 +20,7 @@ from .plot_name import PlotName
 from .plot_resolution import PlotResolution
 from .print_button import Print
 from .print_label import PrintLabel
-from .print_outuput import PrintOutput
+from .print_output import PrintOutput
 from .reset_button import ResetButton
 from .trace_symbol import TraceSymbol
 from .width_hull import WidthHull

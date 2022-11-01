@@ -1,11 +1,10 @@
-import ipywidgets as widgets
 import os
+import ipywidgets as widgets
 
-from nomad_lab_visualizer.config_widgets import ConfigWidgets
 import nomad_lab_visualizer
 
 
-class CrossImageL(ConfigWidgets):
+class CrossImageL(object):
     def __init__(self):
 
         file1 = open(

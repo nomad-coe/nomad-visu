@@ -1,6 +1,6 @@
 import ipywidgets as widgets
 
-from nomad_lab_visualizer.config_widgets import ConfigWidgets
+from ..config_widgets import ConfigWidgets
 
 
 class DisplayButtonL(ConfigWidgets):

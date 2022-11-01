@@ -1,5 +1,5 @@
-import ipywidgets as widgets
 import py3Dmol
+import ipywidgets as widgets
 
 
 class py3DmolWidget(widgets.Output):
