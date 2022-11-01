@@ -10,67 +10,10 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.neighbors import NearestNeighbors
 
 
-class Figure2(go.FigureWidget):
-    def __init__(self, x, y, labels, layout=None, **kwargs):
-
-        self._x = x
-        self._y = y
-        self._labels = labels
-
-        self._regression_trace = None
-        self._complex_hull_traces = None
-
-        super().__init__(None, layout, **kwargs)
-
-        # All permanent layout settings are defined here
-        self.update_layout(
-            hoverlabel=dict(bgcolor="white", font_size=16, font_family="Rockwell"),
-            width=800,
-            height=400,
-            margin=dict(l=50, r=50, b=70, t=20, pad=4),
-        )
-        self.update_xaxes(
-            ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor="black"
-        )
-        self.update_yaxes(
-            ticks="outside", tickwidth=1, ticklen=10, linewidth=1, linecolor="black"
-        )
-
-        for (x, y, label) in zip(x, y, labels):
-            self.add_trace(go.Scatter(x=x, y=y, name=label, mode="markers"))
-
-    def add_regression_line(self, p1, p2):
-        """
-        Note: solution of the intersection of the line and the boundary box
-        Arguments:
-        - p1: point in 2d
-        - p2: point in 2d
-        """
-
-        self._regression_trace = go.Scatter(x = [p1[0], p2[0]],y = [p1[1], p2[1]], name="Line", mode="lines")
-        self.add_trace(self._regression_trace)
-
-    def add_complex_hull(self):
-
-        for (x, y, label) in zip(self._x, self._y, self._labels):
-            if len(x) < 3: continue
-
-            points = np.column_stack((x, y))
-            hull = ConvexHull(points)
-
-            inds = np.append(hull.vertices, hull.vertices[0])
-            # TODO: use the same color as the datapoints
-            self.add_trace(go.Scatter(x=x[inds], y=y[inds], name=f'{label} (hull)', mode="lines"))
-
-            # for simplex in hull.simplices:
-            #     self.add_trace(go.Scatter(x=points[simplex, 0], y=points[simplex, 1]))
-
-
-
-class Figure (object):
-
-
-    def __init__ (self, df, embedding_features, hover_features, target, path_to_structures):
+class Figure(object):
+    def __init__(
+        self, df, embedding_features, hover_features, target, path_to_structures
+    ):
 
         self.df = df.copy()
         self.embedding_features = embedding_features
@@ -96,24 +39,29 @@ class Figure (object):
         # The 'target' feature is used to divide data into different traces.
         # Each item in the following dictionaries will be related to a different trace in the dataframe.
         self.name_traces = self.df[target].unique()
-        self.trace = {} # a pair of features (feat_0, feat_1) returns 'True' if a regression line was added for those features
-        self.regr_line_trace = {} # a pair of features (feat_0, feat_1) returns the values of the regression line for those features
-        self.df_trace_on_map = {} # dataframe containing only the elements that are visualized on the map
+        # a pair of features (feat_0, feat_1) returns 'True' if a regression line was added for those features
+        self.trace = {}
+        # a pair of features (feat_0, feat_1) returns the values of the regression line for those features
+        self.regr_line_trace = {}
+        # dataframe containing only the elements that are visualized on the map
+        self.df_trace_on_map = {}
         self.symbols = {}  # list of symbols used for every marker in each trace
         self.sizes = {}  # list of sizes used for every marker in each trace
         self.colors = {}  # list of colors used for every marker in each trace
         self.trace_symbol = {}  # default symbol used for the trace
 
-        self.optimized_sequence_indexes = {} # optimized sequence of entries that is visualized varying the fraction for each pair of features.
-        self.optimized_init_fract = {} # optimized initial fraction that is visualized for each pair of features.
-
-        self.random_permutation_indexes = {} # random sequence of entries that is visualized varying the fraction.
+        # optimized sequence of entries that is visualized varying the fraction for each pair of features.
+        self.optimized_sequence_indexes = {}
+        # optimized initial fraction that is visualized for each pair of features.
+        self.optimized_init_fract = {}
+        # random sequence of entries that is visualized varying the fraction.
+        self.random_permutation_indexes = {}
 
         self.init_fract = 1
         total_points = self.df.shape[0]
-        if (total_points>1000):
+        if total_points > 1000:
             # The initial fraction of visualized points is by default 1, unless there are more than 1000 points.
-            self.init_fract = 1000/total_points
+            self.init_fract = 1000 / total_points
 
         self.convex_hull = False
 
@@ -152,11 +100,13 @@ class Figure (object):
 
             self.random_permutation_indexes[name_trace] = self.df.loc[
                 self.df[target] == name_trace
-            ].index.to_numpy()[np.random.permutation(self.df.loc[self.df[self.target] == name_trace].shape[0])]
+            ].index.to_numpy()[
+                np.random.permutation(
+                    self.df.loc[self.df[self.target] == name_trace].shape[0]
+                )
+            ]
 
-            n_points = self.df.loc[
-                self.df[target] == name_trace
-            ].shape[0]
+            n_points = self.df.loc[self.df[target] == name_trace].shape[0]
 
             self.df_trace_on_map[name_trace] = (
                 self.df.loc[self.df[target] == name_trace]
@@ -164,34 +114,50 @@ class Figure (object):
                 .head(n_points)
             )
 
-            self.trace_symbol[name_trace] = "circle" # Circle is the init symbol used for each trace
+            self.trace_symbol[
+                name_trace
+            ] = "circle"  # Circle is the init symbol used for each trace
 
+    def add_regr_line(
+        self,
+        coefs,
+        feat_x,
+        feat_y,
+        ConfigWidgets,
+        ColorLineWidget,
+        WidthLineWidget,
+        DashLineWidget,
+    ):
 
-    def add_regr_line (self, coefs, feat_x, feat_y, ConfigWidgets, ColorLineWidget, WidthLineWidget, DashLineWidget):
+        if not (feat_x, feat_y) in self.regr_line_trace:
 
-        if not (feat_x,feat_y) in self.regr_line_trace:
+            self.regr_line_trace[(feat_x, feat_y)] = True
+            line_x, line_y = self.make_line(feat_x, feat_y, coefs)
 
-            self.regr_line_trace[(feat_x,feat_y)]=True
-            line_x, line_y = self.make_line( feat_x, feat_y, coefs)
-
-            name_trace = "Regr line" + str(feat_x) + ' ' + str(feat_y)
-            self.FigureWidget.add_trace(go.Scatter(
-                name=name_trace,
-                x=line_x,
-                y=line_y,
-                ))
+            name_trace = "Regr line" + str(feat_x) + " " + str(feat_y)
+            self.FigureWidget.add_trace(
+                go.Scatter(
+                    name=name_trace,
+                    x=line_x,
+                    y=line_y,
+                )
+            )
             self.trace[name_trace] = self.FigureWidget["data"][-1]
-            self.FigureWidget.update_traces(selector={"name": name_trace}, showlegend=False)
+            self.FigureWidget.update_traces(
+                selector={"name": name_trace}, showlegend=False
+            )
 
         else:
 
-            self.regr_line_trace[(feat_x,feat_y)]=True
+            self.regr_line_trace[(feat_x, feat_y)] = True
             line_x, line_y = self.make_line(feat_x, feat_y, coefs)
 
-            name_trace = "Regr line" + str(feat_x) + ' ' + str(feat_y)
-            self.trace[name_trace].x=line_x
-            self.trace[name_trace].y=line_y
-            self.FigureWidget.update_traces(selector={"name": name_trace}, showlegend=False)
+            name_trace = "Regr line" + str(feat_x) + " " + str(feat_y)
+            self.trace[name_trace].x = line_x
+            self.trace[name_trace].y = line_y
+            self.FigureWidget.update_traces(
+                selector={"name": name_trace}, showlegend=False
+            )
 
         if feat_x == ConfigWidgets.feat_x and feat_y == ConfigWidgets.feat_y:
             ColorLineWidget.disabled = False
@@ -200,10 +166,17 @@ class Figure (object):
 
         self.batch_update(ConfigWidgets)
 
+    def remove_regr_line(
+        self,
+        feat_x,
+        feat_y,
+        ConfigWidgets,
+        ColorLineWidget,
+        WidthLineWidget,
+        DashLineWidget,
+    ):
 
-    def remove_regr_line (self, feat_x, feat_y, ConfigWidgets, ColorLineWidget, WidthLineWidget, DashLineWidget):
-
-        self.regr_line_trace[(feat_x,feat_y)]=False
+        self.regr_line_trace[(feat_x, feat_y)] = False
 
         if feat_x == ConfigWidgets.feat_x and feat_y == ConfigWidgets.feat_y:
             ColorLineWidget.disabled = True
@@ -212,16 +185,28 @@ class Figure (object):
 
         self.batch_update(ConfigWidgets)
 
-
     def optimize_fract(self, visualizerTopWidgets, ConfigWidgets):
 
-        if not (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in self.optimized_sequence_indexes :
-            sequence_indexes, init_fract = self.optimize_sequence(ConfigWidgets.feat_x, ConfigWidgets.feat_y)
+        if (
+            not (ConfigWidgets.feat_x, ConfigWidgets.feat_y)
+            in self.optimized_sequence_indexes
+        ):
+            sequence_indexes, init_fract = self.optimize_sequence(
+                ConfigWidgets.feat_x, ConfigWidgets.feat_y
+            )
 
-            self.optimized_sequence_indexes[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)] = sequence_indexes
-            self.optimized_sequence_indexes[(ConfigWidgets.feat_y, ConfigWidgets.feat_x)] = sequence_indexes
-            self.optimized_init_fract[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)] = init_fract
-            self.optimized_init_fract[(ConfigWidgets.feat_y, ConfigWidgets.feat_x)] = init_fract
+            self.optimized_sequence_indexes[
+                (ConfigWidgets.feat_x, ConfigWidgets.feat_y)
+            ] = sequence_indexes
+            self.optimized_sequence_indexes[
+                (ConfigWidgets.feat_y, ConfigWidgets.feat_x)
+            ] = sequence_indexes
+            self.optimized_init_fract[
+                (ConfigWidgets.feat_x, ConfigWidgets.feat_y)
+            ] = init_fract
+            self.optimized_init_fract[
+                (ConfigWidgets.feat_y, ConfigWidgets.feat_x)
+            ] = init_fract
 
             ConfigWidgets.fract = init_fract
             visualizerTopWidgets.fract_slider.widget.value = init_fract
@@ -260,10 +245,10 @@ class Figure (object):
 
         if ConfigWidgets.bg_toggle:
             bg_color = ConfigWidgets.bg_color
-            gridcolor = 'white'
+            gridcolor = "white"
         else:
-            bg_color = 'white'
-            gridcolor = 'rgb(229,236,246)'
+            bg_color = "white"
+            gridcolor = "rgb(229,236,246)"
 
         with self.FigureWidget.batch_update():
 
@@ -319,7 +304,9 @@ class Figure (object):
                                 orientation="v",
                                 len=0.5,
                                 y=0.25,
-                                title=dict(text=feature, side="right", font={"size": 10}),
+                                title=dict(
+                                    text=feature, side="right", font={"size": 10}
+                                ),
                             ),
                         ),
                     )
@@ -328,18 +315,22 @@ class Figure (object):
                         selector={"name": str(name_trace)},
                         marker=dict(showscale=False, color=self.colors[name_trace]),
                     )
-            if (ConfigWidgets.feat_x,ConfigWidgets.feat_y) in self.regr_line_trace:
-                name_trace = "Regr line" + str(ConfigWidgets.feat_x) + ' ' + (ConfigWidgets.feat_y)
+            if (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in self.regr_line_trace:
+                name_trace = (
+                    "Regr line"
+                    + str(ConfigWidgets.feat_x)
+                    + " "
+                    + (ConfigWidgets.feat_y)
+                )
 
-                if self.regr_line_trace[(ConfigWidgets.feat_x,ConfigWidgets.feat_y)]:
+                if self.regr_line_trace[(ConfigWidgets.feat_x, ConfigWidgets.feat_y)]:
                     self.trace[name_trace].line = dict(
-                            color=ConfigWidgets.line_color,
-                            width=ConfigWidgets.line_width,
-                            dash=ConfigWidgets.line_dash
-                        )
+                        color=ConfigWidgets.line_color,
+                        width=ConfigWidgets.line_width,
+                        dash=ConfigWidgets.line_dash,
+                    )
                 else:
                     self.trace[name_trace].line = dict(width=0)
-
 
             if self.convex_hull == True:
 
@@ -352,7 +343,9 @@ class Figure (object):
                             selector={"name": "Hull " + name_trace},
                         )
                 else:
-                    hullx, hully = self.make_hull(ConfigWidgets.feat_x, ConfigWidgets.feat_y)
+                    hullx, hully = self.make_hull(
+                        ConfigWidgets.feat_x, ConfigWidgets.feat_y
+                    )
                     for name_trace in self.name_traces:
 
                         self.trace["Hull " + str(name_trace)]["x"] = hullx[name_trace]
@@ -381,8 +374,6 @@ class Figure (object):
         self.update_df_on_map(ConfigWidgets)
         self.update_hover_variables()
 
-
-
     def update_df_on_map(self, ConfigWidgets):
         """
         Updates the number of points based on the fraction value,
@@ -391,19 +382,21 @@ class Figure (object):
 
         for name_trace in self.name_traces:
 
-
             n_points = int(
-                ConfigWidgets.fract * \
-                self.df.loc[self.df[self.target] == name_trace].shape[0]
-                )
+                ConfigWidgets.fract
+                * self.df.loc[self.df[self.target] == name_trace].shape[0]
+            )
 
             if n_points < 1:
                 n_points = 1
 
-
-            if (ConfigWidgets.feat_x, ConfigWidgets.feat_y) in self.optimized_sequence_indexes:
+            if (
+                ConfigWidgets.feat_x,
+                ConfigWidgets.feat_y,
+            ) in self.optimized_sequence_indexes:
                 sequence_indexes = self.optimized_sequence_indexes[
-                    (ConfigWidgets.feat_x, ConfigWidgets.feat_y)][name_trace]
+                    (ConfigWidgets.feat_x, ConfigWidgets.feat_y)
+                ][name_trace]
             else:
                 sequence_indexes = self.random_permutation_indexes[name_trace]
 
@@ -411,11 +404,14 @@ class Figure (object):
                 self.df.loc[self.df[self.target] == name_trace]
                 .loc[sequence_indexes]
                 .head(n_points)
-                )
+            )
 
             # if a structure is visualized, its dataframe entry is added to the visualized dataframe 'df_trace_on_map'
             # this to avoid that the entry relative to a visualized structure is not available on the map
-            if ConfigWidgets.structure_text_l in self.df.loc[self.df[self.target] == name_trace].index:
+            if (
+                ConfigWidgets.structure_text_l
+                in self.df.loc[self.df[self.target] == name_trace].index
+            ):
                 self.df_trace_on_map[name_trace] = pd.concat(
                     [
                         self.df_trace_on_map[name_trace],
@@ -423,14 +419,16 @@ class Figure (object):
                     ]
                 )
 
-            if ConfigWidgets.structure_text_r in self.df.loc[self.df[self.target] == name_trace].index:
+            if (
+                ConfigWidgets.structure_text_r
+                in self.df.loc[self.df[self.target] == name_trace].index
+            ):
                 self.df_trace_on_map[name_trace] = pd.concat(
                     [
                         self.df_trace_on_map[name_trace],
                         self.df.loc[[ConfigWidgets.structure_text_r]],
                     ]
                 )
-
 
     def update_hover_variables(self):
         """
@@ -464,16 +462,16 @@ class Figure (object):
                         ]
                     )
                     hover_template += (
-                        str(self.hover_features[i]) + ": %{customdata[" + str(i) + "]}<br>"
+                        str(self.hover_features[i])
+                        + ": %{customdata["
+                        + str(i)
+                        + "]}<br>"
                     )
                 self.hover_custom[name_trace] = hover_custom[0]
                 self.hover_template[name_trace] = hover_template
             else:
-                self.hover_customp[name_trace]=['']
-                self.hover_template[name_trace]=['']
-
-
-
+                self.hover_customp[name_trace] = [""]
+                self.hover_template[name_trace] = [""]
 
     def make_hull(self, feat_x, feat_y):
 
@@ -483,9 +481,9 @@ class Figure (object):
         for name_trace in self.name_traces:
 
             name_trace = str(name_trace)
-            points = self.df.loc[
-                    self.df[self.target] == name_trace
-                ][[feat_x, feat_y]].to_numpy()
+            points = self.df.loc[self.df[self.target] == name_trace][
+                [feat_x, feat_y]
+            ].to_numpy()
 
             delta_0 = max(points[:, 0]) - min(points[:, 0])
             delta_1 = max(points[:, 1]) - min(points[:, 1])
@@ -496,9 +494,9 @@ class Figure (object):
             if exp_0 > 6:
                 points[:, 0] = points[:, 0] * 10**exp_0
             hull = ConvexHull(points)
-            vertexes = self.df.loc[
-                    self.df[self.target] == name_trace
-                ][[feat_x, feat_y]].to_numpy()[hull.vertices]
+            vertexes = self.df.loc[self.df[self.target] == name_trace][
+                [feat_x, feat_y]
+            ].to_numpy()[hull.vertices]
 
             x_hullvx = vertexes[:, 0]
             y_hullvx = vertexes[:, 1]
@@ -507,8 +505,12 @@ class Figure (object):
             xhull = np.array([x_hullvx[0]])
             yhull = np.array([y_hullvx[0]])
             for xy in zip(x_hullvx, y_hullvx):
-                xhull = np.concatenate([xhull, np.linspace(xhull[-1], xy[0], n_intervals)])
-                yhull = np.concatenate([yhull, np.linspace(yhull[-1], xy[1], n_intervals)])
+                xhull = np.concatenate(
+                    [xhull, np.linspace(xhull[-1], xy[0], n_intervals)]
+                )
+                yhull = np.concatenate(
+                    [yhull, np.linspace(yhull[-1], xy[1], n_intervals)]
+                )
 
             xhull_classes[name_trace] = np.concatenate(
                 [xhull, np.linspace(xhull[-1], x_hullvx[0], n_intervals)]
@@ -518,7 +520,6 @@ class Figure (object):
             )
 
         return xhull_classes, yhull_classes
-
 
     def make_line(self, feat_x, feat_y, regr_line_coefs):
 
@@ -541,10 +542,9 @@ class Figure (object):
         All updates caused by a change in the markers properties.
         """
 
-        self.update_marker_color( ConfigWidgets)
-        self.update_marker_symbol( ConfigWidgets)
-        self.update_marker_size( ConfigWidgets)
-
+        self.update_marker_color(ConfigWidgets)
+        self.update_marker_symbol(ConfigWidgets)
+        self.update_marker_size(ConfigWidgets)
 
     def update_marker_symbol(self, ConfigWidgets):
         """
@@ -591,7 +591,6 @@ class Figure (object):
                 except:
                     pass
 
-
     def update_marker_size(self, ConfigWidgets):
         """
         Updates the size of the markers:
@@ -605,11 +604,15 @@ class Figure (object):
 
             for name_trace in self.name_traces:
 
-                sizes = [ConfigWidgets.marker_size] * len(self.df_trace_on_map[name_trace])
+                sizes = [ConfigWidgets.marker_size] * len(
+                    self.df_trace_on_map[name_trace]
+                )
                 symbols = self.symbols[name_trace]
 
                 indices_x = [i for i, symbol in enumerate(symbols) if symbol == "x"]
-                indices_cross = [i for i, symbol in enumerate(symbols) if symbol == "cross"]
+                indices_cross = [
+                    i for i, symbol in enumerate(symbols) if symbol == "cross"
+                ]
 
                 if indices_x:
                     sizes[indices_x[0]] = ConfigWidgets.cross_size
@@ -654,7 +657,6 @@ class Figure (object):
                 )
                 self.sizes[name_trace] = sizes
 
-
     def update_marker_color(self, ConfigWidgets):
         """
         Updates the color of markers:
@@ -666,9 +668,7 @@ class Figure (object):
 
         if feature == "Default color":
 
-            palette = cycle(
-                getattr(px.colors.qualitative, ConfigWidgets.color_palette)
-            )
+            palette = cycle(getattr(px.colors.qualitative, ConfigWidgets.color_palette))
             for name_trace in self.name_traces:
                 self.colors[name_trace] = [next(palette)] * len(
                     self.df_trace_on_map[name_trace]
@@ -678,7 +678,9 @@ class Figure (object):
             # each color represents a different discrete feature value
 
             colors_dict = {}
-            palette = cycle(getattr(px.colors.qualitative, ConfigWidgets.featcolor_list))
+            palette = cycle(
+                getattr(px.colors.qualitative, ConfigWidgets.featcolor_list)
+            )
             for value in np.sort(self.df[feature].unique()):
                 colors_dict[value] = next(palette)
 
@@ -697,7 +699,7 @@ class Figure (object):
             for name_trace in self.name_traces:
                 self.colors[name_trace] = self.df_trace_on_map[name_trace][feature]
 
-    def optimize_sequence (self, feat_x, feat_y):
+    def optimize_sequence(self, feat_x, feat_y):
 
         n_neighbors = 10
         fraction_thres = 1
@@ -706,35 +708,39 @@ class Figure (object):
         for name_trace in self.name_traces:
 
             name_trace = str(name_trace)
-            feat_x_norm = MinMaxScaler().fit_transform(self.df.loc[
-                    self.df[self.target] == name_trace
-                ][feat_x].values.reshape(-1,1))
-            feat_y_norm = MinMaxScaler().fit_transform(self.df.loc[
-                    self.df[self.target] == name_trace
-                ][feat_y].values.reshape(-1,1))
+            feat_x_norm = MinMaxScaler().fit_transform(
+                self.df.loc[self.df[self.target] == name_trace][feat_x].values.reshape(
+                    -1, 1
+                )
+            )
+            feat_y_norm = MinMaxScaler().fit_transform(
+                self.df.loc[self.df[self.target] == name_trace][feat_y].values.reshape(
+                    -1, 1
+                )
+            )
 
             X = np.concatenate((feat_x_norm, feat_y_norm), axis=1)
 
-            nbrs = NearestNeighbors(n_neighbors=n_neighbors, algorithm='ball_tree').fit(X)
+            nbrs = NearestNeighbors(n_neighbors=n_neighbors, algorithm="ball_tree").fit(
+                X
+            )
             nbrs_distances, nbrs_indices = nbrs.kneighbors(X)
 
-            n_values = len(self.df.loc[
-                    self.df[self.target] == name_trace
-                ])
+            n_values = len(self.df.loc[self.df[self.target] == name_trace])
 
-            remaining_indices= np.arange(n_values)
+            remaining_indices = np.arange(n_values)
 
-            new_index = np.array([
-                remaining_indices[np.argmin(np.sum(nbrs_distances, axis=1))]
-                ])
+            new_index = np.array(
+                [remaining_indices[np.argmin(np.sum(nbrs_distances, axis=1))]]
+            )
             selected_indices = np.array([new_index]).reshape(1)
-            remaining_indices = np.delete(remaining_indices,selected_indices)
-            mask = np.where(nbrs_indices==new_index, 1, 0)
+            remaining_indices = np.delete(remaining_indices, selected_indices)
+            mask = np.where(nbrs_indices == new_index, 1, 0)
 
             last_cost = 0
             bool_cost = True
 
-            while (len(remaining_indices)>0):
+            while len(remaining_indices) > 0:
 
                 # prob = np.sum(np.exp(distances[remaininig_indexes,:][:,selected_indexes]), axis=1)
                 # prob /= np.sum(prob)
@@ -742,43 +748,50 @@ class Figure (object):
 
                 # the numerator gives the sum of the distances over the indexes that do not appear on the map
                 # the closer the points that do not appear on the map are, the more likely the point is selected
-                num=np.sum((mask*nbrs_distances)[remaining_indices],axis=1)
+                num = np.sum((mask * nbrs_distances)[remaining_indices], axis=1)
                 # the denominater gives the sum of the distances over the indexes that appear on the map
                 # the closer the points that appear on the map are, the less likely the point is selected
-                den=np.sum(((1-mask)*nbrs_distances)[remaining_indices],axis=1)
-                if (np.min(num)==0):
-                    arg=np.argmax(den[np.where(num==0)])
-                    new_index = np.array([remaining_indices[np.where(num==0)][arg]])
+                den = np.sum(((1 - mask) * nbrs_distances)[remaining_indices], axis=1)
+                if np.min(num) == 0:
+                    arg = np.argmax(den[np.where(num == 0)])
+                    new_index = np.array([remaining_indices[np.where(num == 0)][arg]])
                     new_cost = 0
-                elif (np.min(den)==0):
-                    arg=np.argmin(num[np.where(den==0)])
-                    new_index = np.array([remaining_indices[np.where(den==0)][arg]])
-                    new_cost = float('inf')
+                elif np.min(den) == 0:
+                    arg = np.argmin(num[np.where(den == 0)])
+                    new_index = np.array([remaining_indices[np.where(den == 0)][arg]])
+                    new_cost = float("inf")
                 else:
-                    arg=np.argmin(num/den)
+                    arg = np.argmin(num / den)
                     new_index = np.array([remaining_indices[arg]])
-                    new_cost = (num/den)[arg]
+                    new_cost = (num / den)[arg]
 
-                if (bool_cost) :
-                    if (new_cost>1 and last_cost<1):
-                        fraction_thres = len(selected_indices)/n_values
+                if bool_cost:
+                    if new_cost > 1 and last_cost < 1:
+                        fraction_thres = len(selected_indices) / n_values
                         # fractions_thres [(feat_x, feat_y)] = len(selected_indexes)/len(distances)
                         # fractions_thres [(feat_y, feat_x)] = len(selected_indexes)/len(distances)
                         bool_cost = False
                     last_cost = new_cost
 
-                remaining_indices = np.delete(remaining_indices,np.where(remaining_indices==new_index))
+                remaining_indices = np.delete(
+                    remaining_indices, np.where(remaining_indices == new_index)
+                )
                 selected_indices = np.concatenate((selected_indices, new_index))
-                mask = mask+np.where(nbrs_indices==new_index, 1, 0)
+                mask = mask + np.where(nbrs_indices == new_index, 1, 0)
 
-                if (len(remaining_indices>0) and len(remaining_indices)%10==0):
-                    arg=np.argmax(np.sum((mask*nbrs_distances)[remaining_indices],axis=1))
+                if len(remaining_indices > 0) and len(remaining_indices) % 10 == 0:
+                    arg = np.argmax(
+                        np.sum((mask * nbrs_distances)[remaining_indices], axis=1)
+                    )
                     new_index = np.array([remaining_indices[arg]])
-                    remaining_indices = np.delete(remaining_indices,np.where(remaining_indices==new_index))
+                    remaining_indices = np.delete(
+                        remaining_indices, np.where(remaining_indices == new_index)
+                    )
                     selected_indices = np.concatenate((selected_indices, new_index))
-                    mask = mask+np.where(nbrs_indices==new_index, 1, 0)
+                    mask = mask + np.where(nbrs_indices == new_index, 1, 0)
 
-            optimized_sequence_indexes[name_trace] = self.df[self.df[self.target] == name_trace].index.to_numpy()[selected_indices]
+            optimized_sequence_indexes[name_trace] = self.df[
+                self.df[self.target] == name_trace
+            ].index.to_numpy()[selected_indices]
 
         return optimized_sequence_indexes, fraction_thres
-

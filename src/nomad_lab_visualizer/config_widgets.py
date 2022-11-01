@@ -1,6 +1,7 @@
 from itertools import cycle
 import plotly.express as px
 
+
 class ConfigWidgets(object):
 
     # Default value of the background color

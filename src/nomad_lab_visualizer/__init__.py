@@ -10,68 +10,10 @@ from .config_widgets import ConfigWidgets
 from .utils_widgets import UtilsWidgets
 from .viewers_widgets import ViewersWidgets
 from .utils_button import UtilsButton
-
-from .config import Config
 from .figure import Figure
-from .viewer_widget import AtomisticViewerWidget
 
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
-class FigureWidget:
-    pass
-
-
-class AtomisticViewer:
-    pass
-
-
-
-class Visualizer2:
-    """
-    Visualizer
-
-    Attributes:
-        df: pandas dataframe containing all data to be visualized.
-        embedding_features: list of features used for embedding.
-        hover features: list of features shown while hovering.
-        target: feature used to create traces (same target value - same trace).
-        path_to_structures: true if dataframe contains a 'structure' columns with path to structures.
-    """
-
-    def __init__(
-        self,
-        df: pd.DataFrame,
-        embedding_features: list[str],
-        hover_features: list[str],
-        target: list[str],
-        path_to_structures:bool=False
-    ):
-
-        self.df = df
-        self.target = target
-        self.hover_features = hover_features
-        self.embedding_features = embedding_features
-        self.path_to_structures = path_to_structures
-
-
-        self.config = Config()
-
-        # self.visualizer_figure = Figure(df, embedding_features, hover_features, target, path_to_structures )
-        # self.settings = SettingsWidget()
-        # self.figure = FigureWidget()
-        # self.viewer = AtomisticViewer()
-
-
-
-        # self.visualizer_top_widgets = TopWidgets()
-        # self.visualizer_utils_widgets = UtilsWidgets()
-        # self.visualizer_viewers_widgets = ViewersWidgets()
-        # self.visualizer_utils_button = UtilsButton()
-
-        # self.visualizer_top_widgets.observe_changes(self.visualizer_figure, self.visualizer_utils_widgets)
-        # self.visualizer_utils_widgets.observe_changes(self.visualizer_figure)
-        # self.visualizer_viewers_widgets.observe_changes(self.visualizer_figure)
-        # self.visualizer_utils_button.observe_changes(self.visualizer_figure, self.visualizer_utils_widgets, self.visualizer_viewers_widgets)
 
 
 class Visualizer:
@@ -91,14 +33,16 @@ class Visualizer:
         df: pd.DataFrame,
         embedding_features: list[str],
         hover_features: list[str],
-        target: list[str],
-        path_to_structures:bool=False
+        target: str,
+        path_to_structures: bool = False,
     ):
 
         self.path_to_structures = path_to_structures
 
         self.visualizer_config_widgets = ConfigWidgets()
-        self.visualizer_figure = Figure(df, embedding_features, hover_features, target, path_to_structures )
+        self.visualizer_figure = Figure(
+            df, embedding_features, hover_features, target, path_to_structures
+        )
 
         ConfigWidgets.hover_features = hover_features
         ConfigWidgets.embedding_features = embedding_features
@@ -111,11 +55,16 @@ class Visualizer:
         self.visualizer_viewers_widgets = ViewersWidgets()
         self.visualizer_utils_button = UtilsButton()
 
-        self.visualizer_top_widgets.observe_changes(self.visualizer_figure, self.visualizer_utils_widgets)
+        self.visualizer_top_widgets.observe_changes(
+            self.visualizer_figure, self.visualizer_utils_widgets
+        )
         self.visualizer_utils_widgets.observe_changes(self.visualizer_figure)
         self.visualizer_viewers_widgets.observe_changes(self.visualizer_figure)
-        self.visualizer_utils_button.observe_changes(self.visualizer_figure, self.visualizer_utils_widgets, self.visualizer_viewers_widgets)
-
+        self.visualizer_utils_button.observe_changes(
+            self.visualizer_figure,
+            self.visualizer_utils_widgets,
+            self.visualizer_viewers_widgets,
+        )
 
     def show(self):
         # Displays the map and all widgets.
@@ -148,7 +97,7 @@ class Visualizer:
         else:
             utils_box.layout.top = "10px"
             container = widgets.VBox(
-                                [
+                [
                     top_box,
                     figure_widget,
                     utils_button,
@@ -166,9 +115,7 @@ class Visualizer:
             with self.visualizer_viewers_widgets.windows_output_r.widget:
                 self.visualizer_viewers_widgets.viewer_r.viewer.show()
 
-
-
-    def add_convex_hull (self):
+    def add_convex_hull(self):
 
         self.visualizer_figure.convex_hull = True
         self.visualizer_utils_widgets.color_hull.widget.disabled = False
@@ -177,7 +124,7 @@ class Visualizer:
 
         self.visualizer_figure.batch_update(self.visualizer_config_widgets)
 
-    def remove_convex_hull (self):
+    def remove_convex_hull(self):
 
         self.visualizer_figure.convex_hull = False
         self.visualizer_utils_widgets.color_hull.widget.disabled = True
@@ -186,7 +133,7 @@ class Visualizer:
 
         self.visualizer_figure.batch_update(self.visualizer_config_widgets)
 
-    def add_regr_line (self, coefs, feat_x, feat_y):
+    def add_regr_line(self, coefs, feat_x, feat_y):
 
         self.visualizer_figure.add_regr_line(
             coefs,
@@ -195,10 +142,10 @@ class Visualizer:
             self.visualizer_config_widgets,
             self.visualizer_utils_widgets.color_line.widget,
             self.visualizer_utils_widgets.width_line.widget,
-            self.visualizer_utils_widgets.dash_line.widget
-            )
+            self.visualizer_utils_widgets.dash_line.widget,
+        )
 
-    def remove_regr_line (self, feat_x, feat_y):
+    def remove_regr_line(self, feat_x, feat_y):
 
         self.visualizer_figure.remove_regr_line(
             feat_x,
@@ -206,9 +153,11 @@ class Visualizer:
             self.visualizer_config_widgets,
             self.visualizer_utils_widgets.color_line.widget,
             self.visualizer_utils_widgets.width_line.widget,
-            self.visualizer_utils_widgets.dash_line.widget
-            )
+            self.visualizer_utils_widgets.dash_line.widget,
+        )
 
-    def optimize_fract (self):
+    def optimize_fract(self):
 
-        self.visualizer_figure.optimize_fract(self.visualizer_top_widgets, self.visualizer_config_widgets)
+        self.visualizer_figure.optimize_fract(
+            self.visualizer_top_widgets, self.visualizer_config_widgets
+        )

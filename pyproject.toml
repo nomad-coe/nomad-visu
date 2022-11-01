@@ -6,8 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "nomad_lab_visualizer"
 description = "This is plot/visualizer widget for atomistic structures which can be used in Jupyter Notebooks."
 readme = "README.md"
+dynamic = ["version"]
+license = {text = "Apache-2.0"}
 requires-python = ">=3.7"
-classifiers = ["Programming Language :: Python :: 3"]
 dependencies = [
     'ipywidgets',
     'plotly',
@@ -15,19 +16,11 @@ dependencies = [
     'numpy',
     'pandas',
     'scipy',
-    'scikit-learn'
+    'scikit-learn',
 ]
-# keywords = ["one", "two"]
-# license = {text = "BSD 3-Clause License"}
-dynamic = ["version"]
+classifiers = ["Programming Language :: Python :: 3"]
 
 [project.optional-dependencies]
-dev = ["pip-tools", "black", "mypy", "flake8"]
+dev = ["pip-tools", "yapf", "mypy", "flake8"]
 test = ["pytest"]
 docs = ["mkdocs"]
-
-# [project.scripts]
-# my-script = "my_package.module:function"
-
-# ... other project metadata fields as specified in:
-#     https://packaging.python.org/en/latest/specifications/declaring-project-metadata/

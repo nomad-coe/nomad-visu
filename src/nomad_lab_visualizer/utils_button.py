@@ -11,7 +11,9 @@ class UtilsButton(ConfigWidgets):
             layout=widgets.Layout(width="600px"),
         )
 
-    def observe_changes(self, Figure, visualizer_utils_widgets, visualizer_viewers_widgets):
+    def observe_changes(
+        self, Figure, visualizer_utils_widgets, visualizer_viewers_widgets
+    ):
         def button_clicked(button):
             """
             shows the plot utils box

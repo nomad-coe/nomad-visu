@@ -2,9 +2,9 @@ import ipywidgets as widgets
 
 from ..config_widgets import ConfigWidgets
 
-class MarkersSize (ConfigWidgets):
 
-    def __init__ (self):
+class MarkersSize(ConfigWidgets):
+    def __init__(self):
         self.widget = widgets.BoundedIntText(
             placeholder=str(self.marker_size),
             description="Marker size",
@@ -13,7 +13,6 @@ class MarkersSize (ConfigWidgets):
         )
 
     def observe_change(self, visualizer_figure):
-
         def handle_change(change):
             """
             change markers size

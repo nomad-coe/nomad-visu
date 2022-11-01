@@ -27,15 +27,15 @@ from .width_hull import WidthHull
 from .width_line import WidthLine
 from .window_label import WindowLabel
 
-class UtilsWidgets(ConfigWidgets):
 
+class UtilsWidgets(ConfigWidgets):
     def __init__(self):
 
         self.bg_color = BgColor()
         self.bg_color_update = BgColorUpdate()
         self.bg_toggle = BgToggle()
         self.color_hull = ColorHull()
-        self.color_line = ColorLine ()
+        self.color_line = ColorLine()
         self.color_palette = ColorPalette()
         self.cross_size = CrossSize()
         self.dash_hull = DashHull()
@@ -68,62 +68,59 @@ class UtilsWidgets(ConfigWidgets):
         self.widg_box = widgets.VBox(
             [
                 widgets.HBox(
-                        [
+                    [
                         self.markers_size.widget,
                         self.cross_size.widget,
-                        self.color_palette.widget
-                        ]
+                        self.color_palette.widget,
+                    ]
                 ),
                 widgets.HBox(
-                        [
+                    [
                         self.font_size.widget,
                         self.font_family.widget,
-                        self.font_color.widget
-                        ]
+                        self.font_color.widget,
+                    ]
                 ),
                 widgets.HBox(
-                        [
+                    [
                         self.trace_symbol.widget,
                         self.markers_symbol.widget,
                         self.reset_button.widget,
-                        ]
+                    ]
                 ),
                 widgets.HBox(
-                        [
+                    [
                         self.color_hull.widget,
                         self.width_hull.widget,
-                        self.dash_hull.widget
-                        ]
+                        self.dash_hull.widget,
+                    ]
                 ),
                 widgets.HBox(
-                        [
+                    [
                         self.color_line.widget,
                         self.width_line.widget,
-                        self.dash_line.widget
-                        ]
+                        self.dash_line.widget,
+                    ]
                 ),
                 widgets.HBox(
-                        [
+                    [
                         self.bg_toggle.widget,
                         self.bg_color.widget,
                         self.bg_color_update.widget,
-                        ]
+                    ]
                 ),
                 self.print_label.widget,
                 widgets.HBox(
-                        [
+                    [
                         self.plot_name.widget,
                         self.plot_format.widget,
                         self.plot_resolution.widget,
-                        ]
+                    ]
                 ),
                 self.print.widget,
                 self.print_output.widget,
             ]
         )
-
-
-
 
     def observe_changes(self, Figure):
 
@@ -140,9 +137,14 @@ class UtilsWidgets(ConfigWidgets):
         self.font_size.observe_change(Figure)
         self.markers_size.observe_change(Figure)
         self.markers_symbol.observe_change(Figure, self.trace_symbol)
-        self.print.observe_change(Figure, self.print_output, self.plot_name, self.plot_format, self.plot_resolution)
+        self.print.observe_change(
+            Figure,
+            self.print_output,
+            self.plot_name,
+            self.plot_format,
+            self.plot_resolution,
+        )
         self.reset_button.observe_change(Figure)
         self.trace_symbol.observe_change(Figure)
         self.width_hull.observe_change(Figure)
         self.width_line.observe_change(Figure)
-
