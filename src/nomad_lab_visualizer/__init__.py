@@ -12,8 +12,80 @@ from .viewers_widgets import ViewersWidgets
 from .utils_button import UtilsButton
 from .figure import Figure
 
+from .config import Config
+from .settings_widget import SettingsWidget
+from .figure import FigureWidget
+from .viewer_widget import AtomisticViewerWidget
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
+
+
+class Visualizer2(widgets.Box):
+    """
+    Visualizer
+
+    Attributes:
+        df: pandas dataframe containing all data to be visualized.
+        embedding_features: list of features used for embedding.
+        hover features: list of features shown while hovering.
+        target: feature used to create traces (same target value - same trace).
+        path_to_structures: true if dataframe contains a 'structure' columns with path to structures.
+    """
+
+    def __init__(
+        self,
+        df: pd.DataFrame,
+        embedding_features: list[str],
+        hover_features: list[str],
+        target: str,
+        show_structures: bool = False,
+    ):
+
+        self.df = df
+        self.embedding_features = embedding_features
+        self.hover_features = hover_features
+        self.target = target
+        self.show_structures = show_structures
+
+        self.config = Config()
+
+        settings_widget = SettingsWidget(
+            embedding_features,
+            hover_features,
+            embedding_features[0],
+            embedding_features[1],
+            1,
+        )
+
+        labels = df[target].unique().tolist()
+
+        x = []
+        y = []
+        for label in labels:
+            mask = df[target] == label
+            x.append(df[embedding_features[0]][mask].to_numpy())
+            y.append(df[embedding_features[1]][mask].to_numpy())
+
+        figure = FigureWidget(x, y, labels=labels)
+
+        viewer1 = AtomisticViewerWidget()
+        viewer2 = AtomisticViewerWidget()
+
+        children = [settings_widget, figure, widgets.HBox([viewer1, viewer2])]
+        layout = widgets.Layout(
+            display="flex",
+            flex_flow="column",
+            # border="solid 2px",
+            align_items="stretch",
+            # width="50%",
+        )
+
+        super().__init__(children, layout=layout)
+
+        # self.visualizer_top_widgets.observe_changes(self.visualizer_figure, self.visualizer_utils_widgets)
+        # self.visualizer_utils_widgets.observe_changes(self.visualizer_figure)
+        # self.visualizer_viewers_widgets.observe_changes(self.visualizer_figure)
+        # self.visualizer_utils_button.observe_changes(self.visualizer_figure, self.visualizer_utils_widgets, self.visualizer_viewers_widgets)
 
 
 class Visualizer:
@@ -70,7 +142,7 @@ class Visualizer:
         # Displays the map and all widgets.
 
         top_box = self.visualizer_top_widgets.widg_box
-        figure_widget = self.visualizer_figure.FigureWidget
+        figure_widget = self.visualizer_figure.FigureiWidget
         utils_box = self.visualizer_utils_widgets.widg_box
         utils_button = self.visualizer_utils_button.widget
         viewer_box = self.visualizer_viewers_widgets.widg_box

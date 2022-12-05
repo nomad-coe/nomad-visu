@@ -1,6 +1,6 @@
 import ipywidgets as widgets
 
-from .config_widgets import ConfigWidgets
+from ..config_widgets import ConfigWidgets
 
 
 class UtilsButton(ConfigWidgets):
