@@ -1,3 +1,5 @@
+name: Build draft paper
+
 on: [push]
 
 jobs:
