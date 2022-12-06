@@ -1,14 +1,30 @@
 site_name: nomad-vis
+site_url: https://nomad-coe.github.io/nomad-lab-visualizer/
+
+repo_name: nomad-coe/nomad-vis
+repo_url: https://github.com/nomad-coe/nomad-lab-visualizer
 
 nav:
-    - Home: 'index.md'
-    - 'User Guide':
-      - Setup: 'setup.md'
-      - Introduction: 'introduction.md'
-      - Examples: 'examples.md'
-    - References: 'library.md'
+  - Home: 'index.md'
+  - Getting started:
+    - Setup: 'setup.md'
+    - Introduction: 'introduction.md'
+    - Examples: 'examples.md'
+  - References: 'library.md'
+
+watch:
+  - docs
+  - nomad_lab_visualizer
+
 theme:
   name: material
-markdown_extensions:
-    - toc:
-        permalink: "#"
+  features:
+    - navigation.expand
+  highlightjs: true
+  hljs_style: github
+  hljs_languages:
+    - python
+    - bash
+  navigation_depth: 2
+
+
