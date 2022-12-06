@@ -12,10 +12,6 @@ nav:
     - Examples: 'examples.md'
   - References: 'library.md'
 
-watch:
-  - docs
-  - nomad_lab_visualizer
-
 theme:
   name: material
   features:
