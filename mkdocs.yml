@@ -1,1 +1,14 @@
-site_name: My Docs
+site_name: nomad-vis
+
+nav:
+    - Home: 'index.md'
+    - 'User Guide':
+      - Setup: 'setup.md'
+      - Introduction: 'introduction.md'
+      - Examples: 'examples.md'
+    - References: 'library.md'
+theme:
+  name: material
+markdown_extensions:
+    - toc:
+        permalink: "#"
