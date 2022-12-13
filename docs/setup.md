@@ -13,3 +13,5 @@ You can install using `pip`:
 ```bash
 pip install nomad-vis
 ```
+
+extra info
