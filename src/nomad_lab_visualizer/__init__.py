@@ -142,7 +142,7 @@ class Visualizer:
         # Displays the map and all widgets.
 
         top_box = self.visualizer_top_widgets.widg_box
-        figure_widget = self.visualizer_figure.FigureiWidget
+        figure_widget = self.visualizer_figure.FigureWidget
         utils_box = self.visualizer_utils_widgets.widg_box
         utils_button = self.visualizer_utils_button.widget
         viewer_box = self.visualizer_viewers_widgets.widg_box
