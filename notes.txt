@@ -1,0 +1,215 @@
+Key features compared to chemiscope:
+- pythonic
+- modular (extendable widget, support various inputs)
+- support of category (discrete) target values
+- regression lines, convex hull, resampling
+- chemiscope shows only continuous data VS ours uses discrete only for target
+
+TODO:
+- target should be anything
+- discrete vs continuous properties based on the data
+- fixed color and maker size
+- regression line only works with [0] and [1] feature
+- fract opt as preprocessing step (should including convex hull points)
+- convex hull only on discrete properties
+-
+
+Compund???
+show structures
+multiplicity (avg doesn't make sense)
+
+
+
+Some suggestion:
+- df contains all the data but index could be anything
+- there could be a `compounds_label` which would be optional and by default uses the index of the df. If the user specifies one than that coloumn will be used despite is unique or not.
+- target could be a list where you can list all the labels that you want to use there
+  - if it is a continuous data than you have the option to select a color map and you will see a color bar
+  - if it is a categorical data than you will see discrete color options and a legend with the categories in it
+- you can also use categorical data for filtering
+
+
+  I see so you can also use the “target” as a filtering option. That is very nice
+
+Behavior:
+- x-axis, y-axis, (z-axis): only support for continuous numerical data
+- color: real numerical and ordered categorical data
+  - real numerical: gradient colormap
+  - ordered categorical: discrete colormap (filtering)
+- size: real numerical and ordered literal (or numerical) categorical data
+  - fixed value
+  - real numerical: mapped to a min max range
+  - ordered categorical: equally distributed along a min max range
+  - (numerical categorical: mapped to a min max range, is all numerical categorical are ordered categorical???)
+- path_to_structures: literal path to a folder or a file
+
+Attributes:
+    df (DataFrame): pandas dataframe containing all data
+    embedding_features (list[str]): list of features (names of the columns) used for x-axis, y-axis, (z-axis)
+    target_features (list[str]): List of features (names of the columns) used for color, size
+    hover_features (list[str]): list of features (names of the columns) shown while hovering. First value will be the index value, shown in bold.
+    path_to_structures (str): the name of the column for a path to a folder (in the case of multiple structures) or to a file of the structure
+
+plot(
+    x:list[number|timeseries],
+    y:list[number|timeseries],
+    color:list[number]|categorical[int|str],
+    size:number|list[number]
+    hover: list[str]
+)
+
+questions:
+- list[int] is categorical by default or not?
+- timeseries ?= list[str]
+
+
+features = ["((|IP_B  - EA_B |) / (r_p_A^2))", "((|r_s_A - r_p_B|) / exp(r_s_A))"]
+
+
+viz = VisualizerGUI(
+    df
+    embedding_features = features
+    hover_features = features
+    x_label =  ""
+    y_label =  ""
+    value_label = ""
+)
+viz.add_convex_hull(value_label = "")
+viz.add_regression_line([regr_line_coefs, intercept], x_label =  "", y_label =  "")
+
+
+
+viz = VisualizerGUI(
+    x
+    y
+    value (category or continuous)
+    color (fixed or list) Or colormap (fixed + discrete or continuous)
+    size (fixed or list)
+    x_label
+    y_label
+    hover_values
+)
+
+viz.add_convex_hull(value_label = "")  it ust be category
+viz.add_regression_line([regr_line_coefs, intercept], x_label =  "", y_label =  "")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import os
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+
+from itertools import cycle
+from scipy.spatial import ConvexHull
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.neighbors import NearestNeighbors
+
+# from dataclasses import dataclass
+#
+# @dataclass
+# class HoverLabelConfig:
+#     bgcolor: str = "white"
+#
+# @dataclass
+# class FigureConfig:
+#     hoverlabel: HoverLabelConfig = HoverLabelConfig()
+#
+#
+# config = FigureConfig()
+
+CONFIG=dict(
+    hoverlabel=dict(bgcolor="white", font_size=16, font_family="Rockwell"),
+    width=800,
+    height=400,
+    margin=dict(l=50, r=50, b=70, t=20, pad=4),
+    tickwidth=1,
+    ticklen=10,
+    linewidth=1,
+    linecolor="black"
+)
+
+class FigureWidget(go.FigureWidget):
+    def __init__(self, data=None, layout=None, **kwargs):
+        """
+        Arguments:
+        x: list[list[numbers]|]
+        """
+
+        super().__init__(data=data, layout=layout, **kwargs)
+
+        # All permanent layout settings are defined here
+        self.update_layout(
+            hoverlabel=CONFIG['hoverlabel'],
+            width=CONFIG['wifth'],
+            height=CONFIG['height'],
+            margin=CONFIG['margin']
+        )
+        self.update_xaxes(
+            ticks=CONFIG['ticks'],
+            tickwidth=CONFIG['tickwidth'],
+            ticklen=CONFIG['ticklen'],
+            linewidth=CONFIG['linewidth'],
+            linecolor=CONFIG['linecolor']
+        )
+        self.update_yaxes(
+            ticks=CONFIG['ticks'],
+            tickwidth=CONFIG['tickwidth'],
+            ticklen=CONFIG['ticklen'],
+            linewidth=CONFIG['linewidth'],
+            linecolor=CONFIG['linecolor']
+        )
+
+#         for (x, y, label) in zip(x, y, labels):
+#             self.add_trace(go.Scatter(x=x, y=y, name=label, mode="markers"))
+#
+#         self._x = x
+#         self._y = y
+#         self._labels = labels
+#
+#         self._regression_trace = None
+#         self._complex_hull_traces = None
+
+
+    def add_regression_line(self, p1, p2):
+        """
+        Note: solution of the intersection of the line and the boundary box
+        Arguments:
+        - p1: point in 2d
+        - p2: point in 2d
+        """
+
+        self._regression_trace = go.Scatter(
+            x=[p1[0], p2[0]], y=[p1[1], p2[1]], name="Line", mode="lines"
+        )
+        self.add_trace(self._regression_trace)
+
+    def add_complex_hull(self):
+
+        for (x, y, label) in zip(self._x, self._y, self._labels):
+            if len(x) < 3:
+                continue
+
+            points = np.column_stack((x, y))
+            hull = ConvexHull(points)
+
+            inds = np.append(hull.vertices, hull.vertices[0])
+            # TODO: use the same color as the datapoints
+            self.add_trace(
+                go.Scatter(x=x[inds], y=y[inds], name=f"{label} (hull)", mode="lines")
+            )
+
+            # for simplex in hull.simplices:
+            #     self.add_trace(go.Scatter(x=points[simplex, 0], y=points[simplex, 1]))
