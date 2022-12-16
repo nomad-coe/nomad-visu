@@ -1,5 +1,5 @@
 ---
-title: 'Gala: A Python package for galactic dynamics'
+title: 'NOMAD-visu: A Python package for atomistic data visualisation'
 tags:
   - Python
   - astronomy

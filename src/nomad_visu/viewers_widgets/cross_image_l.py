@@ -1,14 +1,14 @@
 import os
 import ipywidgets as widgets
 
-import nomad_lab_visualizer
+import nomad_visu
 
 
 class CrossImageL(object):
     def __init__(self):
 
         file1 = open(
-            os.path.join(nomad_lab_visualizer.__path__[0], "assets/cross1.png"), "rb"
+            os.path.join(nomad_visu.__path__[0], "assets/cross1.png"), "rb"
         )
         image1 = file1.read()
         self.widget = widgets.Image(

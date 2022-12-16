@@ -1,4 +1,4 @@
-# nomad-vis: Specialized visualiser for low dimensional inspection of molecular dataset at big scale
+# NOMAD-visu: A Python package for atomistic data visualisation
 
 Two line description of the project. One figure.
 

@@ -1,17 +1,16 @@
-# Nomad-lab Visualizer
+# NOMAD-visu:
 
-[![Tests](https://github.com/nomad-coe/nomad-lab-visualizer/actions/workflows/python-package.yml/badge.svg)](https://github.com/nomad-coe/nomad-lab-visualizer/actions/workflows/python-package.yml)
-[![Docs](https://github.com/nomad-coe/nomad-lab-visualizer/actions/workflows/python-mkdocs.yml/badge.svg)](https://nomad-coe.github.io/nomad-lab-visualizer/)
+[![Tests](https://github.com/nomad-coe/nomad-visu/actions/workflows/python-package.yml/badge.svg)](https://github.com/nomad-coe/nomad-visu/actions/workflows/python-package.yml)
+[![Docs](https://github.com/nomad-coe/nomad-visu/actions/workflows/python-mkdocs.yml/badge.svg)](https://nomad-coe.github.io/nomad-visu/)
 
-
-This is plot/visualizer widget for atomistic structures which can be used in Jupyter Notebooks.
+A Python package for atomistic data visualisation
 
 ## Installation
 
 You can install using `pip`:
 
 ```bash
-pip install nomad-lab-visualiser
+pip install nomad-visu
 ```
 
 ## Quick start
@@ -58,8 +57,8 @@ visualizer.show()
 
 Create a python environment for development:
 ```bash
-mamba create -n nomad-lab-visualiser-dev -c conda-forge python pip jupyter jupyterlab plotly ipywidgets py3dmol numpy scipy pandas scikit-learn setuptools pip-tools black mypy pytest flake8
-mamba activate nomad-lab-visualiser-dev
+mamba create -n nomad-visu-dev -c conda-forge python pip jupyter jupyterlab plotly ipywidgets py3dmol numpy scipy pandas scikit-learn setuptools pip-tools black mypy pytest flake8
+mamba activate nomad-visu-dev
 ```
 
 Install the python package in editable mode (i.e. setuptools "develop mode") from a local project path (`.`).
