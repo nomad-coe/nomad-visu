@@ -3,8 +3,8 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "nomad_lab_visualizer"
-description = "This is plot/visualizer widget for atomistic structures which can be used in Jupyter Notebooks."
+name = "nomad-visu"
+description = "A Python package for atomistic data visualisation"
 readme = "README.md"
 dynamic = ["version"]
 license = {text = "Apache-2.0"}
@@ -23,4 +23,4 @@ classifiers = ["Programming Language :: Python :: 3"]
 [project.optional-dependencies]
 dev = ["pip-tools", "yapf", "mypy", "flake8"]
 test = ["pytest"]
-docs = ["mkdocs"]
+docs = ["mkdocs", "mkdocs-material"]
