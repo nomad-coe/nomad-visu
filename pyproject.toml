@@ -10,6 +10,7 @@ dynamic = ["version"]
 license = {text = "Apache-2.0"}
 requires-python = ">=3.7"
 dependencies = [
+    'notebook',
     'ipywidgets',
     'plotly',
     'py3dmol',
@@ -23,4 +24,4 @@ classifiers = ["Programming Language :: Python :: 3"]
 [project.optional-dependencies]
 dev = ["pip-tools", "yapf", "mypy", "flake8"]
 test = ["pytest"]
-docs = ["mkdocs", "mkdocs-material"]
+docs = ["mkdocs", "mkdocs-material","mkdocs-autorefs", "mkdocstrings"]
