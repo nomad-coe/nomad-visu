@@ -1,4 +1,4 @@
 # References
 
-
-functions and their arguments
+::: nomad_visu.Visualizer
+    handler: python
