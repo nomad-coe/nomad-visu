@@ -25,53 +25,54 @@ class Visualizer2(widgets.Box):
     Visualizer
 
     Attributes:
-        df: pandas dataframe containing all data to be visualized.
-        embedding_features: list of features used for embedding.
-        hover features: list of features shown while hovering.
-        target: feature used to create traces (same target value - same trace).
-        path_to_structures: true if dataframe contains a 'structure' columns with path to structures.
+        df (DataFrame): pandas dataframe containing all data
+        feature_cols (list[str]): list of features (names of the columns) used for x-axis, y-axis, (z-axis)
+        target_cols (list[str]): List of features (names of the columns) used for color, size
+        caption_cols (list[str]): list of features (names of the columns) shown while hovering. First value will be the index value, shown in bold.
+        structure_col (str): the name of the column for a path to a folder (in the case of multiple structures) or to a file of the structure
+
     """
 
     def __init__(
         self,
         df: pd.DataFrame,
-        embedding_features: list[str],
-        hover_features: list[str],
-        target: str,
-        show_structures: bool = False,
+        feature_cols: list[str],
+        target_cols: list[str],
+        fracture: float = 1.0,
+        caption_cols: list[str] = None,
+        structure_col: str = None,
     ):
 
         self.df = df
-        self.embedding_features = embedding_features
-        self.hover_features = hover_features
-        self.target = target
-        self.show_structures = show_structures
+        self.feature_cols = feature_cols
+        self.target_cols = target_cols
+        self.fracture = fracture
+        self.caption_cols = caption_cols
+        self.structure_col = structure_col
 
         self.config = Config()
 
-        settings_widget = SettingsWidget(
-            embedding_features,
-            hover_features,
-            embedding_features[0],
-            embedding_features[1],
-            1,
+        self.widget_settings = SettingsWidget(
+            feature_cols,
+            target_cols,
+            fracture,
         )
 
-        labels = df[target].unique().tolist()
-
-        x = []
-        y = []
-        for label in labels:
-            mask = df[target] == label
-            x.append(df[embedding_features[0]][mask].to_numpy())
-            y.append(df[embedding_features[1]][mask].to_numpy())
+        # labels = df[target].unique().tolist()
+        #
+        # x = []
+        # y = []
+        # for label in labels:
+        #     mask = df[target] == label
+        #     x.append(df[embedding_features[0]][mask].to_numpy())
+        #     y.append(df[embedding_features[1]][mask].to_numpy())
 
         figure = FigureWidget(x, y, labels=labels)
 
         viewer1 = AtomisticViewerWidget()
         viewer2 = AtomisticViewerWidget()
 
-        children = [settings_widget, figure, widgets.HBox([viewer1, viewer2])]
+        children = [self.widget_settings, figure, widgets.HBox([viewer1, viewer2])]
         layout = widgets.Layout(
             display="flex",
             flex_flow="column",
@@ -96,7 +97,7 @@ class Visualizer:
         df: pandas dataframe containing all data to be visualized.
         embedding_features: list of features used for embedding.
         hover features: list of features shown while hovering.
-        target: feature used to create traces (same target value - same trace).
+        trget: feature used to create traces (same target value - same trace).
         path_to_structures: true if dataframe contains a 'structure' columns with path to structures.
     """
 

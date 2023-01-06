@@ -11,7 +11,7 @@ This is plot/visualizer widget for atomistic structures which can be used in Jup
 You can install using `pip`:
 
 ```bash
-pip install nomad-lab-visualiser
+pip install nomad-visu
 ```
 
 ## Quick start
