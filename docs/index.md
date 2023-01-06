@@ -5,9 +5,10 @@ Two line description of the project. One figure.
 ## Features
 
 
+## Installation
 
-## Citation
+You can install the package using `pip`:
 
-
-
-<!-- TOC -->
+```bash
+pip install nomad-visu
+```

@@ -67,7 +67,11 @@ class Visualizer:
         )
 
     def show(self):
-        # Displays the map and all widgets.
+        """
+        Displays the map and all widgets.
+
+        """
+
 
         top_box = self.visualizer_top_widgets.widg_box
         figure_widget = self.visualizer_figure.FigureWidget
@@ -116,6 +120,9 @@ class Visualizer:
                 self.visualizer_viewers_widgets.viewer_r.viewer.show()
 
     def add_convex_hull(self):
+        """
+        Add convex hull to the map.
+        """
 
         self.visualizer_figure.convex_hull = True
         self.visualizer_utils_widgets.color_hull.widget.disabled = False
@@ -125,6 +132,9 @@ class Visualizer:
         self.visualizer_figure.batch_update(self.visualizer_config_widgets)
 
     def remove_convex_hull(self):
+        """
+        Remove convex hull from the map.
+        """
 
         self.visualizer_figure.convex_hull = False
         self.visualizer_utils_widgets.color_hull.widget.disabled = True
@@ -134,6 +144,9 @@ class Visualizer:
         self.visualizer_figure.batch_update(self.visualizer_config_widgets)
 
     def add_regr_line(self, coefs, feat_x, feat_y):
+        """
+        Add regression line to the map.
+        """
 
         self.visualizer_figure.add_regr_line(
             coefs,
@@ -146,7 +159,10 @@ class Visualizer:
         )
 
     def remove_regr_line(self, feat_x, feat_y):
+        """
+        Remove regression line from the map.
 
+        """
         self.visualizer_figure.remove_regr_line(
             feat_x,
             feat_y,
@@ -157,7 +173,9 @@ class Visualizer:
         )
 
     def optimize_fract(self):
-
+        """
+        Optimize fractional .
+        """
         self.visualizer_figure.optimize_fract(
             self.visualizer_top_widgets, self.visualizer_config_widgets
         )

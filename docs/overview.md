@@ -1,7 +1,8 @@
-# Introduction
+# Overview
 
 
 Goals and principles
+
 
 
 ## Quick example
@@ -53,4 +54,9 @@ visualizer.show()
 - convex hull
 
 - molecular visualiser
--
+
+
+
+## Citation
+
+

@@ -1,21 +1,21 @@
 site_name: nomad-visu
+site_description: "A Python package for atomistic data visualisation"
 site_url: https://nomad-coe.github.io/nomad-visu/
 repo_name: nomad-coe/nomad-visu
 repo_url: https://github.com/nomad-coe/nomad-visu
 
 nav:
-  - Home: 'index.md'
-  - Getting started:
-    - Setup: 'setup.md'
-    - Introduction: 'introduction.md'
-    - Examples: 'examples.md'
-    # - octet: 'examples/octet_binaries.ipynb'
-  - References: 'library.md'
+  - Home: "index.md"
+  - "overview.md"
+  - "examples.md"
+  - "references.md"
+  - "development.md"
 
 theme:
   name: material
   features:
     - navigation.expand
+    # - navigation.tabs
   highlightjs: true
   hljs_style: github
   hljs_languages:
@@ -28,9 +28,11 @@ plugins:
       lang: en
   - mkdocstrings:
       default_handler: python
-  # - mkdocs-jupyter:
-  #     execute: true
-  #     kernel: nomad-visu
+      handlers:
+        python:
+          paths: [src] # search packages in the src folder
+          members_order: source
+          show_source: false
   - autorefs
 
 watch:
